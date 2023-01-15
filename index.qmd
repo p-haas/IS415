@@ -2,10 +2,6 @@
 title: "IS415"
 ---
 
-This is a Quarto website. Welcome\_
+Welcome to **IS415 Geospatial Analytics and Applications**.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```
+This is the course website of IS415 I study this semester. You will find all my course work on this website.

@@ -4,7 +4,13 @@ project:
 website:
   title: "IS415"
   navbar:
-    left:
+    left: 
+      - text: "Hands-on Exercise"
+        menu:
+          - text: "Hands-on Exercise 1"
+            href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html"
+          
+    right:
       - href: index.qmd
         text: Home
       - about.qmd
@@ -16,4 +22,3 @@ format:
     toc: true
 
 editor: visual
-

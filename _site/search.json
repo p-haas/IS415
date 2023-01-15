@@ -7,10 +7,24 @@
     "text": "About this site\n\n1 + 1\n\n[1] 2"
   },
   {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
+    "title": "Hands-on Exercise 1: Geospatial Data Wrangling with R",
+    "section": "",
+    "text": "In this section, I will install and load the required R packages, being tidyverse and sf libraries/packages.\n\npacman::p_load(tidyverse, sf)"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "IS415",
     "section": "",
-    "text": "This is a Quarto website. Welcome_\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "Welcome to IS415 Geospatial Analytics and Applications.\nThis is the course website of IS415 I study this semester. You will find all my course work on this website."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#plotting-the-geospatial-data.",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#plotting-the-geospatial-data.",
+    "title": "Hands-on Exercise 1: Geospatial Data Wrangling with R",
+    "section": "Plotting the Geospatial Data.",
+    "text": "Plotting the Geospatial Data.\n\nplot(mpsz)"
   }
 ]
