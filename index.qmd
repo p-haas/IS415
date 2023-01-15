@@ -2,7 +2,7 @@
 title: "IS415"
 ---
 
-This is a Quarto website.
+This is a Quarto website. Welcome\_
 
 To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
