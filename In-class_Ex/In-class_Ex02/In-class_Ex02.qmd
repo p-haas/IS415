@@ -1,0 +1,68 @@
+---
+title: "In-Class Exercise - Geospatial Data Wrangling"
+subtitle: "Session 2"
+execute: 
+  warning: false
+date-modified: "`r Sys.Date()`"
+---
+
+# Installing and Loading R Packages
+
+### Libraries - *sf* & *tidyverse*
+
+```{r}
+pacman::p_load(sf, tidyverse, readr)
+```
+
+# Importing Data into R Workbook
+
+### Import shp file
+
+```{r}
+nga_adm2 = st_read(dsn = "data/geospatial",
+                   layer = "geoBoundaries-NGA-ADM2") %>% st_transform(crs = 26391)
+```
+
+### Import csv file
+
+```{r}
+wpdx_plus = read_csv("data/aspatial/Water_Point_Data_Exchange_-_Plus__WPdx__.csv")
+```
+
+# Understanding the data
+
+### Nigeria Level-2 Administrative Boundary
+
+```{r}
+st_geometry(nga_adm2)
+```
+
+```{r}
+glimpse(nga_adm2)
+```
+
+```{r}
+# head(nga_adm2)
+```
+
+### WPdx+ data set
+
+```{r}
+glimpse(wpdx_plus)
+```
+
+```{r}
+# head(wpdx_plus)
+```
+
+### Proportion of Functional & Non-Functional water points
+
+```{r}
+prop_func = sum(wpdx_plus$`#status_id`=="Yes")/nrow(wpdx_plus)
+print(prop_func)
+```
+
+```{r}
+prop_nonfunc = sum(wpdx_plus$`#status_id`=="No")/nrow(wpdx_plus)
+print(nonprop_func)
+```

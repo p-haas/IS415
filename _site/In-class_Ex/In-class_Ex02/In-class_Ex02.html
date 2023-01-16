@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>IS415 - In-Class Exercise - Geospatial Data Wrangling</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">IS415</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html">
+ <span class="dropdown-text">Hands-on Exercise - Session 1</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">In-class Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex02/In-class_Ex02.html">
+ <span class="dropdown-text">In-class Exercise - Session 2</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#installing-and-loading-r-packages" id="toc-installing-and-loading-r-packages" class="nav-link active" data-scroll-target="#installing-and-loading-r-packages">Installing and Loading R Packages</a>
+  <ul class="collapse">
+  <li><a href="#libraries---sf-tidyverse" id="toc-libraries---sf-tidyverse" class="nav-link" data-scroll-target="#libraries---sf-tidyverse">Libraries - <em>sf</em> &amp; <em>tidyverse</em></a></li>
+  </ul></li>
+  <li><a href="#importing-data-into-r-workbook" id="toc-importing-data-into-r-workbook" class="nav-link" data-scroll-target="#importing-data-into-r-workbook">Importing Data into R Workbook</a>
+  <ul class="collapse">
+  <li><a href="#import-shp-file" id="toc-import-shp-file" class="nav-link" data-scroll-target="#import-shp-file">Import shp file</a></li>
+  <li><a href="#import-csv-file" id="toc-import-csv-file" class="nav-link" data-scroll-target="#import-csv-file">Import csv file</a></li>
+  </ul></li>
+  <li><a href="#understanding-the-data" id="toc-understanding-the-data" class="nav-link" data-scroll-target="#understanding-the-data">Understanding the data</a>
+  <ul class="collapse">
+  <li><a href="#nigeria-level-2-administrative-boundary" id="toc-nigeria-level-2-administrative-boundary" class="nav-link" data-scroll-target="#nigeria-level-2-administrative-boundary">Nigeria Level-2 Administrative Boundary</a></li>
+  <li><a href="#wpdx-data-set" id="toc-wpdx-data-set" class="nav-link" data-scroll-target="#wpdx-data-set">WPdx+ data set</a></li>
+  <li><a href="#proportion-of-functional-non-functional-water-points" id="toc-proportion-of-functional-non-functional-water-points" class="nav-link" data-scroll-target="#proportion-of-functional-non-functional-water-points">Proportion of Functional &amp; Non-Functional water points</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">In-Class Exercise - Geospatial Data Wrangling</h1>
+<p class="subtitle lead">Session 2</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">January 16, 2023</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="installing-and-loading-r-packages" class="level1">
+<h1>Installing and Loading R Packages</h1>
+<section id="libraries---sf-tidyverse" class="level3">
+<h3 class="anchored" data-anchor-id="libraries---sf-tidyverse">Libraries - <em>sf</em> &amp; <em>tidyverse</em></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, tidyverse, readr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="importing-data-into-r-workbook" class="level1">
+<h1>Importing Data into R Workbook</h1>
+<section id="import-shp-file" class="level3">
+<h3 class="anchored" data-anchor-id="import-shp-file">Import shp file</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>nga_adm2 <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">layer =</span> <span class="st">"geoBoundaries-NGA-ADM2"</span>) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">26391</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `geoBoundaries-NGA-ADM2' from data source 
+  `C:\Users\pierre\Desktop\p-haas\IS415\In-class_Ex\In-class_Ex02\data\geospatial' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 774 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+</section>
+<section id="import-csv-file" class="level3">
+<h3 class="anchored" data-anchor-id="import-csv-file">Import csv file</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wpdx_plus <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/Water_Point_Data_Exchange_-_Plus__WPdx__.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="understanding-the-data" class="level1">
+<h1>Understanding the data</h1>
+<section id="nigeria-level-2-administrative-boundary" class="level3">
+<h3 class="anchored" data-anchor-id="nigeria-level-2-administrative-boundary">Nigeria Level-2 Administrative Boundary</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_geometry</span>(nga_adm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Geometry set for 774 features 
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 28879.72 ymin: 30292.37 xmax: 1343798 ymax: 1094244
+Projected CRS: Minna / Nigeria West Belt
+First 5 geometries:</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(nga_adm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 774
+Columns: 6
+$ shapeName  &lt;chr&gt; "Aba North", "Aba South", "Abadam", "Abaji", "Abak", "Abaka…
+$ Level      &lt;chr&gt; "ADM2", "ADM2", "ADM2", "ADM2", "ADM2", "ADM2", "ADM2", "AD…
+$ shapeID    &lt;chr&gt; "NGA-ADM2-72505758B79815894", "NGA-ADM2-72505758B67905963",…
+$ shapeGroup &lt;chr&gt; "NGA", "NGA", "NGA", "NGA", "NGA", "NGA", "NGA", "NGA", "NG…
+$ shapeType  &lt;chr&gt; "ADM2", "ADM2", "ADM2", "ADM2", "ADM2", "ADM2", "ADM2", "AD…
+$ geometry   &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((552560.3 12..., MULTIPOLYGON (…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># head(nga_adm2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="wpdx-data-set" class="level3">
+<h3 class="anchored" data-anchor-id="wpdx-data-set">WPdx+ data set</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(wpdx_plus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 406,566
+Columns: 70
+$ row_id                        &lt;dbl&gt; 651816, 584864, 509399, 21983, 660321, 6…
+$ `#source`                     &lt;chr&gt; "Water For People", "Global Environment …
+$ `#lat_deg`                    &lt;dbl&gt; -15.726464200, 6.723120000, 8.001933333,…
+$ `#lon_deg`                    &lt;dbl&gt; 35.05067, -1.58151, -11.28760, -10.12595…
+$ `#report_date`                &lt;chr&gt; "06/11/2018 12:00:00 AM", "10/25/2017 12…
+$ `#status_id`                  &lt;chr&gt; "Yes", "Yes", "Yes", "Yes", "Yes", "Yes"…
+$ `#water_source_clean`         &lt;chr&gt; NA, NA, NA, NA, "Piped Water", "Piped Wa…
+$ `#water_source_category`      &lt;chr&gt; NA, NA, NA, NA, "Piped Water", "Piped Wa…
+$ `#water_tech_clean`           &lt;chr&gt; "Kiosk", "Tapstand", "Tapstand", "Tapsta…
+$ `#water_tech_category`        &lt;chr&gt; "Tapstand", "Tapstand", "Tapstand", "Tap…
+$ `#facility_type`              &lt;chr&gt; "Improved", "Improved", "Improved", "Imp…
+$ `#clean_country_name`         &lt;chr&gt; "Malawi", "Ghana", "Sierra Leone", "Libe…
+$ `#clean_adm1`                 &lt;chr&gt; "Blantyre", "Ashanti", "Eastern", "Lofa"…
+$ `#clean_adm2`                 &lt;chr&gt; "Blantyre City", "Asokore Mampong Munici…
+$ `#clean_adm3`                 &lt;chr&gt; "n.a. (2465)", NA, "Kando Leppeama", "Lu…
+$ `#clean_adm4`                 &lt;chr&gt; NA, NA, NA, NA, "Kamwenge Town Council",…
+$ `#install_year`               &lt;dbl&gt; NA, 2017, NA, NA, NA, NA, NA, NA, NA, NA…
+$ `#installer`                  &lt;chr&gt; NA, NA, "Water Aid", NA, NA, NA, NA, NA,…
+$ `#rehab_year`                 &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ `#rehabilitator`              &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ `#management_clean`           &lt;chr&gt; NA, NA, NA, "School Management", NA, NA,…
+$ `#status_clean`               &lt;chr&gt; NA, NA, "Functional", NA, NA, NA, NA, NA…
+$ `#pay`                        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ `#fecal_coliform_presence`    &lt;chr&gt; NA, NA, NA, NA, "Present", "Present", "P…
+$ `#fecal_coliform_value`       &lt;dbl&gt; NA, 0, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ `#subjective_quality`         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ `#activity_id`                &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ `#scheme_id`                  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ `#wpdx_id`                    &lt;chr&gt; "5GPQ73F2+C77", "6CRWPCF9+69X", "6CWC2P2…
+$ `#notes`                      &lt;chr&gt; NA, NA, "Poor…Jenneh…Kandu Leppiema……", …
+$ `#orig_lnk`                   &lt;chr&gt; NA, NA, NA, "https://wash-liberia.org/ra…
+$ `#photo_lnk`                  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ `#country_id`                 &lt;chr&gt; "MW", "GH", "SL", "LR", "UG", "UG", "UG"…
+$ `#data_lnk`                   &lt;chr&gt; "https://catalog.waterpointdata.org/data…
+$ `#distance_to_primary_road`   &lt;dbl&gt; 7034.8250, 3677.9101, 17540.3622, 21602.…
+$ `#distance_to_secondary_road` &lt;dbl&gt; 3431.81039, 3944.70081, 4052.93329, 3703…
+$ `#distance_to_tertiary_road`  &lt;dbl&gt; 421.90674, 690.13048, 104.43156, 14456.7…
+$ `#distance_to_city`           &lt;dbl&gt; 8321.854, 5362.011, 17003.136, 52727.389…
+$ `#distance_to_town`           &lt;dbl&gt; 22044.5149, 7550.3392, 15474.4428, 31606…
+$ water_point_history           &lt;chr&gt; "{\"2018-06-11\": {\"source\": \"Water F…
+$ rehab_priority                &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ water_point_population        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ local_population_1km          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ crucialness_score             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ pressure_score                &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ usage_capacity                &lt;dbl&gt; 250, 250, 250, 250, 250, 250, 250, 250, …
+$ is_urban                      &lt;lgl&gt; TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, …
+$ days_since_report             &lt;dbl&gt; 1562, 1791, 4281, 2482, 1286, 1281, 1660…
+$ staleness_score               &lt;dbl&gt; 61.11805, 56.86178, 25.93887, 45.73258, …
+$ latest_record                 &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE…
+$ location_id                   &lt;dbl&gt; 355848, 349148, 98255, 285679, 362508, 3…
+$ cluster_size                  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1…
+$ `#clean_country_id`           &lt;chr&gt; "MWI", "GHA", "SLE", "LBR", "UGA", "UGA"…
+$ `#country_name`               &lt;chr&gt; "Malawi", "Ghana", "Sierra Leone", "Libe…
+$ `#water_source`               &lt;chr&gt; NA, NA, "Gravity stand-post", "Public st…
+$ `#water_tech`                 &lt;chr&gt; "Communal water kiosk", "Standpost", NA,…
+$ `#status`                     &lt;chr&gt; "1", NA, "Functional", NA, "1", "0", "1"…
+$ `#adm2`                       &lt;chr&gt; "Kameza", NA, "Kenema", NA, "Kibale", "K…
+$ `#adm3`                       &lt;chr&gt; NA, NA, NA, NA, "Kamwenge T/Council", "B…
+$ `#management`                 &lt;chr&gt; NA, NA, NA, "Institutional Management - …
+$ `#adm1`                       &lt;chr&gt; "Blantyre", NA, "Eastern", "Lofa", "Kamw…
+$ `New Georeferenced Column`    &lt;chr&gt; "POINT (35.0506729 -15.7264642)", "POINT…
+$ lat_deg_original              &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ lat_lon_deg                   &lt;chr&gt; "(-15.7264642°, 35.0506729°)", "(6.72312…
+$ lon_deg_original              &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ public_data_source            &lt;chr&gt; "https://catalog.waterpointdata.org/data…
+$ converted                     &lt;chr&gt; NA, NA, "#install_year, #notes", "#statu…
+$ count                         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+$ created_timestamp             &lt;chr&gt; "02/18/2022 05:36:33 AM", "07/29/2020 07…
+$ updated_timestamp             &lt;chr&gt; "02/18/2022 05:36:33 AM", "07/29/2020 07…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># head(wpdx_plus)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="proportion-of-functional-non-functional-water-points" class="level3">
+<h3 class="anchored" data-anchor-id="proportion-of-functional-non-functional-water-points">Proportion of Functional &amp; Non-Functional water points</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>prop_func <span class="ot">=</span> <span class="fu">sum</span>(wpdx_plus<span class="sc">$</span><span class="st">`</span><span class="at">#status_id</span><span class="st">`</span><span class="sc">==</span><span class="st">"Yes"</span>)<span class="sc">/</span><span class="fu">nrow</span>(wpdx_plus)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(prop_func)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7129716</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

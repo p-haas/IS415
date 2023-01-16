@@ -1,5 +1,5 @@
 ---
-title: "Hands-on Exercise 1: Geospatial Data Wrangling with R"
+title: "Hands-on Exercise - Session 1: Geospatial Data Wrangling with R"
 execute: 
   warning: false
 date: "`r Sys.Date()`"
@@ -7,7 +7,7 @@ date: "`r Sys.Date()`"
 
 # Getting Started
 
-## Installing and loading R packages
+## Installing and Loading R Packages
 
 In this section, I will install and load the required R packages, being tidyverse and sf libraries/packages.
 
@@ -15,15 +15,50 @@ In this section, I will install and load the required R packages, being tidyvers
 pacman::p_load(tidyverse, sf)
 ```
 
-# Importing a geospatial data in shape-file format.
+# Importing Geospatial Data in shp format
+
+## Import Data
 
 ```{r}
 mpsz <- st_read(dsn = "data/geospatial", 
                 layer = "MP14_SUBZONE_WEB_PL")
 ```
 
-## Plotting the Geospatial Data.
+```{r}
+cpg <- st_read(dsn = "data/geospatial", 
+                layer = "CyclingPathGazette")
+```
+
+## Checking Content of Data Frame Simple Feature
+
+```{r}
+st_geometry(mpsz)
+```
+
+```{r}
+glimpse(mpsz)
+```
+
+## Plotting Geospatial Data - Polygon Feature
 
 ```{r}
 plot(mpsz)
+```
+
+## Plotting Geospatial Data - Polyline Feature
+
+```{r}
+plot(cpg)
+```
+
+# Importing GIS data in kml format
+
+```{r}
+psl <- st_read(dsn = "data/geospatial/preschools-location.kml")
+```
+
+## Plotting Geospatial Data - Multipoint
+
+```{r}
+plot(psl)
 ```
