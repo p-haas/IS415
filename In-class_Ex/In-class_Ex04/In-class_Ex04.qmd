@@ -1,0 +1,66 @@
+---
+title: "In-class Exercise - Spatial Point Patterns Analysis"
+subtitle: "Session 4"
+
+author: "Pierre HAAS"
+
+date: "January 30, 2023"
+date-modified: "`r Sys.Date()`"
+
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+# 1 Getting started
+
+## 1.1 Installing and Loading the Packages
+
+```{r}
+pacman::p_load(maptools, sf, raster, spatstat, tmap)
+```
+
+Things to learn from this code chunk.
+
+## 1.2 Importing Spatial Data
+
+```{r}
+childcare_sf = st_read("data/child-care-services-geojson.geojson") %>%
+  st_transform(crs=3414)
+```
+
+```{r}
+sg_sf = st_read(dsn="data", layer="CostalOutline")
+```
+
+```{r}
+mpsz_sf = st_read(dsn="data", layer="MP14_SUBZONE_WEB_PL")
+```
+
+# 2 Spatial Data Wrangling
+
+# 3 Geospatial Data Wrangling
+
+## 3.1 Converting *sf* data frames into *sp* Spatial\* Class
+
+```{r}
+childcare = as_Spatial(childcare_sf)
+mpsz      = as_Spatial(mpsz_sf)
+sg        = as_Spatial(sg_sf)
+```
+
+## 3.2 Converting Spatial\* Class into generic *sp* format
+
+```{r}
+childcare_sp = as(childcare, "SpatialPoints")
+sg_sp        = as(sg, "SpatialPolygons")
+```
+
+## 3.3 Converting generic *sp* format into *spatstat* ppp's format
+
+```{r}
+childcare_ppp <- as(childcare_sp, "ppp")
+childcare_ppp
+```

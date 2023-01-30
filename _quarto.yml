@@ -3,16 +3,30 @@ project:
 
 website:
   title: "IS415"
+  
   navbar:
-    left: 
+  
+    left:
+    
       - text: "Hands-on Exercise"
         menu:
-          - text: "Hands-on Exercise - Session 1"
+          - text: "Hands-on Exercise 1"
             href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html"
-      - text: "In-class Exercise"
+          - text: "Hands-on Exercise 3"
+            href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html"
+          - text: "Hands-on Exercise 4"
+            href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html"
+          - text: "Hands-on Exercise 5"
+            href: "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html"
+            
+      - text: "In-Class Exercises"
         menu: 
-          - text: "In-class Exercise - Session 2"
+          - text: "In-Class Exercise 2"
             href: "In-class_Ex/In-class_Ex02/In-class_Ex02.html"
+          - text: "In-Class Exercise 3"
+            href: "In-class_Ex/In-class_Ex03/In-class_Ex03.html"
+          - text: "In-Class Exercise 4"
+            href: "In-class_Ex/In-class_Ex04/In-class_Ex04.html"
           
     right:
       - href: index.qmd
