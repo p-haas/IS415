@@ -1,0 +1,24 @@
+---
+title: "In-class Exercise 3"
+---
+
+# 1 Getting started
+
+## 1.1 Installing & Loading Packages
+
+```{r}
+pacman::p_load(tidyverse, tmap, sf)
+```
+
+## 1.2 Importing data
+
+```{r}
+NGA_wp <- read_rds("data/NGA_wp.rds")
+```
+
+# 2 Basic Choropleth Mapping
+
+## 2.1 Visualising distribution of non-functional water point
+
+
+
