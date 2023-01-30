@@ -5,19 +5,23 @@ execute:
 date: "`r Sys.Date()`"
 ---
 
-# Getting Started
+# 1.1 Getting Started
 
-## Installing and Loading R Packages
+## 1.1.1 Installing and Loading R Packages
 
-In this section, I will install and load the required R packages, being tidyverse and sf libraries/packages.
+In this section, I will install and load the required R packages, being tidyverse and sf libraries/packages. Here we use the pacman library to install and load the libraries in case it is needed.
 
 ```{r}
 pacman::p_load(tidyverse, sf)
 ```
 
-# Importing Geospatial Data in shp format
+# 1.2 Importing Data into R-Studio
 
-## Import Data
+In this section, we will import the data previously extracted from the web into our R session. Note that the data should be stored in the same folder as the R repository.
+
+## 1.2.1 Import data in shp file format
+
+Here we use the function st_read to read the files stored under the shp format.
 
 ```{r}
 mpsz <- st_read(dsn = "data/geospatial", 
@@ -29,36 +33,86 @@ cpg <- st_read(dsn = "data/geospatial",
                 layer = "CyclingPathGazette")
 ```
 
-## Checking Content of Data Frame Simple Feature
+## 1.2.2 Import data in kml format
 
-```{r}
-st_geometry(mpsz)
-```
-
-```{r}
-glimpse(mpsz)
-```
-
-## Plotting Geospatial Data - Polygon Feature
-
-```{r}
-plot(mpsz)
-```
-
-## Plotting Geospatial Data - Polyline Feature
-
-```{r}
-plot(cpg)
-```
-
-# Importing GIS data in kml format
+Here we use the function st_read to read the files stored under the kml format. Note that in this second case, we do not include the layer in the code.
 
 ```{r}
 psl <- st_read(dsn = "data/geospatial/preschools-location.kml")
 ```
 
-## Plotting Geospatial Data - Multipoint
+# 1.3 Checking Content of Data Frame Simple Feature
+
+## 1.3.1 Working with st_geometry()
+
+Note that st_geometry() can be replaced by mpsz\$geometry or mpsz\[\[1\]\]
+
+```{r}
+st_geometry(mpsz)
+```
+
+Notice that the print only displays basic information of the feature class such as type of geometry, the geographic extent of the features and the coordinate system of the data.
+
+## 1.3.2 Working with glimpse()
+
+The function glimpse() reports information about the data type of every column or field.
+
+```{r}
+glimpse(mpsz)
+```
+
+## 1.3.3 Working with head()
+
+The function prints the first five rows of the dataset.
+
+```{r}
+head(mpsz, n=5)
+```
+
+# 1.4 Plotting Geospatial Data
+
+## 1.4.1 Plotting - Polygon Feature
+
+```{r}
+plot(mpsz)
+```
+
+The default plot of an sf object is a multi-plot of all attributes, up to a reasonable maximum as shown above. We can, however, choose to plot only the geometry by using the code chunk below.
+
+```{r}
+plot(st_geometry(mpsz))
+```
+
+Alternatively, we can also choose the plot the sf object by using a specific attribute as shown in the code chunk below.
+
+```{r}
+plot(mpsz["PLN_AREA_N"])
+```
+
+## 1.4.2 Plotting - Polyline Feature
+
+```{r}
+plot(cpg)
+```
+
+```{r}
+plot(st_geometry(cpg))
+```
+
+## 1.4.3 Plotting - Multipoint Feature
 
 ```{r}
 plot(psl)
 ```
+
+```{r}
+plot(st_geometry(psl))
+```
+
+# 1.5 Working with Projection
+
+# 1.6 Importing and Converting Aspatial data
+
+## 1.6.1 Importing data in csv format
+
+

@@ -1,0 +1,36 @@
+---
+title: "Hands-on Exercise - Choropleth Mapping with R"
+subtitle: "Session 3"
+---
+
+# 1 Getting Started
+
+## 1.1 Installing and Loading R Packages
+
+In this section, I will install and load the required R packages, tidyverse, sf, and tmap packages. Here we use the pacman library to install and load the packages at once.
+
+```{r}
+pacman::p_load(tidyverse, sf, tmap)
+```
+
+# 2 Importing Data into R
+
+## 2.1 Importing Geospatial Data
+
+```{r}
+mpsz <- st_read(dsn = "data/geospatial", 
+                layer = "MP14_SUBZONE_WEB_PL")
+```
+
+## 2.2 Importing Attribute Data into R
+
+```{r}
+popdata <- read_csv("data/aspatial/respopagesextod2011to2020.csv")
+```
+
+## 2.3 Data Preparation
+
+
+
+
+
