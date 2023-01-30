@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-01-16">
+<meta name="dcterms.date" content="2023-01-30">
 
 <title>IS415 - Hands-on Exercise - Session 1: Geospatial Data Wrangling with R</title>
 <style>
@@ -150,18 +150,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
         <li>
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html">
- <span class="dropdown-text">Hands-on Exercise - Session 1</span></a>
+ <span class="dropdown-text">Hands-on Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html">
+ <span class="dropdown-text">Hands-on Exercise 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html">
+ <span class="dropdown-text">Hands-on Exercise 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05.html">
+ <span class="dropdown-text">Hands-on Exercise 5</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">In-class Exercise</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">In-Class Exercises</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercises">    
         <li>
     <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex02/In-class_Ex02.html">
- <span class="dropdown-text">In-class Exercise - Session 2</span></a>
+ <span class="dropdown-text">In-Class Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex03/In-class_Ex03.html">
+ <span class="dropdown-text">In-Class Exercise 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex04/In-class_Ex04.html">
+ <span class="dropdown-text">In-Class Exercise 4</span></a>
   </li>  
     </ul>
   </li>
@@ -190,20 +210,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting Started</a>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">1.1 Getting Started</a>
   <ul class="collapse">
-  <li><a href="#installing-and-loading-r-packages" id="toc-installing-and-loading-r-packages" class="nav-link" data-scroll-target="#installing-and-loading-r-packages">Installing and Loading R Packages</a></li>
+  <li><a href="#installing-and-loading-r-packages" id="toc-installing-and-loading-r-packages" class="nav-link" data-scroll-target="#installing-and-loading-r-packages">1.1.1 Installing and Loading R Packages</a></li>
   </ul></li>
-  <li><a href="#importing-geospatial-data-in-shp-format" id="toc-importing-geospatial-data-in-shp-format" class="nav-link" data-scroll-target="#importing-geospatial-data-in-shp-format">Importing Geospatial Data in shp format</a>
+  <li><a href="#importing-data-into-r-studio" id="toc-importing-data-into-r-studio" class="nav-link" data-scroll-target="#importing-data-into-r-studio">1.2 Importing Data into R-Studio</a>
   <ul class="collapse">
-  <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">Import Data</a></li>
-  <li><a href="#checking-content-of-data-frame-simple-feature" id="toc-checking-content-of-data-frame-simple-feature" class="nav-link" data-scroll-target="#checking-content-of-data-frame-simple-feature">Checking Content of Data Frame Simple Feature</a></li>
-  <li><a href="#plotting-geospatial-data---polygon-feature" id="toc-plotting-geospatial-data---polygon-feature" class="nav-link" data-scroll-target="#plotting-geospatial-data---polygon-feature">Plotting Geospatial Data - Polygon Feature</a></li>
-  <li><a href="#plotting-geospatial-data---polyline-feature" id="toc-plotting-geospatial-data---polyline-feature" class="nav-link" data-scroll-target="#plotting-geospatial-data---polyline-feature">Plotting Geospatial Data - Polyline Feature</a></li>
+  <li><a href="#import-data-in-shp-file-format" id="toc-import-data-in-shp-file-format" class="nav-link" data-scroll-target="#import-data-in-shp-file-format">1.2.1 Import data in shp file format</a></li>
+  <li><a href="#import-data-in-kml-format" id="toc-import-data-in-kml-format" class="nav-link" data-scroll-target="#import-data-in-kml-format">1.2.2 Import data in kml format</a></li>
   </ul></li>
-  <li><a href="#importing-gis-data-in-kml-format" id="toc-importing-gis-data-in-kml-format" class="nav-link" data-scroll-target="#importing-gis-data-in-kml-format">Importing GIS data in kml format</a>
+  <li><a href="#checking-content-of-data-frame-simple-feature" id="toc-checking-content-of-data-frame-simple-feature" class="nav-link" data-scroll-target="#checking-content-of-data-frame-simple-feature">1.3 Checking Content of Data Frame Simple Feature</a>
   <ul class="collapse">
-  <li><a href="#plotting-geospatial-data---multipoint" id="toc-plotting-geospatial-data---multipoint" class="nav-link" data-scroll-target="#plotting-geospatial-data---multipoint">Plotting Geospatial Data - Multipoint</a></li>
+  <li><a href="#working-with-st_geometry" id="toc-working-with-st_geometry" class="nav-link" data-scroll-target="#working-with-st_geometry">1.3.1 Working with st_geometry()</a></li>
+  <li><a href="#working-with-glimpse" id="toc-working-with-glimpse" class="nav-link" data-scroll-target="#working-with-glimpse">1.3.2 Working with glimpse()</a></li>
+  <li><a href="#working-with-head" id="toc-working-with-head" class="nav-link" data-scroll-target="#working-with-head">1.3.3 Working with head()</a></li>
+  </ul></li>
+  <li><a href="#plotting-geospatial-data" id="toc-plotting-geospatial-data" class="nav-link" data-scroll-target="#plotting-geospatial-data">1.4 Plotting Geospatial Data</a>
+  <ul class="collapse">
+  <li><a href="#plotting---polygon-feature" id="toc-plotting---polygon-feature" class="nav-link" data-scroll-target="#plotting---polygon-feature">1.4.1 Plotting - Polygon Feature</a></li>
+  <li><a href="#plotting---polyline-feature" id="toc-plotting---polyline-feature" class="nav-link" data-scroll-target="#plotting---polyline-feature">1.4.2 Plotting - Polyline Feature</a></li>
+  <li><a href="#plotting---multipoint-feature" id="toc-plotting---multipoint-feature" class="nav-link" data-scroll-target="#plotting---multipoint-feature">1.4.3 Plotting - Multipoint Feature</a></li>
+  </ul></li>
+  <li><a href="#working-with-projection" id="toc-working-with-projection" class="nav-link" data-scroll-target="#working-with-projection">1.5 Working with Projection</a></li>
+  <li><a href="#importing-and-converting-aspatial-data" id="toc-importing-and-converting-aspatial-data" class="nav-link" data-scroll-target="#importing-and-converting-aspatial-data">1.6 Importing and Converting Aspatial data</a>
+  <ul class="collapse">
+  <li><a href="#importing-data-in-csv-format" id="toc-importing-data-in-csv-format" class="nav-link" data-scroll-target="#importing-data-in-csv-format">1.6.1 Importing data in csv format</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -224,7 +255,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 16, 2023</p>
+      <p class="date">January 30, 2023</p>
     </div>
   </div>
   
@@ -235,19 +266,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <section id="getting-started" class="level1">
-<h1>Getting Started</h1>
+<h1>1.1 Getting Started</h1>
 <section id="installing-and-loading-r-packages" class="level2">
-<h2 class="anchored" data-anchor-id="installing-and-loading-r-packages">Installing and Loading R Packages</h2>
-<p>In this section, I will install and load the required R packages, being tidyverse and sf libraries/packages.</p>
+<h2 class="anchored" data-anchor-id="installing-and-loading-r-packages">1.1.1 Installing and Loading R Packages</h2>
+<p>In this section, I will install and load the required R packages, being tidyverse and sf libraries/packages. Here we use the pacman library to install and load the libraries in case it is needed.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="importing-geospatial-data-in-shp-format" class="level1">
-<h1>Importing Geospatial Data in shp format</h1>
-<section id="import-data" class="level2">
-<h2 class="anchored" data-anchor-id="import-data">Import Data</h2>
+<section id="importing-data-into-r-studio" class="level1">
+<h1>1.2 Importing Data into R-Studio</h1>
+<p>In this section, we will import the data previously extracted from the web into our R session. Note that the data should be stored in the same folder as the R repository.</p>
+<section id="import-data-in-shp-file-format" class="level2">
+<h2 class="anchored" data-anchor-id="import-data-in-shp-file-format">1.2.1 Import data in shp file format</h2>
+<p>Here we use the function st_read to read the files stored under the shp format.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer =</span> <span class="st">"MP14_SUBZONE_WEB_PL"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -277,10 +310,32 @@ CRS:           NA</code></pre>
 </div>
 </div>
 </section>
-<section id="checking-content-of-data-frame-simple-feature" class="level2">
-<h2 class="anchored" data-anchor-id="checking-content-of-data-frame-simple-feature">Checking Content of Data Frame Simple Feature</h2>
+<section id="import-data-in-kml-format" class="level2">
+<h2 class="anchored" data-anchor-id="import-data-in-kml-format">1.2.2 Import data in kml format</h2>
+<p>Here we use the function st_read to read the files stored under the kml format. Note that in this second case, we do not include the layer in the code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_geometry</span>(mpsz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>psl <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial/preschools-location.kml"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `PRESCHOOLS_LOCATION' from data source 
+  `C:\Users\pierre\Desktop\p-haas\IS415\Hands-on_Ex\Hands-on_Ex01\data\geospatial\preschools-location.kml' 
+  using driver `KML'
+Simple feature collection with 1925 features and 2 fields
+Geometry type: POINT
+Dimension:     XYZ
+Bounding box:  xmin: 103.6824 ymin: 1.247759 xmax: 103.9897 ymax: 1.462134
+z_range:       zmin: 0 zmax: 0
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="checking-content-of-data-frame-simple-feature" class="level1">
+<h1>1.3 Checking Content of Data Frame Simple Feature</h1>
+<section id="working-with-st_geometry" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-st_geometry">1.3.1 Working with st_geometry()</h2>
+<p>Note that st_geometry() can be replaced by mpsz$geometry or mpsz[[1]]</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_geometry</span>(mpsz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Geometry set for 323 features 
 Geometry type: MULTIPOLYGON
@@ -290,8 +345,13 @@ Projected CRS: SVY21
 First 5 geometries:</code></pre>
 </div>
 </div>
+<p>Notice that the print only displays basic information of the feature class such as type of geometry, the geographic extent of the features and the coordinate system of the data.</p>
+</section>
+<section id="working-with-glimpse" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-glimpse">1.3.2 Working with glimpse()</h2>
+<p>The function glimpse() reports information about the data type of every column or field.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mpsz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mpsz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 323
 Columns: 16
@@ -314,49 +374,102 @@ $ geometry   &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((31495.56 30..., MULTIPOLYG
 </div>
 </div>
 </section>
-<section id="plotting-geospatial-data---polygon-feature" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-geospatial-data---polygon-feature">Plotting Geospatial Data - Polygon Feature</h2>
+<section id="working-with-head" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-head">1.3.3 Working with head()</h2>
+<p>The function prints the first five rows of the dataset.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpsz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-<section id="plotting-geospatial-data---polyline-feature" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-geospatial-data---polyline-feature">Plotting Geospatial Data - Polyline Feature</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cpg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-</section>
-<section id="importing-gis-data-in-kml-format" class="level1">
-<h1>Importing GIS data in kml format</h1>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>psl <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial/preschools-location.kml"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mpsz, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `PRESCHOOLS_LOCATION' from data source 
-  `C:\Users\pierre\Desktop\p-haas\IS415\Hands-on_Ex\Hands-on_Ex01\data\geospatial\preschools-location.kml' 
-  using driver `KML'
-Simple feature collection with 1925 features and 2 fields
-Geometry type: POINT
-Dimension:     XYZ
-Bounding box:  xmin: 103.6824 ymin: 1.247759 xmax: 103.9897 ymax: 1.462134
-z_range:       zmin: 0 zmax: 0
-Geodetic CRS:  WGS 84</code></pre>
+<pre><code>Simple feature collection with 5 features and 15 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 25867.68 ymin: 28369.47 xmax: 32362.39 ymax: 30435.54
+Projected CRS: SVY21
+  OBJECTID SUBZONE_NO      SUBZONE_N SUBZONE_C CA_IND      PLN_AREA_N
+1        1          1   MARINA SOUTH    MSSZ01      Y    MARINA SOUTH
+2        2          1   PEARL'S HILL    OTSZ01      Y          OUTRAM
+3        3          3      BOAT QUAY    SRSZ03      Y SINGAPORE RIVER
+4        4          8 HENDERSON HILL    BMSZ08      N     BUKIT MERAH
+5        5          3        REDHILL    BMSZ03      N     BUKIT MERAH
+  PLN_AREA_C       REGION_N REGION_C          INC_CRC FMEL_UPD_D   X_ADDR
+1         MS CENTRAL REGION       CR 5ED7EB253F99252E 2014-12-05 31595.84
+2         OT CENTRAL REGION       CR 8C7149B9EB32EEFC 2014-12-05 28679.06
+3         SR CENTRAL REGION       CR C35FEFF02B13E0E5 2014-12-05 29654.96
+4         BM CENTRAL REGION       CR 3775D82C5DDBEFBD 2014-12-05 26782.83
+5         BM CENTRAL REGION       CR 85D9ABEF0A40678F 2014-12-05 26201.96
+    Y_ADDR SHAPE_Leng SHAPE_Area                       geometry
+1 29220.19   5267.381  1630379.3 MULTIPOLYGON (((31495.56 30...
+2 29782.05   3506.107   559816.2 MULTIPOLYGON (((29092.28 30...
+3 29974.66   1740.926   160807.5 MULTIPOLYGON (((29932.33 29...
+4 29933.77   3313.625   595428.9 MULTIPOLYGON (((27131.28 30...
+5 30005.70   2825.594   387429.4 MULTIPOLYGON (((26451.03 30...</code></pre>
 </div>
 </div>
-<section id="plotting-geospatial-data---multipoint" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-geospatial-data---multipoint">Plotting Geospatial Data - Multipoint</h2>
+</section>
+</section>
+<section id="plotting-geospatial-data" class="level1">
+<h1>1.4 Plotting Geospatial Data</h1>
+<section id="plotting---polygon-feature" class="level2">
+<h2 class="anchored" data-anchor-id="plotting---polygon-feature">1.4.1 Plotting - Polygon Feature</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(psl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpsz)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The default plot of an sf object is a multi-plot of all attributes, up to a reasonable maximum as shown above. We can, however, choose to plot only the geometry by using the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(mpsz))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Alternatively, we can also choose the plot the sf object by using a specific attribute as shown in the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mpsz[<span class="st">"PLN_AREA_N"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="plotting---polyline-feature" class="level2">
+<h2 class="anchored" data-anchor-id="plotting---polyline-feature">1.4.2 Plotting - Polyline Feature</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cpg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(cpg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="plotting---multipoint-feature" class="level2">
+<h2 class="anchored" data-anchor-id="plotting---multipoint-feature">1.4.3 Plotting - Multipoint Feature</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(psl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(psl))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex01_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="working-with-projection" class="level1">
+<h1>1.5 Working with Projection</h1>
+</section>
+<section id="importing-and-converting-aspatial-data" class="level1">
+<h1>1.6 Importing and Converting Aspatial data</h1>
+<section id="importing-data-in-csv-format" class="level2">
+<h2 class="anchored" data-anchor-id="importing-data-in-csv-format">1.6.1 Importing data in csv format</h2>
 
 
 </section>
