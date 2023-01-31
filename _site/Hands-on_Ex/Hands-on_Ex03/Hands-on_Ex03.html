@@ -217,13 +217,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#importing-geospatial-data" id="toc-importing-geospatial-data" class="nav-link" data-scroll-target="#importing-geospatial-data">2.1 Importing Geospatial Data</a></li>
   <li><a href="#importing-attribute-data-into-r" id="toc-importing-attribute-data-into-r" class="nav-link" data-scroll-target="#importing-attribute-data-into-r">2.2 Importing Attribute Data into R</a></li>
-  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2.3 Data Preparation</a></li>
+  </ul></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">3 Data Preparation</a>
+  <ul class="collapse">
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">3.1 Data Wrangling</a></li>
+  <li><a href="#joining-the-geospatial-and-attribute-data" id="toc-joining-the-geospatial-and-attribute-data" class="nav-link" data-scroll-target="#joining-the-geospatial-and-attribute-data">3.2 Joining the Geospatial and Attribute Data</a></li>
+  </ul></li>
+  <li><a href="#choropleth-mapping-for-geospatial-data-using-tmap" id="toc-choropleth-mapping-for-geospatial-data-using-tmap" class="nav-link" data-scroll-target="#choropleth-mapping-for-geospatial-data-using-tmap">4 Choropleth Mapping for Geospatial Data using <em>tmap</em></a>
+  <ul class="collapse">
+  <li><a href="#quickly-plot-a-choropleth-map-with-qtm-function" id="toc-quickly-plot-a-choropleth-map-with-qtm-function" class="nav-link" data-scroll-target="#quickly-plot-a-choropleth-map-with-qtm-function">4.1 Quickly plot a choropleth map with <em>qtm()</em> function</a></li>
+  <li><a href="#creating-a-choropleth-map-using-tmaps-elements" id="toc-creating-a-choropleth-map-using-tmaps-elements" class="nav-link" data-scroll-target="#creating-a-choropleth-map-using-tmaps-elements">4.2 Creating a choropleth map using <em>tmap’s</em> elements</a>
+  <ul class="collapse">
+  <li><a href="#drawing-a-base-map" id="toc-drawing-a-base-map" class="nav-link" data-scroll-target="#drawing-a-base-map">4.2.1 Drawing a base map</a></li>
+  <li><a href="#drawing-a-choropleth-map-using-tm_polygons" id="toc-drawing-a-choropleth-map-using-tm_polygons" class="nav-link" data-scroll-target="#drawing-a-choropleth-map-using-tm_polygons">4.2.2 Drawing a choropleth map using <em>tm_polygons()</em></a></li>
+  <li><a href="#drawing-a-choropleth-map-using-tm_fill-and-tm_border" id="toc-drawing-a-choropleth-map-using-tm_fill-and-tm_border" class="nav-link" data-scroll-target="#drawing-a-choropleth-map-using-tm_fill-and-tm_border">4.2.3 Drawing a choropleth map using <em>tm_fill()</em> and <em>tm_border()</em></a></li>
+  </ul></li>
+  <li><a href="#data-classification-methods-of-tmap" id="toc-data-classification-methods-of-tmap" class="nav-link" data-scroll-target="#data-classification-methods-of-tmap">4.3 Data classification methods of <em>tmap</em></a>
+  <ul class="collapse">
+  <li><a href="#plotting-choropleth-maps-using-built-in-classification-methods" id="toc-plotting-choropleth-maps-using-built-in-classification-methods" class="nav-link" data-scroll-target="#plotting-choropleth-maps-using-built-in-classification-methods">4.3.1 Plotting choropleth maps using built-in classification methods</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -249,7 +267,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="installing-and-loading-r-packages">1.1 Installing and Loading R Packages</h2>
 <p>In this section, I will install and load the required R packages, tidyverse, sf, and tmap packages. Here we use the pacman library to install and load the packages at once.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf, tmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, sf, tmap, stringr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -275,23 +293,245 @@ Projected CRS: SVY21</code></pre>
 <section id="importing-attribute-data-into-r" class="level2">
 <h2 class="anchored" data-anchor-id="importing-attribute-data-into-r">2.2 Importing Attribute Data into R</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>popdata <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/respopagesextod2011to2020.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 984656 Columns: 7
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr (5): PA, SZ, AG, Sex, TOD
-dbl (2): Pop, Time
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>popdata <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/respopagesextod2011to2020.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Time<span class="sc">==</span><span class="dv">2020</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="data-preparation" class="level1">
+<h1>3 Data Preparation</h1>
+<p>In this section, we will start off by preparing a data table with year 2020 values. The data table will include the variables PA, SZ, YOUNG, ECONOMY ACTIVE, AGED, TOTAL, DEPENDENCY. Please find below a description of the mentioned variables:</p>
+<ul>
+<li><p>YOUNG: age group 0 to 4 until age group 20 to 24</p></li>
+<li><p>ECONOMY ACTIVE: age group 25-29 until age group 60-64</p></li>
+<li><p>AGED: age group 65 and above</p></li>
+<li><p>TOTAL: all age group</p></li>
+<li><p>DEPENDENCY: the ratio between young and aged against economy active group</p></li>
+</ul>
+<section id="data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-wrangling">3.1 Data Wrangling</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>popdata2020 <span class="ot">&lt;-</span> popdata <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA, SZ, AG) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">POP</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">Pop</span><span class="st">`</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from=</span>AG, </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from=</span>POP) <span class="sc">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">YOUNG =</span> <span class="fu">rowSums</span>(.[<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>])</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>         <span class="sc">+</span><span class="fu">rowSums</span>(.[<span class="dv">12</span>])) <span class="sc">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="st">`</span><span class="at">ECONOMY ACTIVE</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">rowSums</span>(.[<span class="dv">7</span><span class="sc">:</span><span class="dv">11</span>])<span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rowSums</span>(.[<span class="dv">13</span><span class="sc">:</span><span class="dv">15</span>]))<span class="sc">%&gt;%</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="st">`</span><span class="at">AGED</span><span class="st">`</span><span class="ot">=</span><span class="fu">rowSums</span>(.[<span class="dv">16</span><span class="sc">:</span><span class="dv">21</span>])) <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="st">`</span><span class="at">TOTAL</span><span class="st">`</span><span class="ot">=</span><span class="fu">rowSums</span>(.[<span class="dv">3</span><span class="sc">:</span><span class="dv">21</span>])) <span class="sc">%&gt;%</span>  </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="st">`</span><span class="at">DEPENDENCY</span><span class="st">`</span> <span class="ot">=</span> (<span class="st">`</span><span class="at">YOUNG</span><span class="st">`</span> <span class="sc">+</span> <span class="st">`</span><span class="at">AGED</span><span class="st">`</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="st">`</span><span class="at">ECONOMY ACTIVE</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">`</span><span class="at">PA</span><span class="st">`</span>, <span class="st">`</span><span class="at">SZ</span><span class="st">`</span>, <span class="st">`</span><span class="at">YOUNG</span><span class="st">`</span>, </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>       <span class="st">`</span><span class="at">ECONOMY ACTIVE</span><span class="st">`</span>, <span class="st">`</span><span class="at">AGED</span><span class="st">`</span>, </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>       <span class="st">`</span><span class="at">TOTAL</span><span class="st">`</span>, <span class="st">`</span><span class="at">DEPENDENCY</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="joining-the-geospatial-and-attribute-data" class="level2">
+<h2 class="anchored" data-anchor-id="joining-the-geospatial-and-attribute-data">3.2 Joining the Geospatial and Attribute Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>popdata2020 <span class="ot">&lt;-</span> popdata2020 <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="at">.vars =</span> <span class="fu">vars</span>(PA, SZ), </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">.funs =</span> <span class="fu">funs</span>(toupper)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">ECONOMY ACTIVE</span><span class="st">`</span> <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mpsz_pop2020 <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mpsz, popdata2020,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"SUBZONE_N"</span> <span class="ot">=</span> <span class="st">"SZ"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(mpsz_pop2020, <span class="st">"data/rds/mpszpop2020.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="choropleth-mapping-for-geospatial-data-using-tmap" class="level1 page-columns page-full">
+<h1>4 Choropleth Mapping for Geospatial Data using <em>tmap</em></h1>
+<section id="quickly-plot-a-choropleth-map-with-qtm-function" class="level2">
+<h2 class="anchored" data-anchor-id="quickly-plot-a-choropleth-map-with-qtm-function">4.1 Quickly plot a choropleth map with <em>qtm()</em> function</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(mpsz_pop2020, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"DEPENDENCY"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
-<section id="data-preparation" class="level2">
-<h2 class="anchored" data-anchor-id="data-preparation">2.3 Data Preparation</h2>
+<section id="creating-a-choropleth-map-using-tmaps-elements" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-choropleth-map-using-tmaps-elements">4.2 Creating a choropleth map using <em>tmap’s</em> elements</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"quantile"</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"Blues"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">title =</span> <span class="st">"Dependency ratio"</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Distribution of Dependency Ratio by planning subzone"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.position =</span> <span class="st">"center"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.size =</span> <span class="fl">1.2</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.height =</span> <span class="fl">0.45</span>, </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.width =</span> <span class="fl">0.35</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">frame =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_compass</span>(<span class="at">type=</span><span class="st">"8star"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_scale_bar</span>() <span class="sc">+</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_grid</span>(<span class="at">alpha =</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_credits</span>(<span class="st">"Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)</span><span class="sc">\n</span><span class="st"> and Population data from Department of Statistics DOS"</span>, </span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"bottom"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="drawing-a-base-map" class="level3">
+<h3 class="anchored" data-anchor-id="drawing-a-base-map">4.2.1 Drawing a base map</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020) <span class="sc">+</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="drawing-a-choropleth-map-using-tm_polygons" class="level3">
+<h3 class="anchored" data-anchor-id="drawing-a-choropleth-map-using-tm_polygons">4.2.2 Drawing a choropleth map using <em>tm_polygons()</em></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020) <span class="sc">+</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"DEPENDENCY"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="drawing-a-choropleth-map-using-tm_fill-and-tm_border" class="level3">
+<h3 class="anchored" data-anchor-id="drawing-a-choropleth-map-using-tm_fill-and-tm_border">4.2.3 Drawing a choropleth map using <em>tm_fill()</em> and <em>tm_border()</em></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">lwd =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>N.B. Some important things to note about the <em>tm_fill()</em> function:</p>
+<p>The alpha argument is used to define transparency number between 0 (totally transparent) and 1 (not transparent). By default, the alpha value of the col is used (normally 1).</p>
+<p>Beside alpha argument, there are three other arguments for tm_borders(), they are:</p>
+<ul>
+<li><p><em>col</em> = border colour,</p></li>
+<li><p><em>lwd</em> = border line width. The default is 1, and</p></li>
+<li><p><em>lty</em> = border line type. The default is “solid”.</p></li>
+</ul>
+</section>
+</section>
+<section id="data-classification-methods-of-tmap" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="data-classification-methods-of-tmap">4.3 Data classification methods of <em>tmap</em></h2>
+<section id="plotting-choropleth-maps-using-built-in-classification-methods" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="plotting-choropleth-maps-using-built-in-classification-methods">4.3.1 Plotting choropleth maps using built-in classification methods</h3>
+<p>The code chunk below shows a quantile data classification that used 5 classes. In order words, we specify using the <em>jenks</em> method with 5 classes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">5</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"jenks"</span>) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>In the code chunk below, <em>equal</em> data classification method is used.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">5</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"equal"</span>) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="diy" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="diy">DIY</h4>
+<div class="page-columns page-full">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">5</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">5</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"sd"</span>) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">5</span>,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"pretty"</span>) <span class="sc">+</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_pop2020)<span class="sc">+</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"DEPENDENCY"</span>,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>          <span class="at">n =</span> <span class="dv">5</span>,</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"kmeans"</span>) <span class="sc">+</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-mpg" class="cell column-page quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-mpg-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Hands-on_Ex03_files/figure-html/fig-mpg-1.png" class="img-fluid figure-img" data-ref-parent="fig-mpg" width="672"></p>
+<p></p><figcaption class="figure-caption">(a) Quantile classification</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-mpg-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Hands-on_Ex03_files/figure-html/fig-mpg-2.png" class="img-fluid figure-img" data-ref-parent="fig-mpg" width="672"></p>
+<p></p><figcaption class="figure-caption">(b) Standard deviation classification</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-mpg-3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Hands-on_Ex03_files/figure-html/fig-mpg-3.png" class="img-fluid figure-img" data-ref-parent="fig-mpg" width="672"></p>
+<p></p><figcaption class="figure-caption">(c) Pretty classification</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-mpg-4" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Hands-on_Ex03_files/figure-html/fig-mpg-4.png" class="img-fluid figure-img" data-ref-parent="fig-mpg" width="672"></p>
+<p></p><figcaption class="figure-caption">(d) Kmeans classification</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;1: Distribution of Dependency Ratio by Planning Subzone.</figcaption><p></p>
+</figure>
+</div>
+</div>
 
 
+</section>
+</section>
 </section>
 </section>
 

@@ -1,6 +1,10 @@
 ---
 title: "Hands-on Exercise - Choropleth Mapping with R"
 subtitle: "Session 3"
+execute: 
+  eval: true
+  echo: true
+  warning: false
 ---
 
 # 1 Getting Started
@@ -10,7 +14,7 @@ subtitle: "Session 3"
 In this section, I will install and load the required R packages, tidyverse, sf, and tmap packages. Here we use the pacman library to install and load the packages at once.
 
 ```{r}
-pacman::p_load(tidyverse, sf, tmap)
+pacman::p_load(tidyverse, sf, tmap, stringr)
 ```
 
 # 2 Importing Data into R
@@ -25,12 +29,196 @@ mpsz <- st_read(dsn = "data/geospatial",
 ## 2.2 Importing Attribute Data into R
 
 ```{r}
-popdata <- read_csv("data/aspatial/respopagesextod2011to2020.csv")
+popdata <- read_csv("data/aspatial/respopagesextod2011to2020.csv") %>%
+  filter(Time==2020)
 ```
 
-## 2.3 Data Preparation
+# 3 Data Preparation
 
+In this section, we will start off by preparing a data table with year 2020 values. The data table will include the variables PA, SZ, YOUNG, ECONOMY ACTIVE, AGED, TOTAL, DEPENDENCY. Please find below a description of the mentioned variables:
 
+-   YOUNG: age group 0 to 4 until age group 20 to 24
 
+-   ECONOMY ACTIVE: age group 25-29 until age group 60-64
 
+-   AGED: age group 65 and above
 
+-   TOTAL: all age group
+
+-   DEPENDENCY: the ratio between young and aged against economy active group
+
+## 3.1 Data Wrangling
+
+```{r}
+popdata2020 <- popdata %>%
+  group_by(PA, SZ, AG) %>%
+  summarise(`POP` = sum(`Pop`)) %>%
+  ungroup()%>%
+  pivot_wider(names_from=AG, 
+              values_from=POP) %>%
+  mutate(YOUNG = rowSums(.[3:6])
+         +rowSums(.[12])) %>%
+mutate(`ECONOMY ACTIVE` = rowSums(.[7:11])+
+rowSums(.[13:15]))%>%
+mutate(`AGED`=rowSums(.[16:21])) %>%
+mutate(`TOTAL`=rowSums(.[3:21])) %>%  
+mutate(`DEPENDENCY` = (`YOUNG` + `AGED`)
+/`ECONOMY ACTIVE`) %>%
+  select(`PA`, `SZ`, `YOUNG`, 
+       `ECONOMY ACTIVE`, `AGED`, 
+       `TOTAL`, `DEPENDENCY`)
+```
+
+## 3.2 Joining the Geospatial and Attribute Data
+
+```{r}
+popdata2020 <- popdata2020 %>%
+  mutate_at(.vars = vars(PA, SZ), 
+          .funs = funs(toupper)) %>%
+  filter(`ECONOMY ACTIVE` > 0)
+```
+
+```{r}
+mpsz_pop2020 <- left_join(mpsz, popdata2020,
+                          by = c("SUBZONE_N" = "SZ"))
+```
+
+```{r}
+write_rds(mpsz_pop2020, "data/rds/mpszpop2020.rds")
+```
+
+# 4 Choropleth Mapping for Geospatial Data using *tmap*
+
+## 4.1 Quickly plot a choropleth map with *qtm()* function
+
+```{r}
+tmap_mode("plot")
+qtm(mpsz_pop2020, 
+    fill = "DEPENDENCY")
+```
+
+## 4.2 Creating a choropleth map using *tmap's* elements
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY", 
+          style = "quantile", 
+          palette = "Blues",
+          title = "Dependency ratio") +
+  tm_layout(main.title = "Distribution of Dependency Ratio by planning subzone",
+            main.title.position = "center",
+            main.title.size = 1.2,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2) +
+  tm_credits("Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\n and Population data from Department of Statistics DOS", 
+             position = c("left", "bottom"))
+```
+
+### 4.2.1 Drawing a base map
+
+```{r}
+tm_shape(mpsz_pop2020) + 
+  tm_polygons()
+```
+
+### 4.2.2 Drawing a choropleth map using *tm_polygons()*
+
+```{r}
+tm_shape(mpsz_pop2020) + 
+  tm_polygons("DEPENDENCY")
+```
+
+### 4.2.3 Drawing a choropleth map using *tm_fill()* and *tm_border()*
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY")
+```
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY") +
+  tm_borders(lwd = 0.1, alpha = 1)
+```
+
+N.B. Some important things to note about the *tm_fill()* function:
+
+The alpha argument is used to define transparency number between 0 (totally transparent) and 1 (not transparent). By default, the alpha value of the col is used (normally 1).
+
+Beside alpha argument, there are three other arguments for tm_borders(), they are:
+
+-   *col* = border colour,
+
+-   *lwd* = border line width. The default is 1, and
+
+-   *lty* = border line type. The default is "solid".
+
+## 4.3 Data classification methods of *tmap*
+
+### 4.3.1 Plotting choropleth maps using built-in classification methods
+
+The code chunk below shows a quantile data classification that used 5 classes. In order words, we specify using the *jenks* method with 5 classes.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "jenks") +
+  tm_borders(alpha = 0.5)
+```
+
+In the code chunk below, *equal* data classification method is used.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "equal") +
+  tm_borders(alpha = 0.5)
+```
+
+#### DIY
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+#| label: fig-mpg
+#| fig-cap: "Distribution of Dependency Ratio by Planning Subzone."
+#| fig-subcap:
+#|   - "Quantile classification"
+#|   - "Standard deviation classification"
+#|   - "Pretty classification"
+#|   - "Kmeans classification"
+#| layout-ncol: 2
+#| column: page
+
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5)
+
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "sd") +
+  tm_borders(alpha = 0.5)
+
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "pretty") +
+  tm_borders(alpha = 0.5)
+
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "kmeans") +
+  tm_borders(alpha = 0.5)
+```

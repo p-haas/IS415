@@ -18,14 +18,14 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#import-data-in-shp-file-format",
     "title": "Hands-on Exercise - Session 1: Geospatial Data Wrangling with R",
     "section": "1.2.1 Import data in shp file format",
-    "text": "1.2.1 Import data in shp file format\nHere we use the function st_read to read the files stored under the shp format.\n\nmpsz <- st_read(dsn = \"data/geospatial\", \n                layer = \"MP14_SUBZONE_WEB_PL\")\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\Users\\pierre\\Desktop\\p-haas\\IS415\\Hands-on_Ex\\Hands-on_Ex01\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\n\n\n\ncpg <- st_read(dsn = \"data/geospatial\", \n                layer = \"CyclingPathGazette\")\n\nReading layer `CyclingPathGazette' from data source \n  `C:\\Users\\pierre\\Desktop\\p-haas\\IS415\\Hands-on_Ex\\Hands-on_Ex01\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 2248 features and 0 fields\nGeometry type: MULTILINESTRING\nDimension:     XY\nBounding box:  xmin: 11854.32 ymin: 28347.98 xmax: 42626.09 ymax: 48948.15\nCRS:           NA"
+    "text": "1.2.1 Import data in shp file format\nHere we use the function st_read to read the files stored under the shp format.\n\nmpsz <- st_read(dsn = \"data/geospatial\", \n                layer = \"MP14_SUBZONE_WEB_PL\")\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\p-haas\\IS415\\Hands-on_Ex\\Hands-on_Ex01\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\n\n\n\ncpg <- st_read(dsn = \"data/geospatial\", \n                layer = \"CyclingPathGazette\")\n\nReading layer `CyclingPathGazette' from data source \n  `C:\\p-haas\\IS415\\Hands-on_Ex\\Hands-on_Ex01\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 2248 features and 0 fields\nGeometry type: MULTILINESTRING\nDimension:     XY\nBounding box:  xmin: 11854.32 ymin: 28347.98 xmax: 42626.09 ymax: 48948.15\nCRS:           NA"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#import-data-in-kml-format",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#import-data-in-kml-format",
     "title": "Hands-on Exercise - Session 1: Geospatial Data Wrangling with R",
     "section": "1.2.2 Import data in kml format",
-    "text": "1.2.2 Import data in kml format\nHere we use the function st_read to read the files stored under the kml format. Note that in this second case, we do not include the layer in the code.\n\npsl <- st_read(dsn = \"data/geospatial/preschools-location.kml\")\n\nReading layer `PRESCHOOLS_LOCATION' from data source \n  `C:\\Users\\pierre\\Desktop\\p-haas\\IS415\\Hands-on_Ex\\Hands-on_Ex01\\data\\geospatial\\preschools-location.kml' \n  using driver `KML'\nSimple feature collection with 1925 features and 2 fields\nGeometry type: POINT\nDimension:     XYZ\nBounding box:  xmin: 103.6824 ymin: 1.247759 xmax: 103.9897 ymax: 1.462134\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84"
+    "text": "1.2.2 Import data in kml format\nHere we use the function st_read to read the files stored under the kml format. Note that in this second case, we do not include the layer in the code.\n\npsl <- st_read(dsn = \"data/geospatial/preschools-location.kml\")\n\nReading layer `PRESCHOOLS_LOCATION' from data source \n  `C:\\p-haas\\IS415\\Hands-on_Ex\\Hands-on_Ex01\\data\\geospatial\\preschools-location.kml' \n  using driver `KML'\nSimple feature collection with 1925 features and 2 fields\nGeometry type: POINT\nDimension:     XYZ\nBounding box:  xmin: 103.6824 ymin: 1.247759 xmax: 103.9897 ymax: 1.462134\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#working-with-st_geometry",
@@ -81,7 +81,56 @@
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html",
     "title": "Hands-on Exercise - Choropleth Mapping with R",
     "section": "",
-    "text": "In this section, I will install and load the required R packages, tidyverse, sf, and tmap packages. Here we use the pacman library to install and load the packages at once.\n\npacman::p_load(tidyverse, sf, tmap)"
+    "text": "In this section, I will install and load the required R packages, tidyverse, sf, and tmap packages. Here we use the pacman library to install and load the packages at once.\n\npacman::p_load(tidyverse, sf, tmap, stringr)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-geospatial-data",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-geospatial-data",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "2.1 Importing Geospatial Data",
+    "text": "2.1 Importing Geospatial Data\n\nmpsz <- st_read(dsn = \"data/geospatial\", \n                layer = \"MP14_SUBZONE_WEB_PL\")\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\p-haas\\IS415\\Hands-on_Ex\\Hands-on_Ex03\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-attribute-data-into-r",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-attribute-data-into-r",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "2.2 Importing Attribute Data into R",
+    "text": "2.2 Importing Attribute Data into R\n\npopdata <- read_csv(\"data/aspatial/respopagesextod2011to2020.csv\") %>%\n  filter(Time==2020)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#data-wrangling",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#data-wrangling",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "3.1 Data Wrangling",
+    "text": "3.1 Data Wrangling\n\npopdata2020 <- popdata %>%\n  group_by(PA, SZ, AG) %>%\n  summarise(`POP` = sum(`Pop`)) %>%\n  ungroup()%>%\n  pivot_wider(names_from=AG, \n              values_from=POP) %>%\n  mutate(YOUNG = rowSums(.[3:6])\n         +rowSums(.[12])) %>%\nmutate(`ECONOMY ACTIVE` = rowSums(.[7:11])+\nrowSums(.[13:15]))%>%\nmutate(`AGED`=rowSums(.[16:21])) %>%\nmutate(`TOTAL`=rowSums(.[3:21])) %>%  \nmutate(`DEPENDENCY` = (`YOUNG` + `AGED`)\n/`ECONOMY ACTIVE`) %>%\n  select(`PA`, `SZ`, `YOUNG`, \n       `ECONOMY ACTIVE`, `AGED`, \n       `TOTAL`, `DEPENDENCY`)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#joining-the-geospatial-and-attribute-data",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#joining-the-geospatial-and-attribute-data",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "3.2 Joining the Geospatial and Attribute Data",
+    "text": "3.2 Joining the Geospatial and Attribute Data\n\npopdata2020 <- popdata2020 %>%\n  mutate_at(.vars = vars(PA, SZ), \n          .funs = funs(toupper)) %>%\n  filter(`ECONOMY ACTIVE` > 0)\n\n\nmpsz_pop2020 <- left_join(mpsz, popdata2020,\n                          by = c(\"SUBZONE_N\" = \"SZ\"))\n\n\nwrite_rds(mpsz_pop2020, \"data/rds/mpszpop2020.rds\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#quickly-plot-a-choropleth-map-with-qtm-function",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#quickly-plot-a-choropleth-map-with-qtm-function",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "4.1 Quickly plot a choropleth map with qtm() function",
+    "text": "4.1 Quickly plot a choropleth map with qtm() function\n\ntmap_mode(\"plot\")\nqtm(mpsz_pop2020, \n    fill = \"DEPENDENCY\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#creating-a-choropleth-map-using-tmaps-elements",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#creating-a-choropleth-map-using-tmaps-elements",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "4.2 Creating a choropleth map using tmap’s elements",
+    "text": "4.2 Creating a choropleth map using tmap’s elements\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\", \n          style = \"quantile\", \n          palette = \"Blues\",\n          title = \"Dependency ratio\") +\n  tm_layout(main.title = \"Distribution of Dependency Ratio by planning subzone\",\n            main.title.position = \"center\",\n            main.title.size = 1.2,\n            legend.height = 0.45, \n            legend.width = 0.35,\n            frame = TRUE) +\n  tm_borders(alpha = 0.5) +\n  tm_compass(type=\"8star\", size = 2) +\n  tm_scale_bar() +\n  tm_grid(alpha =0.2) +\n  tm_credits(\"Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\\n and Population data from Department of Statistics DOS\", \n             position = c(\"left\", \"bottom\"))\n\n\n\n\n\n4.2.1 Drawing a base map\n\ntm_shape(mpsz_pop2020) + \n  tm_polygons()\n\n\n\n\n\n\n4.2.2 Drawing a choropleth map using tm_polygons()\n\ntm_shape(mpsz_pop2020) + \n  tm_polygons(\"DEPENDENCY\")\n\n\n\n\n\n\n4.2.3 Drawing a choropleth map using tm_fill() and tm_border()\n\ntm_shape(mpsz_pop2020) +\n  tm_fill(\"DEPENDENCY\")\n\n\n\n\n\ntm_shape(mpsz_pop2020) +\n  tm_fill(\"DEPENDENCY\") +\n  tm_borders(lwd = 0.1, alpha = 1)\n\n\n\n\nN.B. Some important things to note about the tm_fill() function:\nThe alpha argument is used to define transparency number between 0 (totally transparent) and 1 (not transparent). By default, the alpha value of the col is used (normally 1).\nBeside alpha argument, there are three other arguments for tm_borders(), they are:\n\ncol = border colour,\nlwd = border line width. The default is 1, and\nlty = border line type. The default is “solid”."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#data-classification-methods-of-tmap",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#data-classification-methods-of-tmap",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "4.3 Data classification methods of tmap",
+    "text": "4.3 Data classification methods of tmap\n\n4.3.1 Plotting choropleth maps using built-in classification methods\nThe code chunk below shows a quantile data classification that used 5 classes. In order words, we specify using the jenks method with 5 classes.\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"jenks\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\nIn the code chunk below, equal data classification method is used.\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"equal\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\nDIY\n\n\nShow the code\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"pretty\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"kmeans\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n\n\n\n(a) Quantile classification\n\n\n\n\n\n\n\n(b) Standard deviation classification\n\n\n\n\n\n\n\n\n\n(c) Pretty classification\n\n\n\n\n\n\n\n(d) Kmeans classification\n\n\n\n\nFigure 1: Distribution of Dependency Ratio by Planning Subzone."
   },
   {
     "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
@@ -95,7 +144,7 @@
     "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#import-shp-file---geospatial-data",
     "title": "In-Class Exercise - Geospatial Data Wrangling",
     "section": "2.1 Import shp file - Geospatial data",
-    "text": "2.1 Import shp file - Geospatial data\n\nnga = st_read(dsn = \"data/geospatial\",\n                   layer = \"nga_admbnda_adm2\") %>% st_transform(crs = 26391)\n\nReading layer `nga_admbnda_adm2' from data source \n  `C:\\Users\\pierre\\Desktop\\p-haas\\IS415\\In-class_Ex\\In-class_Ex02\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 774 features and 16 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442\nGeodetic CRS:  WGS 84"
+    "text": "2.1 Import shp file - Geospatial data\n\nnga = st_read(dsn = \"data/geospatial\",\n                   layer = \"nga_admbnda_adm2\") %>% st_transform(crs = 26391)\n\nReading layer `nga_admbnda_adm2' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex02\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 774 features and 16 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442\nGeodetic CRS:  WGS 84"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#understanding-the-data",
@@ -154,34 +203,6 @@
     "text": "4.4 Saving the analytical data in rds format\n\nwrite_rds(NGA_wp, \"data/rds/NGA_wp.rds\")"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "IS415",
-    "section": "",
-    "text": "Welcome to IS415 Geospatial Analytics and Applications.\nThis is the course website of IS415 I study this semester. You will find all my course work on this website."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-geospatial-data",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-geospatial-data",
-    "title": "Hands-on Exercise - Choropleth Mapping with R",
-    "section": "2.1 Importing Geospatial Data",
-    "text": "2.1 Importing Geospatial Data\n\nmpsz <- st_read(dsn = \"data/geospatial\", \n                layer = \"MP14_SUBZONE_WEB_PL\")\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\p-haas\\IS415\\Hands-on_Ex\\Hands-on_Ex03\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-attribute-data-into-r",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-attribute-data-into-r",
-    "title": "Hands-on Exercise - Choropleth Mapping with R",
-    "section": "2.2 Importing Attribute Data into R",
-    "text": "2.2 Importing Attribute Data into R\n\npopdata <- read_csv(\"data/aspatial/respopagesextod2011to2020.csv\")\n\nRows: 984656 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (5): PA, SZ, AG, Sex, TOD\ndbl (2): Pop, Time\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#data-preparation",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#data-preparation",
-    "title": "Hands-on Exercise - Choropleth Mapping with R",
-    "section": "2.3 Data Preparation",
-    "text": "2.3 Data Preparation"
-  },
-  {
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html",
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html",
     "title": "In-class Exercise 3",
@@ -222,5 +243,12 @@
     "title": "In-class Exercise - Spatial Point Patterns Analysis",
     "section": "3.3 Converting generic sp format into spatstat ppp’s format",
     "text": "3.3 Converting generic sp format into spatstat ppp’s format\n\nchildcare_ppp <- as(childcare_sp, \"ppp\")\nchildcare_ppp\n\nPlanar point pattern: 1545 points\nwindow: rectangle = [11203.01, 45404.24] x [25667.6, 49300.88] units"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "IS415",
+    "section": "",
+    "text": "Welcome to IS415 Geospatial Analytics and Applications.\nThis is the course website of IS415 I study this semester. You will find all my course work on this website."
   }
 ]
