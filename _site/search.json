@@ -130,7 +130,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#data-classification-methods-of-tmap",
     "title": "Hands-on Exercise - Choropleth Mapping with R",
     "section": "4.3 Data classification methods of tmap",
-    "text": "4.3 Data classification methods of tmap\n\n4.3.1 Plotting choropleth maps using built-in classification methods\nThe code chunk below shows a quantile data classification that used 5 classes. In order words, we specify using the jenks method with 5 classes.\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"jenks\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\nIn the code chunk below, equal data classification method is used.\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"equal\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\nDIY\n\n\nShow the code\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"pretty\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"kmeans\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n\n\n\n(a) Quantile classification\n\n\n\n\n\n\n\n(b) Standard deviation classification\n\n\n\n\n\n\n\n\n\n(c) Pretty classification\n\n\n\n\n\n\n\n(d) Kmeans classification\n\n\n\n\nFigure 1: Distribution of Dependency Ratio by Planning Subzone."
+    "text": "4.3 Data classification methods of tmap\n\n4.3.1 Plotting choropleth maps using built-in classification methods\nThe code chunk below shows a quantile data classification that used 5 classes. In order words, we specify using the jenks method with 5 classes.\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"jenks\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\nIn the code chunk below, equal data classification method is used.\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"equal\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n4.3.1.1 DIY - Test new classification methods\nIn this section, I tested two classification methods, namely quantile and sd.\n\n\nShow the code\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 2,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 6,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 10,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 20,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n\n\n\n(a) Two classes\n\n\n\n\n\n\n\n(b) Six classes\n\n\n\n\n\n\n\n\n\n(c) Ten classes\n\n\n\n\n\n\n\n(d) Twenty classes\n\n\n\n\nFigure 1: Quantile Distribution of Dependency Ratio by Planning Subzone.\n\n\n\n\n\nShow the code\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 2,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 6,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 10,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 20,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n\n\n\n(a) Two classes\n\n\n\n\n\n\n\n(b) Six classes\n\n\n\n\n\n\n\n\n\n(c) Ten classes\n\n\n\n\n\n\n\n(d) Twenty classes\n\n\n\n\nFigure 2: Standard Deviation Distribution of Dependency Ratio by Planning Subzone.\n\n\n\n\n\n\n4.3.2 Plotting choropleth maps with custom break\n\nsummary(mpsz_pop2020$DEPENDENCY)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's \n 0.0000  0.6519  0.7025  0.7742  0.7645 19.0000      92 \n\n\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          breaks = c(0, 0.60, 0.70, 0.80, 0.90, 1.00)) +\n  tm_borders(alpha = 0.5)"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
@@ -207,14 +207,14 @@
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html",
     "title": "In-class Exercise 3",
     "section": "",
-    "text": "pacman::p_load(tidyverse, tmap, sf)\n\n\n\n\n\nNGA_wp <- read_rds(\"data/NGA_wp.rds\")"
+    "text": "pacman::p_load(tidyverse, tmap, sf)\n\n\n\n\n\nNGA_wp <- read_rds(\"data/rds/NGA_wp.rds\")"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#visualising-distribution-of-non-functional-water-point",
     "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#visualising-distribution-of-non-functional-water-point",
     "title": "In-class Exercise 3",
     "section": "2.1 Visualising distribution of non-functional water point",
-    "text": "2.1 Visualising distribution of non-functional water point"
+    "text": "2.1 Visualising distribution of non-functional water point\n\ntm_shape(NGA_wp)+\n  tm_fill(\"wp_nonfunctional\",\n          n = 10,\n          style=\"equal\",\n          palette=\"Blues\")+\n  tm_borders(lwd=0.1)+\n  tm_layout(main.title = \"Distribution of nonfunctional water point by LGAs\",\n            legend.outside = FALSE)"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
@@ -250,5 +250,68 @@
     "title": "IS415",
     "section": "",
     "text": "Welcome to IS415 Geospatial Analytics and Applications.\nThis is the course website of IS415 I study this semester. You will find all my course work on this website."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#class-work-and-code",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#class-work-and-code",
+    "title": "In-class Exercise 3",
+    "section": "2.2 Class work and code",
+    "text": "2.2 Class work and code\n\np1 <- tm_shape(NGA_wp) +\n  tm_fill(\"wp_functional\",\n          n = 10,\n          style = \"equal\",\n          palette = \"Blues\") +\n  tm_borders(lwd = 0.1,\n             alpha = 1) +\n  tm_layout(main.title = \"Distribution of functional water point by LGAs\",\n            legend.outside = FALSE)\n\n\np2 <- tm_shape(NGA_wp) +\n  tm_fill(\"total_wp\",\n          n = 10,\n          style = \"equal\",\n          palette = \"Blues\") +\n  tm_borders(lwd = 0.1,\n             alpha = 1) +\n  tm_layout(main.title = \"Distribution of total water point by LGAs\",\n            legend.outside = FALSE)\n\n\ntmap_arrange(p2, p1, nrow = 1)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#deriving-proportion-of-functional-and-non-functional-water-points",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#deriving-proportion-of-functional-and-non-functional-water-points",
+    "title": "In-class Exercise 3",
+    "section": "3.1 Deriving Proportion of Functional and Non-functional Water Points",
+    "text": "3.1 Deriving Proportion of Functional and Non-functional Water Points\n\nNGA_wp = NGA_wp %>%\n  mutate(pct_functional = wp_functional / total_wp) %>%\n  mutate(pct_nonfunctional = wp_nonfunctional / total_wp)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#plotting-map-of-rates",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#plotting-map-of-rates",
+    "title": "In-class Exercise 3",
+    "section": "3.2 Plotting Map of Rates",
+    "text": "3.2 Plotting Map of Rates\n\ntm_shape(NGA_wp) +\n  tm_fill(\"pct_functional\",\n          n = 10,\n          style = \"equal\",\n          palette = \"Blues\",\n          legend.hist = TRUE) +\n  tm_borders(lwd = 0.1,\n             alpha = 1) +\n  tm_layout(main.title = \"Rate map of functional  water points by LGAs\",\n            legend.outside = TRUE)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#percentile-map",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#percentile-map",
+    "title": "In-class Exercise 3",
+    "section": "4.1 Percentile Map",
+    "text": "4.1 Percentile Map\n\n4.1.1 Data Preparation\n\nNGA_wp = NGA_wp %>%\n  drop_na()\n\n\npercent <- c(0,.01,.1,.5,.9,.99,1)\nvar <- NGA_wp[\"pct_functional\"] %>%\n  st_set_geometry(NULL)\nquantile(var[,1], percent)\n\n       0%        1%       10%       50%       90%       99%      100% \n0.0000000 0.0000000 0.2169811 0.4791667 0.8611111 1.0000000 1.0000000 \n\n\n\n\n4.1.2 Creating the get.var() function\n\nget.var <- function(vname,df) {\n  v <- df[vname] %>% \n    st_set_geometry(NULL)\n  v <- unname(v[,1])\n  return(v)\n}\n\n\n\n4.1.3 A percentile mapping function\n\npercentmap <- function(vnam, df, legtitle=NA, mtitle=\"Percentile Map\"){\n  percent <- c(0,.01,.1,.5,.9,.99,1)\n  var <- get.var(vnam, df)\n  bperc <- quantile(var, percent)\n  tm_shape(df) +\n  tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,\n             title=legtitle,\n             breaks=bperc,\n             palette=\"Blues\",\n          labels=c(\"< 1%\", \"1% - 10%\", \"10% - 50%\", \"50% - 90%\", \"90% - 99%\", \"> 99%\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"right\",\"bottom\"))\n}\n\n\n\n4.1.4 Test drive the percentile mapping function\n\npercentmap(\"total_wp\", NGA_wp)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#box-map",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#box-map",
+    "title": "In-class Exercise 3",
+    "section": "4.2 Box map",
+    "text": "4.2 Box map\n\nggplot(data = NGA_wp,\n       aes(x = \"\",\n           y = wp_nonfunctional)) +\n  geom_boxplot()\n\n\n\n\n\n4.2.1 Creating the boxbreaks function\n\nboxbreaks <- function(v,mult=1.5) {\n  qv <- unname(quantile(v))\n  iqr <- qv[4] - qv[2]\n  upfence <- qv[4] + mult * iqr\n  lofence <- qv[2] - mult * iqr\n  # initialize break points vector\n  bb <- vector(mode=\"numeric\",length=7)\n  # logic for lower and upper fences\n  if (lofence < qv[1]) {  # no lower outliers\n    bb[1] <- lofence\n    bb[2] <- floor(qv[1])\n  } else {\n    bb[2] <- lofence\n    bb[1] <- qv[1]\n  }\n  if (upfence > qv[5]) { # no upper outliers\n    bb[7] <- upfence\n    bb[6] <- ceiling(qv[5])\n  } else {\n    bb[6] <- upfence\n    bb[7] <- qv[5]\n  }\n  bb[3:5] <- qv[2:4]\n  return(bb)\n}\n\n\n\n4.2.2 Test drive the newly created function\n\nvar <- get.var(\"wp_nonfunctional\", NGA_wp) \nboxbreaks(var)\n\n[1] -56.5   0.0  14.0  34.0  61.0 131.5 278.0\n\n\n\n\n4.2.3 Boxmap function\n\nboxmap <- function(vnam, df, \n                   legtitle=NA,\n                   mtitle=\"Box Map\",\n                   mult=1.5){\n  var <- get.var(vnam,df)\n  bb <- boxbreaks(var)\n  tm_shape(df) +\n    tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,title=legtitle,\n             breaks=bb,\n             palette=\"Blues\",\n          labels = c(\"lower outlier\", \n                     \"< 25%\", \n                     \"25% - 50%\", \n                     \"50% - 75%\",\n                     \"> 75%\", \n                     \"upper outlier\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"left\",\n                               \"top\"))\n}\n\n\ntmap_mode(\"plot\")\nboxmap(\"wp_nonfunctional\", NGA_wp)\n\n\n\n\n\n\n4.2.4 Recode NA values to zero\n\nNGA_wp <- NGA_wp %>%\n  mutate(wp_functional = na_if(\n    total_wp, total_wp < 0))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#colour-scheme",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#colour-scheme",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "4.4 Colour Scheme",
+    "text": "4.4 Colour Scheme\n\n4.4.1 Using ColourBrewer palette\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 6,\n          style = \"quantile\",\n          palette = \"Blues\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          style = \"quantile\",\n          palette = \"-Greens\") +\n  tm_borders(alpha = 0.5)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#map-layouts",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#map-layouts",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "4.5 Map Layouts",
+    "text": "4.5 Map Layouts\n\n4.5.1 Map Legend\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\", \n          style = \"jenks\", \n          palette = \"Blues\", \n          legend.hist = TRUE, \n          legend.is.portrait = TRUE,\n          legend.hist.z = 0.1) +\n  tm_layout(main.title = \"Distribution of Dependency Ratio by planning subzone \\n(Jenks classification)\",\n            main.title.position = \"center\",\n            main.title.size = 1,\n            legend.height = 0.45, \n            legend.width = 0.35,\n            legend.outside = FALSE,\n            legend.position = c(\"right\", \"bottom\"),\n            frame = FALSE) +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n\n4.5.2 Map Style\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\", \n          style = \"quantile\", \n          palette = \"-Greens\") +\n  tm_borders(alpha = 0.5) +\n  tmap_style(\"classic\")\n\n\n\n\n\n\n4.5.3 Cartographic Furniture\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\", \n          style = \"quantile\", \n          palette = \"Blues\",\n          title = \"No. of persons\") +\n  tm_layout(main.title = \"Distribution of Dependency Ratio \\nby planning subzone\",\n            main.title.position = \"center\",\n            main.title.size = 1.2,\n            legend.height = 0.45, \n            legend.width = 0.35,\n            frame = TRUE) +\n  tm_borders(alpha = 0.5) +\n  tm_compass(type=\"8star\", size = 2) +\n  tm_scale_bar(width = 0.15) +\n  tm_grid(lwd = 0.1, alpha = 0.2) +\n  tm_credits(\"Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\\n and Population data from Department of Statistics DOS\", \n             position = c(\"left\", \"bottom\"))\n\n\n\n\nTo reset the default style, refer to the code chunk below.\n\ntmap_style(\"white\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#drawing-small-multiple-choropleth-maps",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#drawing-small-multiple-choropleth-maps",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "4.6 Drawing Small Multiple Choropleth Maps",
+    "text": "4.6 Drawing Small Multiple Choropleth Maps\n\n4.6.1 By assigning multiple values to at least one of the aesthetic arguments\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(c(\"YOUNG\", \"AGED\"),\n          style = \"equal\", \n          palette = \"Blues\") +\n  tm_layout(legend.position = c(\"right\", \"bottom\")) +\n  tm_borders(alpha = 0.5) +\n  tmap_style(\"white\")\n\n\n\n\n\n\n4.6.2 By defining a group-by variable in tm_facets()\n\ntm_shape(mpsz_pop2020) +\n  tm_fill(\"DEPENDENCY\",\n          style = \"quantile\",\n          palette = \"Blues\",\n          thres.poly = 0) + \n  tm_facets(by=\"REGION_N\", \n            free.coords=TRUE, \n            drop.shapes=TRUE) +\n  tm_layout(legend.show = FALSE,\n            title.position = c(\"center\", \"center\"), \n            title.size = 20) +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n\n4.6.3 By creating multiple stand-alone maps with tmap_arrange()\n\nyoungmap <- tm_shape(mpsz_pop2020)+ \n  tm_polygons(\"YOUNG\", \n              style = \"quantile\", \n              palette = \"Blues\")\n\nagedmap <- tm_shape(mpsz_pop2020)+ \n  tm_polygons(\"AGED\", \n              style = \"quantile\", \n              palette = \"Blues\")\n\ntmap_arrange(youngmap, agedmap, asp=1, ncol=2)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#mapping-spatial-object-meeting-a-selection-criterion",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#mapping-spatial-object-meeting-a-selection-criterion",
+    "title": "Hands-on Exercise - Choropleth Mapping with R",
+    "section": "4.7 Mapping Spatial Object Meeting a Selection Criterion",
+    "text": "4.7 Mapping Spatial Object Meeting a Selection Criterion\n\ntm_shape(mpsz_pop2020[mpsz_pop2020$REGION_N==\"CENTRAL REGION\", ])+\n  tm_fill(\"DEPENDENCY\", \n          style = \"quantile\", \n          palette = \"Blues\", \n          legend.hist = TRUE, \n          legend.is.portrait = TRUE,\n          legend.hist.z = 0.1) +\n  tm_layout(legend.outside = TRUE,\n            legend.height = 0.45, \n            legend.width = 5.0,\n            legend.position = c(\"right\", \"bottom\"),\n            frame = FALSE) +\n  tm_borders(alpha = 0.5)"
   }
 ]

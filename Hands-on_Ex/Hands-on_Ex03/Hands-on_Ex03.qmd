@@ -182,43 +182,247 @@ tm_shape(mpsz_pop2020)+
   tm_borders(alpha = 0.5)
 ```
 
-#### DIY
+#### 4.3.1.1 DIY - Test new classification methods
+
+In this section, I tested two classification methods, namely *quantile* and *sd*.
 
 ```{r}
 #| echo: true
 #| code-fold: true
 #| code-summary: "Show the code"
 #| label: fig-mpg
-#| fig-cap: "Distribution of Dependency Ratio by Planning Subzone."
+#| fig-cap: "Quantile Distribution of Dependency Ratio by Planning Subzone."
 #| fig-subcap:
-#|   - "Quantile classification"
-#|   - "Standard deviation classification"
-#|   - "Pretty classification"
-#|   - "Kmeans classification"
+#|   - "Two classes"
+#|   - "Six classes"
+#|   - "Ten classes"
+#|   - "Twenty classes"
 #| layout-ncol: 2
 #| column: page
 
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
-          n = 5,
+          n = 2,
           style = "quantile") +
   tm_borders(alpha = 0.5)
 
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
-          n = 5,
+          n = 6,
+          style = "quantile") +
+  tm_borders(alpha = 0.5)
+
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 10,
+          style = "quantile") +
+  tm_borders(alpha = 0.5)
+
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 20,
+          style = "quantile") +
+  tm_borders(alpha = 0.5)
+```
+
+```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+#| label: fig-mpg2
+#| fig-cap: "Standard Deviation Distribution of Dependency Ratio by Planning Subzone."
+#| fig-subcap:
+#|   - "Two classes"
+#|   - "Six classes"
+#|   - "Ten classes"
+#|   - "Twenty classes"
+#| layout-ncol: 2
+#| column: page
+
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 2,
           style = "sd") +
   tm_borders(alpha = 0.5)
 
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
-          n = 5,
-          style = "pretty") +
+          n = 6,
+          style = "sd") +
   tm_borders(alpha = 0.5)
 
 tm_shape(mpsz_pop2020)+
   tm_fill("DEPENDENCY",
-          n = 5,
-          style = "kmeans") +
+          n = 10,
+          style = "sd") +
+  tm_borders(alpha = 0.5)
+
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 20,
+          style = "sd") +
+  tm_borders(alpha = 0.5)
+```
+
+### 4.3.2 Plotting choropleth maps with custom break
+
+```{r}
+summary(mpsz_pop2020$DEPENDENCY)
+```
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          breaks = c(0, 0.60, 0.70, 0.80, 0.90, 1.00)) +
+  tm_borders(alpha = 0.5)
+```
+
+## 4.4 Colour Scheme
+
+### 4.4.1 Using ColourBrewer palette
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 6,
+          style = "quantile",
+          palette = "Blues") +
+  tm_borders(alpha = 0.5)
+```
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          style = "quantile",
+          palette = "-Greens") +
+  tm_borders(alpha = 0.5)
+```
+
+## 4.5 Map Layouts
+
+### 4.5.1 Map Legend
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY", 
+          style = "jenks", 
+          palette = "Blues", 
+          legend.hist = TRUE, 
+          legend.is.portrait = TRUE,
+          legend.hist.z = 0.1) +
+  tm_layout(main.title = "Distribution of Dependency Ratio by planning subzone \n(Jenks classification)",
+            main.title.position = "center",
+            main.title.size = 1,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            legend.outside = FALSE,
+            legend.position = c("right", "bottom"),
+            frame = FALSE) +
+  tm_borders(alpha = 0.5)
+```
+
+### 4.5.2 Map Style
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY", 
+          style = "quantile", 
+          palette = "-Greens") +
+  tm_borders(alpha = 0.5) +
+  tmap_style("classic")
+
+
+```
+
+### 4.5.3 Cartographic Furniture
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY", 
+          style = "quantile", 
+          palette = "Blues",
+          title = "No. of persons") +
+  tm_layout(main.title = "Distribution of Dependency Ratio \nby planning subzone",
+            main.title.position = "center",
+            main.title.size = 1.2,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar(width = 0.15) +
+  tm_grid(lwd = 0.1, alpha = 0.2) +
+  tm_credits("Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\n and Population data from Department of Statistics DOS", 
+             position = c("left", "bottom"))
+```
+
+To reset the default style, refer to the code chunk below.
+
+```{r}
+tmap_style("white")
+```
+
+## 4.6 Drawing Small Multiple Choropleth Maps
+
+### 4.6.1 By assigning multiple values to at least one of the aesthetic arguments
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill(c("YOUNG", "AGED"),
+          style = "equal", 
+          palette = "Blues") +
+  tm_layout(legend.position = c("right", "bottom")) +
+  tm_borders(alpha = 0.5) +
+  tmap_style("white")
+```
+
+### 4.6.2 By defining a group-by variable in *tm_facets()*
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY",
+          style = "quantile",
+          palette = "Blues",
+          thres.poly = 0) + 
+  tm_facets(by="REGION_N", 
+            free.coords=TRUE, 
+            drop.shapes=TRUE) +
+  tm_layout(legend.show = FALSE,
+            title.position = c("center", "center"), 
+            title.size = 20) +
+  tm_borders(alpha = 0.5)
+```
+
+### 4.6.3 By creating multiple stand-alone maps with *tmap_arrange()*
+
+```{r}
+youngmap <- tm_shape(mpsz_pop2020)+ 
+  tm_polygons("YOUNG", 
+              style = "quantile", 
+              palette = "Blues")
+
+agedmap <- tm_shape(mpsz_pop2020)+ 
+  tm_polygons("AGED", 
+              style = "quantile", 
+              palette = "Blues")
+
+tmap_arrange(youngmap, agedmap, asp=1, ncol=2)
+```
+
+## 4.7 Mapping Spatial Object Meeting a Selection Criterion
+
+```{r}
+tm_shape(mpsz_pop2020[mpsz_pop2020$REGION_N=="CENTRAL REGION", ])+
+  tm_fill("DEPENDENCY", 
+          style = "quantile", 
+          palette = "Blues", 
+          legend.hist = TRUE, 
+          legend.is.portrait = TRUE,
+          legend.hist.z = 0.1) +
+  tm_layout(legend.outside = TRUE,
+            legend.height = 0.45, 
+            legend.width = 5.0,
+            legend.position = c("right", "bottom"),
+            frame = FALSE) +
   tm_borders(alpha = 0.5)
 ```
