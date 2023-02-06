@@ -45,9 +45,39 @@ tm_shape(stores)+
 # Local Colocation Quotients (LCLQ)
 
 ```{r}
-nb = include_self(
-  st_knn(st_geometry(stores), 6)
-)
+nb = include_self(st_knn(st_geometry(stores), 6))
 
-wt = st_kernel_weights(nb, stores, "gaussian")
+wt = st_kernel_weights(nb, stores, "gaussian", adaptive = TRUE)
+```
+
+```{r}
+FamilyMart = stores %>%
+  filter(Name == "Family Mart")
+A = FamilyMart$Name
+```
+
+```{r}
+SevenEleven = stores %>%
+  filter(Name == "7-Eleven")
+B = SevenEleven$Name
+```
+
+```{r}
+LCLQ = local_colocation(A, B, nb, wt, 49)
+```
+
+```{r}
+LCLQ_stores = cbind(stores, LCLQ)
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(studyArea)+
+  tm_polygons()+
+tm_shape(LCLQ_stores)+
+  tm_dots(col = "X7.Eleven",
+          size = 0.01,
+          border.col = "black",
+          border.lwd = 0.5)+
+  tm_view(set.zoom.limits = c(12, 16))
 ```
