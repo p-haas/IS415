@@ -341,12 +341,12 @@ kde_wpnonfunc_raster
 ### 6.1.4 - Assigning projection systems
 
 ```{r}
-projection(kde_wpfunc_raster) <- CRS("+init=EPSG:26391")
+projection(kde_wpfunc_raster) <- CRS("+init=EPSG:26391 +datum:WGS84 +units=km")
 kde_wpfunc_raster
 ```
 
 ```{r}
-projection(kde_wpnonfunc_raster) <- CRS("+init=EPSG:26391")
+projection(kde_wpnonfunc_raster) <- CRS("+init=EPSG:26391 +datum:WGS84 +units=km")
 kde_wpnonfunc_raster
 ```
 
