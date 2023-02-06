@@ -85,7 +85,6 @@ wp_sf_nga <- wpdx_sf %>%
     status_clean, "unknown"))
 ```
 
-
 ## 4.1 Extracting Water Point Data
 
 ```{r}

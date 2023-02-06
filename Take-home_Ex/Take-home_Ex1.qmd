@@ -1,0 +1,457 @@
+---
+title: "Take-home Exercise - Application of Spatial Point Patterns Analysis"
+subtitle: "Discover the geographical distribution of functional and non-function water points in Osun State, Nigeria"
+
+author: "Pierre HAAS"
+
+date: "February 03, 2023"
+date-modified: "`r Sys.Date()`"
+
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+---
+
+# 1 - Introduction
+
+# 2 - Data
+
+# 3 - Getting Started
+
+## 3.1 - Installing and Loading Packages
+
+```{r}
+pacman::p_load(sf, tmap, funModeling, maptools, spatstat, tidyverse, raster, cowplot)
+```
+
+# 4 - Handling Geospatial Data
+
+## 4.1 - Importing Aspatial Data, *csv* format
+
+```{r}
+#| warning: false
+
+wp_nga = read_csv("data/aspatial/Water_Point_Data_Exchange_-_Plus__WPdx__.csv", show_col_types = FALSE) %>% 
+  filter(`#clean_country_name` == "Nigeria" &  `#clean_adm1` == "Osun")
+```
+
+### 4.1.1 - Converting water point data into *sf* point features
+
+```{r}
+wp_nga$Geometry = st_as_sfc(wp_nga$`New Georeferenced Column`)
+```
+
+```{r}
+wp_sf <- st_sf(wp_nga, crs=4326)
+wp_sf
+```
+
+### 4.1.2 - Transforming into Nigeria projected coordinate system
+
+```{r}
+wp_sf <- wp_sf %>%
+  st_transform(crs = 26391)
+```
+
+## 4.2 - Importing Geospatial Data, *shp* format
+
+### 4.2.1 - The NGA data set
+
+```{r}
+nga = st_read(dsn = "data/geospatial",
+                   layer = "nga_admbnda_adm2") %>%
+  filter(ADM1_EN == "Osun")
+```
+
+```{r}
+st_crs(nga)
+```
+
+```{r}
+nga <- nga %>%
+  st_transform(crs = 26391)
+```
+
+### 4.2.2 - The geoBoundaries data set
+
+```{r}
+geoNGA = st_read(dsn = "data/geospatial",
+                 layer = "geoBoundaries-NGA-ADM2")
+```
+
+```{r}
+st_crs(geoNGA)
+```
+
+```{r}
+geoNGA <- geoNGA %>%
+  st_transform(crs = 26391)
+```
+
+# 5 - Data Cleaning & Wrangling
+
+## 5.1 - Geospatial Data Cleaning
+
+### 5.1.1 - Excluding redundant fields
+
+```{r}
+nga <- nga %>%
+  dplyr::select(c(3:4, 8:9))
+```
+
+### 5.1.2 - Checking for duplicated name
+
+```{r}
+nga$ADM2_EN[duplicated(nga$ADM2_EN)==TRUE]
+```
+
+## 5.2 - Data Wrangling for Water Point Data
+
+```{r}
+#| warning: false
+
+funModeling::freq(data = wp_sf,
+     input = '#status_clean')
+```
+
+```{r}
+wp_sf_nga <- wp_sf %>% 
+  rename(status_clean = '#status_clean') %>%
+  dplyr::select(status_clean) %>%
+  mutate(status_clean = replace_na(
+    status_clean, "unknown"))
+```
+
+### 5.2.1 - Extracting water point data
+
+```{r}
+wp_sf_functional <- wp_sf_nga %>%
+  filter(status_clean %in%
+           c("Functional",
+             "Functional but not in use",
+             "Functional but needs repair"))
+```
+
+```{r}
+wp_sf_nonfunctional <- wp_sf_nga %>%
+  filter(status_clean %in%
+           c("Abandoned/Decommissioned",
+             "Abandoned",
+             "Non-Functional due to dry season",
+             "Non-Functional",
+             "Non functional due to dry season"))
+```
+
+```{r}
+wp_sf_unknown <- wp_sf_nga %>%
+  filter(status_clean == "unknown")
+```
+
+### 5.2.2 - Performing Point-in-Polygon Count
+
+```{r}
+nga_wp <- nga %>% 
+  mutate(`total_wp` = lengths(
+    st_intersects(nga, wp_sf_nga))) %>%
+  mutate(`wp_functional` = lengths(
+    st_intersects(nga, wp_sf_functional))) %>%
+  mutate(`wp_nonfunctional` = lengths(
+    st_intersects(nga, wp_sf_nonfunctional))) %>%
+  mutate(`wp_unknown` = lengths(
+    st_intersects(nga, wp_sf_unknown)))
+```
+
+## 5.3 - Converting *sf* data frames to *sp's* Spatial\* class
+
+```{r}
+wp_functional = as_Spatial(wp_sf_functional)
+wp_nonfunctional = as_Spatial(wp_sf_nonfunctional)
+nga_spat = as_Spatial(nga)
+```
+
+```{r}
+wp_functional
+```
+
+```{r}
+wp_nonfunctional
+```
+
+```{r}
+nga_spat
+```
+
+## 5.4 - Converting the Spatial\* class into generic *sp* format
+
+```{r}
+wp_functional_sp <- as(wp_functional, "SpatialPoints")
+wp_nonfunctional_sp <- as(wp_nonfunctional, "SpatialPoints")
+nga_sp <- as(nga_spat, "SpatialPolygons")
+```
+
+## 5.5 - Converting the generic *sp* format into *spatstat's* ppp format
+
+```{r}
+wp_functional_ppp <- as(wp_functional_sp, "ppp")
+wp_nonfunctional_ppp <- as(wp_nonfunctional_sp, "ppp")
+```
+
+```{r}
+wp_functional_ppp
+```
+
+```{r}
+plot(wp_functional_ppp)
+```
+
+```{r}
+summary(wp_functional_ppp)
+```
+
+## 5.6 - Creating *owin* object
+
+```{r}
+nga_owin <- as(nga_sp, "owin")
+plot(nga_owin)
+```
+
+## 5.7 Combining point events object and *owin* object
+
+```{r}
+wp_functional_ppp = wp_functional_ppp[nga_owin]
+wp_nonfunctional_ppp = wp_nonfunctional_ppp[nga_owin]
+```
+
+```{r}
+plot(wp_functional_ppp)
+```
+
+# 6 - Exploratory Spatial Data Analysis
+
+This section has for objective:
+
+-   Deriving kernel density maps of functional and non-functional water points
+
+-   Display kernel density maps of the [Osun State, Nigeria]{.underline} on ***openstreetmap*** using appropriate ***tmap*** functions
+
+-   Describe the spatial patterns revealed by the kernel density maps & highlight the advantage of kernel density map over point map
+
+## 6.1 - Kernel Density Estimation
+
+Our first step to KDE is to derive two density maps for functional and non-functional water points to check for any potential data problem. Here, we suspect that the scale of density values will be expressed in meters. The default measurement unit of Nigeria's projected coordinate system -- [EPSG:26391](https://epsg.io/26391) -- is expressed in meters. We shall verify that and correct it to kilometers to get a more desirable map output (scale).
+
+For starters, we should use the *density()* function to compute kernel density estimates for both types of water points. We use *bw.ppl* method for smoothing the bandwidth for the kernel estimation point process intensity and leave the default kernel smoothing method -- it is the Gaussian method.
+
+```{r}
+#| warning: false
+
+kde_wpfunc <- density(wp_functional_ppp, 
+                               sigma=bw.ppl, 
+                               edge=TRUE)
+
+kde_wpnonfunc <- density(wp_nonfunctional_ppp,
+                             sigma=bw.ppl,
+                             edge=TRUE)
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: Show code
+
+par(mfrow=c(1,2))
+plot(kde_wpfunc, 
+     main = "Functional Water Points",
+     ribside=c("bottom"))
+plot(kde_wpnonfunc,
+     main = "Non-Functional Water Points",
+     ribside=c("bottom"))
+```
+
+The density values of the output range from 0 to 0.000006 and it makes for an output difficult to comprehend and interpret. Thus, we will rescale our density values to get an output in "number of points per square kilometer".
+
+### 6.1.1 - Rescalling KDE values
+
+To change the scale of the density values, we use the *rescale()* function from the ***spatstat.geom*** package. Here, we multiply values of our two objects of class *ppp* by 1000. We thus express them in kilometers and define the unit name to be "km".
+
+```{r}
+wp_functional_ppp.km <- rescale(wp_functional_ppp, 1000, "km")
+
+wp_nonfunctional_ppp.km <- rescale(wp_nonfunctional_ppp, 1000, "km")
+```
+
+We can now run the previously used *density()* function using the rescaled data and plot the output KDE map.
+
+```{r}
+#| warning: false
+#| code-fold: true
+#| code-summary: Show code
+
+kde_wpfunc.km <- density(wp_functional_ppp.km, 
+                               sigma=bw.ppl, 
+                               edge=TRUE)
+
+kde_wpnonfunc.km <- density(wp_nonfunctional_ppp.km,
+                             sigma=bw.ppl,
+                             edge=TRUE)
+
+par(mfrow=c(1,2))
+plot(kde_wpfunc.km, 
+     main = "Functional Water Points",
+     ribside=c("bottom"))
+plot(kde_wpnonfunc.km,
+     main = "Non-Functional Water Points",
+     ribside=c("bottom"))
+```
+
+We start observing signs of potential clustering but, for now, we shall focus on transforming our *im* objects into *rasters* to plot our KDE maps using the ***tmap*** package. We will talk more about CSR and clustering later.
+
+### 6.1.2 - Convert KDE output into grid object
+
+```{r}
+#| label: fig-KDEgridded
+#| fig-cap: ""
+#| fig-subcap:
+#|   - "Functional Water Points"
+#|   - "Non-Functional Water Points"
+#| layout-ncol: 2
+#| column: page
+
+gridded_wpfunc <- as.SpatialGridDataFrame.im(kde_wpfunc.km)
+gridded_wpnonfunc <- as.SpatialGridDataFrame.im(kde_wpnonfunc.km)
+
+spplot(gridded_wpfunc)
+spplot(gridded_wpnonfunc)
+
+```
+
+### 6.1.3 - Converting grid object into raster
+
+```{r}
+kde_wpfunc_raster <- raster(gridded_wpfunc)
+kde_wpfunc_raster
+```
+
+```{r}
+kde_wpnonfunc_raster <- raster(gridded_wpnonfunc)
+kde_wpnonfunc_raster
+```
+
+### 6.1.4 - Assigning projection systems
+
+```{r}
+projection(kde_wpfunc_raster) <- CRS("+init=EPSG:26391")
+kde_wpfunc_raster
+```
+
+```{r}
+projection(kde_wpnonfunc_raster) <- CRS("+init=EPSG:26391")
+kde_wpnonfunc_raster
+```
+
+## 6.2 - Visualizing KDE with tmap
+
+```{r}
+tmap_mode('view')
+tm_basemap("OpenStreetMap") +
+tm_shape(kde_wpfunc_raster) +
+  tm_raster("v")
+```
+
+```{r}
+tmap_mode('view')
+tm_basemap("OpenStreetMap") +
+tm_shape(kde_wpnonfunc_raster) +
+  tm_raster("v")
+```
+
+## 6.3 - Nearest Neighbor Index
+
+Before moving on to the Second-order Spatial Points Analysis, I would like to perform the Clark-Evans test to measure aggregation of functional and non-functional water points. The goal is to test the randomness of the data points and assess whether they are randomly distributed, clustered or dispersed.
+
+We will perform a series of 2 tests, first on functional water points and, second, on non-functional water points. We will be using the *clarkevans.test()* function of the **spatstat** package.
+
+The hypotheses are the following:
+
+***Test 1***
+
+**H~0~ :** Functional Water Points are randomly distributed
+
+**H~1~ :** Functional Water Points are not randomly distributed, they are clustered
+
+***Test 2***
+
+**H~0~ :** Non-functional Water Points are randomly distributed
+
+**H~1~ :** Non-functional Water Points are not randomly distributed, they are clustered
+
+As you may have read above, we determine the alternative hypothesis to be that water points are clustered. This decision is based on an intuition that derives from the previously seen visual representations of functional and non-functional water points. Indeed, we observed in our KDE plots some concentration of data points across the Osun State. Thus, we would like to test for clustering directly to prove this intuition.
+
+Please note that when conducting our tests, we will use a 5% significance level.
+
+### 6.3.1 - Test 1 on functional water points
+
+First test on functional water points.
+
+```{r}
+clarkevans.test(wp_functional_ppp,
+                correction="none",
+                clipregion=NULL,
+                alternative=c("clustered"),
+                nsim=99)
+```
+
+### 6.3.2 - Test 2 on non-functional water points
+
+Second test on non-functional water points
+
+```{r}
+clarkevans.test(wp_nonfunctional_ppp,
+                correction="none",
+                clipregion=NULL,
+                alternative=c("clustered"),
+                nsim=99)
+```
+
+### 6.3.3 - Conclusion
+
+Conclusion?
+
+# 7 - Second-order Spatial Point Patterns Analysis
+
+## 7.1 - Formulate the null hypothesis and alternative hypothesis and select the confidence level
+
+## 7.2 - Perform the test by using appropriate Second order spatial point patterns analysis technique
+
+```{r}
+# G_tm = Gest(wp_functional_ppp, correction = "best")
+# plot(G_tm)
+```
+
+## 7.3 - With reference to the analysis results, draw statistical conclusions
+
+# 8 - Spatial Correlation Analysis
+
+In this section, you are required to confirm statistically if the spatial distribution of functional and non-functional water points are independent from each other.
+
+## 8.1 - Formulate the null hypothesis and alternative hypothesis and select the confidence level
+
+## 8.2 - Perform the test by using appropriate Second order spatial point patterns analysis technique
+
+```{r}
+#L_wpfunc = Lest(wp_functional_ppp, correction = "Ripley")
+#plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
+```
+
+```{r}
+# L_wp1.csr <- envelope(wp1_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
+# plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Functional WP in Borepe")
+```
+
+```{r}
+# K_wpnonfunc = Kest(wp_nonfunctional_ppp, correction = "isotropic")
+# plot(K_wpnonfunc, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)", xlim=c(0,1000))
+```
+
+## 8.3 - With reference to the analysis results, draw statistical conclusions

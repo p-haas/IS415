@@ -64,3 +64,19 @@ sg_sp        = as(sg, "SpatialPolygons")
 childcare_ppp <- as(childcare_sp, "ppp")
 childcare_ppp
 ```
+
+# 4
+
+## 4.1
+
+```{r}
+tmap_mode('view')
+tm_shape(childcare_sf)+
+  tm_dots(alpha = 0.5,
+          size = 0.01)+
+  tm_view(set.zoom.limits = c(11, 13))
+```
+
+```{r}
+tmap_mode("plot")
+```

@@ -114,5 +114,3 @@ plot(st_geometry(psl))
 # 1.6 Importing and Converting Aspatial data
 
 ## 1.6.1 Importing data in csv format
-
-
