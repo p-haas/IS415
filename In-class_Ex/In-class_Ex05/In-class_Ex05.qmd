@@ -13,3 +13,19 @@ execute:
   warning: false
 editor: visual
 ---
+
+```{r}
+pacman::p_load(tidyverse, tmap, sf, sfdep)
+```
+
+```{r}
+studyArea = st_read(dsn = "data",
+                    layer = "study_area") %>%
+  st_transform(crs = 3829)
+```
+
+```{r}
+stores = st_read(dsn = "data",
+                    layer = "stores") %>%
+  st_transform(crs = 3829)
+```

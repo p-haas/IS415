@@ -586,5 +586,26 @@
     "title": "In-class Exercise - Spatial Point Patterns Analysis",
     "section": "4.1",
     "text": "4.1\n\ntmap_mode('view')\ntm_shape(childcare_sf)+\n  tm_dots(alpha = 0.5,\n          size = 0.01)+\n  tm_view(set.zoom.limits = c(11, 13))\n\n\n\n\n\n\n\ntmap_mode(\"plot\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05.html",
+    "href": "In-class_Ex/In-class_Ex05/In-class_Ex05.html",
+    "title": "In-class Exercise - Spatial Point Patterns Analysis",
+    "section": "",
+    "text": "pacman::p_load(tidyverse, tmap, sf, sfdep)\n\n\nstudyArea = st_read(dsn = \"data\",\n                    layer = \"study_area\") %>%\n  st_transform(crs = 3829)\n\nReading layer `study_area' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex05\\data' using driver `ESRI Shapefile'\nSimple feature collection with 7 features and 7 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 121.4836 ymin: 25.00776 xmax: 121.592 ymax: 25.09288\nGeodetic CRS:  TWD97\n\n\n\nstores = st_read(dsn = \"data\",\n                    layer = \"stores\") %>%\n  st_transform(crs = 3829)\n\nReading layer `stores' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex05\\data' using driver `ESRI Shapefile'\nSimple feature collection with 1409 features and 4 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 121.4902 ymin: 25.01257 xmax: 121.5874 ymax: 25.08557\nGeodetic CRS:  TWD97"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/data/stores.html",
+    "href": "In-class_Ex/In-class_Ex05/data/stores.html",
+    "title": "IS415",
+    "section": "",
+    "text": "<!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’>     \n\n\n        0 0     false"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/data/study_area.html",
+    "href": "In-class_Ex/In-class_Ex05/data/study_area.html",
+    "title": "IS415",
+    "section": "",
+    "text": "<!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’>     dataset\n\n\n        0 0     false"
   }
 ]
