@@ -29,3 +29,25 @@ stores = st_read(dsn = "data",
                     layer = "stores") %>%
   st_transform(crs = 3829)
 ```
+
+```{r}
+tmap_mode("view")
+tm_shape(studyArea)+
+  tm_polygons()+
+tm_shape(stores)+
+  tm_dots(col = "Name",
+          size = 0.01,
+          border.col = "black",
+          border.lwd = 0.5)+
+  tm_view(set.zoom.limits = c(12, 16))
+```
+
+# Local Colocation Quotients (LCLQ)
+
+```{r}
+nb = include_self(
+  st_knn(st_geometry(stores), 6)
+)
+
+wt = st_kernel_weights(nb, stores, "gaussian")
+```
