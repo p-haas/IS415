@@ -133,160 +133,6 @@
     "text": "4.3 Data classification methods of tmap\n\n4.3.1 Plotting choropleth maps using built-in classification methods\nThe code chunk below shows a quantile data classification that used 5 classes. In order words, we specify using the jenks method with 5 classes.\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"jenks\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\nIn the code chunk below, equal data classification method is used.\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 5,\n          style = \"equal\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n4.3.1.1 DIY - Test new classification methods\nIn this section, I tested two classification methods, namely quantile and sd.\n\n\nShow the code\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 2,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 6,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 10,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 20,\n          style = \"quantile\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n\n\n\n(a) Two classes\n\n\n\n\n\n\n\n(b) Six classes\n\n\n\n\n\n\n\n\n\n(c) Ten classes\n\n\n\n\n\n\n\n(d) Twenty classes\n\n\n\n\nFigure 1: Quantile Distribution of Dependency Ratio by Planning Subzone.\n\n\n\n\n\nShow the code\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 2,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 6,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 10,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          n = 20,\n          style = \"sd\") +\n  tm_borders(alpha = 0.5)\n\n\n\n\n\n\n\n\n(a) Two classes\n\n\n\n\n\n\n\n(b) Six classes\n\n\n\n\n\n\n\n\n\n(c) Ten classes\n\n\n\n\n\n\n\n(d) Twenty classes\n\n\n\n\nFigure 2: Standard Deviation Distribution of Dependency Ratio by Planning Subzone.\n\n\n\n\n\n\n4.3.2 Plotting choropleth maps with custom break\n\nsummary(mpsz_pop2020$DEPENDENCY)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's \n 0.0000  0.6519  0.7025  0.7742  0.7645 19.0000      92 \n\n\n\ntm_shape(mpsz_pop2020)+\n  tm_fill(\"DEPENDENCY\",\n          breaks = c(0, 0.60, 0.70, 0.80, 0.90, 1.00)) +\n  tm_borders(alpha = 0.5)"
   },
   {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "",
-    "text": "pacman::p_load(sf, tidyverse, readr, funModeling)"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#import-shp-file---geospatial-data",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#import-shp-file---geospatial-data",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "2.1 Import shp file - Geospatial data",
-    "text": "2.1 Import shp file - Geospatial data\n\nnga = st_read(dsn = \"data/geospatial\",\n                   layer = \"nga_admbnda_adm2\") %>% st_transform(crs = 26391)\n\nReading layer `nga_admbnda_adm2' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex02\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 774 features and 16 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442\nGeodetic CRS:  WGS 84"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#understanding-the-data",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#understanding-the-data",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "2.2 Understanding the data",
-    "text": "2.2 Understanding the data\n\n2.2.1 Nigeria Level-2 Administrative Boundary (example)\n\nst_geometry(nga)\n\nGeometry set for 774 features \nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 28879.72 ymin: 30292.37 xmax: 1343798 ymax: 1094244\nProjected CRS: Minna / Nigeria West Belt\nFirst 5 geometries:\n\n\n\nglimpse(nga)\n\nRows: 774\nColumns: 17\n$ Shape_Leng <dbl> 0.2370744, 0.2624772, 3.0753158, 2.5379842, 0.6871498, 1.06…\n$ Shape_Area <dbl> 0.0015239210, 0.0035311037, 0.3268678399, 0.0683785064, 0.0…\n$ ADM2_EN    <chr> \"Aba North\", \"Aba South\", \"Abadam\", \"Abaji\", \"Abak\", \"Abaka…\n$ ADM2_PCODE <chr> \"NG001001\", \"NG001002\", \"NG008001\", \"NG015001\", \"NG003001\",…\n$ ADM2_REF   <chr> \"Aba North\", \"Aba South\", \"Abadam\", \"Abaji\", \"Abak\", \"Abaka…\n$ ADM2ALT1EN <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ ADM2ALT2EN <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ ADM1_EN    <chr> \"Abia\", \"Abia\", \"Borno\", \"Federal Capital Territory\", \"Akwa…\n$ ADM1_PCODE <chr> \"NG001\", \"NG001\", \"NG008\", \"NG015\", \"NG003\", \"NG011\", \"NG02…\n$ ADM0_EN    <chr> \"Nigeria\", \"Nigeria\", \"Nigeria\", \"Nigeria\", \"Nigeria\", \"Nig…\n$ ADM0_PCODE <chr> \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\",…\n$ date       <date> 2016-11-29, 2016-11-29, 2016-11-29, 2016-11-29, 2016-11-29…\n$ validOn    <date> 2019-04-17, 2019-04-17, 2019-04-17, 2019-04-17, 2019-04-17…\n$ validTo    <date> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ SD_EN      <chr> \"Abia South\", \"Abia South\", \"Borno North\", \"Federal Capital…\n$ SD_PCODE   <chr> \"NG00103\", \"NG00103\", \"NG00802\", \"NG01501\", \"NG00302\", \"NG0…\n$ geometry   <MULTIPOLYGON [m]> MULTIPOLYGON (((552560.3 12..., MULTIPOLYGON (…\n\n\n\n# head(nga)"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-aspatial-data-into-r-workbook",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-aspatial-data-into-r-workbook",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "2.3 Importing Aspatial data into R Workbook",
-    "text": "2.3 Importing Aspatial data into R Workbook\n\n2.3.1 Import csv file - Aspatial data\n\nwpdx_nigeria = filter(read_csv(\"data/aspatial/Water_Point_Data_Exchange_-_Plus__WPdx__.csv\"), `#clean_country_name` == \"Nigeria\")\n\n\n\n2.3.2 Convert Aspatial into Geospatial data\n\nwpdx_nigeria$Geometry = st_as_sfc(wpdx_nigeria$`New Georeferenced Column`)\nwpdx_sf = st_sf(wpdx_nigeria, crs = 4326) %>% st_transform(crs = 26391)\nwpdx_sf\n\nSimple feature collection with 95008 features and 70 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 32536.82 ymin: 33461.24 xmax: 1292096 ymax: 1091052\nProjected CRS: Minna / Nigeria West Belt\n# A tibble: 95,008 × 71\n   row_id `#source`      #lat_…¹ #lon_…² #repo…³ #stat…⁴ #wate…⁵ #wate…⁶ #wate…⁷\n *  <dbl> <chr>            <dbl>   <dbl> <chr>   <chr>   <chr>   <chr>   <chr>  \n 1 429068 GRID3             7.98    5.12 08/29/… Unknown <NA>    <NA>    Tapsta…\n 2 222071 Federal Minis…    6.96    3.60 08/16/… Yes     Boreho… Well    Mechan…\n 3 160612 WaterAid          6.49    7.93 12/04/… Yes     Boreho… Well    Hand P…\n 4 160669 WaterAid          6.73    7.65 12/04/… Yes     Boreho… Well    <NA>   \n 5 160642 WaterAid          6.78    7.66 12/04/… Yes     Boreho… Well    Hand P…\n 6 160628 WaterAid          6.96    7.78 12/04/… Yes     Boreho… Well    Hand P…\n 7 160632 WaterAid          7.02    7.84 12/04/… Yes     Boreho… Well    Hand P…\n 8 642747 Living Water …    7.33    8.98 10/03/… Yes     Boreho… Well    Mechan…\n 9 642456 Living Water …    7.17    9.11 10/03/… Yes     Boreho… Well    Hand P…\n10 641347 Living Water …    7.20    9.22 03/28/… Yes     Boreho… Well    Hand P…\n# … with 94,998 more rows, 62 more variables: `#water_tech_category` <chr>,\n#   `#facility_type` <chr>, `#clean_country_name` <chr>, `#clean_adm1` <chr>,\n#   `#clean_adm2` <chr>, `#clean_adm3` <chr>, `#clean_adm4` <chr>,\n#   `#install_year` <dbl>, `#installer` <chr>, `#rehab_year` <lgl>,\n#   `#rehabilitator` <lgl>, `#management_clean` <chr>, `#status_clean` <chr>,\n#   `#pay` <chr>, `#fecal_coliform_presence` <chr>,\n#   `#fecal_coliform_value` <dbl>, `#subjective_quality` <chr>, …"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#exclude-redundant-fields",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#exclude-redundant-fields",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "3.1 Exclude redundant fields",
-    "text": "3.1 Exclude redundant fields\n\nnga <- nga %>%\n  select(c(3:4, 8:9))"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#checking-for-duplicates-with-ifelse-statement",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#checking-for-duplicates-with-ifelse-statement",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "3.2 Checking for duplicates with IFELSE() statement",
-    "text": "3.2 Checking for duplicates with IFELSE() statement\n\nduplicated_LGA <- nga$ADM2_EN[duplicated(nga$ADM2_EN)==TRUE]\nnga$ADM2_EN = ifelse(nga$ADM2_EN %in% duplicated_LGA, paste(nga$ADM2_EN, nga$ADM1_EN, sep=\", \"), nga$ADM2_EN)"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#extracting-water-point-data",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#extracting-water-point-data",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "4.1 Extracting Water Point Data",
-    "text": "4.1 Extracting Water Point Data\n\nwp_functional <- wp_sf_nga %>%\n  filter(status_clean %in%\n           c(\"Functional\",\n             \"Functional but not in use\",\n             \"Functional but needs repair\"))\n\n\nwp_nonfunctional <- wp_sf_nga %>%\n  filter(status_clean %in%\n           c(\"Abandoned/Decommissioned\",\n             \"Abandoned\",\n             \"Non-Functional due to dry season\",\n             \"Non-Functional\",\n             \"Non functional due to dry season\"))\n\n\nwp_unknown <- wp_sf_nga %>%\n  filter(status_clean == \"unknown\")\n\n\nfreq(data = wp_functional,\n     input = 'status_clean')\n\n\n\n\n                 status_clean frequency percentage cumulative_perc\n1                  Functional     45883      87.99           87.99\n2 Functional but needs repair      4579       8.78           96.77\n3   Functional but not in use      1686       3.23          100.00\n\n\n\nfreq(data = wp_nonfunctional,\n     input = 'status_clean')\n\n\n\n\n                      status_clean frequency percentage cumulative_perc\n1                   Non-Functional     29385      91.25           91.25\n2 Non-Functional due to dry season      2403       7.46           98.71\n3         Abandoned/Decommissioned       234       0.73           99.44\n4                        Abandoned       175       0.54           99.98\n5 Non functional due to dry season         7       0.02          100.00\n\n\n\nfreq(data = wp_unknown,\n     input = 'status_clean')\n\n\n\n\n  status_clean frequency percentage cumulative_perc\n1      unknown     10656        100             100"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#performing-point-in-polygon-count",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#performing-point-in-polygon-count",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "4.2 Performing Point-in-Polygon Count",
-    "text": "4.2 Performing Point-in-Polygon Count\n\nNGA_wp <- nga %>% \n  mutate(`total_wp` = lengths(\n    st_intersects(nga, wp_sf_nga))) %>%\n  mutate(`wp_functional` = lengths(\n    st_intersects(nga, wp_functional))) %>%\n  mutate(`wp_nonfunctional` = lengths(\n    st_intersects(nga, wp_nonfunctional))) %>%\n  mutate(`wp_unknown` = lengths(\n    st_intersects(nga, wp_unknown)))"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#visualing-attributes-by-using-statistical-graphs",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#visualing-attributes-by-using-statistical-graphs",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "4.3 Visualing attributes by using statistical graphs",
-    "text": "4.3 Visualing attributes by using statistical graphs\n\nggplot(data = NGA_wp,\n       aes(x = total_wp)) + \n  geom_histogram(bins=20,\n                 color=\"black\",\n                 fill=\"light blue\") +\n  geom_vline(aes(xintercept=mean(\n    total_wp, na.rm=T)),\n             color=\"red\", \n             linetype=\"dashed\", \n             size=0.8) +\n  ggtitle(\"Distribution of total water points by LGA\") +\n  xlab(\"No. of water points\") +\n  ylab(\"No. of\\nLGAs\") +\n  theme(axis.title.y=element_text(angle = 0))"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#saving-the-analytical-data-in-rds-format",
-    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#saving-the-analytical-data-in-rds-format",
-    "title": "In-Class Exercise - Geospatial Data Wrangling",
-    "section": "4.4 Saving the analytical data in rds format",
-    "text": "4.4 Saving the analytical data in rds format\n\nwrite_rds(NGA_wp, \"data/rds/NGA_wp.rds\")"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html",
-    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html",
-    "title": "In-class Exercise 3",
-    "section": "",
-    "text": "pacman::p_load(tidyverse, tmap, sf)\n\n\n\n\n\nNGA_wp <- read_rds(\"data/rds/NGA_wp.rds\")"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#visualising-distribution-of-non-functional-water-point",
-    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#visualising-distribution-of-non-functional-water-point",
-    "title": "In-class Exercise 3",
-    "section": "2.1 Visualising distribution of non-functional water point",
-    "text": "2.1 Visualising distribution of non-functional water point\n\ntm_shape(NGA_wp)+\n  tm_fill(\"wp_nonfunctional\",\n          n = 10,\n          style=\"equal\",\n          palette=\"Blues\")+\n  tm_borders(lwd=0.1)+\n  tm_layout(main.title = \"Distribution of nonfunctional water point by LGAs\",\n            legend.outside = FALSE)"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
-    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
-    "title": "In-class Exercise - Spatial Point Patterns Analysis",
-    "section": "",
-    "text": "pacman::p_load(maptools, sf, raster, spatstat, tmap)\n\nThings to learn from this code chunk.\n\n\n\n\nchildcare_sf = st_read(\"data/child-care-services-geojson.geojson\") %>%\n  st_transform(crs=3414)\n\nReading layer `child-care-services-geojson' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex04\\data\\child-care-services-geojson.geojson' \n  using driver `GeoJSON'\nSimple feature collection with 1545 features and 2 fields\nGeometry type: POINT\nDimension:     XYZ\nBounding box:  xmin: 103.6824 ymin: 1.248403 xmax: 103.9897 ymax: 1.462134\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84\n\n\n\nsg_sf = st_read(dsn=\"data\", layer=\"CostalOutline\")\n\nReading layer `CostalOutline' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex04\\data' using driver `ESRI Shapefile'\nSimple feature collection with 60 features and 4 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 2663.926 ymin: 16357.98 xmax: 56047.79 ymax: 50244.03\nProjected CRS: SVY21\n\n\n\nmpsz_sf = st_read(dsn=\"data\", layer=\"MP14_SUBZONE_WEB_PL\")\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex04\\data' using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-sf-data-frames-into-sp-spatial-class",
-    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-sf-data-frames-into-sp-spatial-class",
-    "title": "In-class Exercise - Spatial Point Patterns Analysis",
-    "section": "3.1 Converting sf data frames into sp Spatial* Class",
-    "text": "3.1 Converting sf data frames into sp Spatial* Class\n\nchildcare = as_Spatial(childcare_sf)\nmpsz      = as_Spatial(mpsz_sf)\nsg        = as_Spatial(sg_sf)"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-spatial-class-into-generic-sp-format",
-    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-spatial-class-into-generic-sp-format",
-    "title": "In-class Exercise - Spatial Point Patterns Analysis",
-    "section": "3.2 Converting Spatial* Class into generic sp format",
-    "text": "3.2 Converting Spatial* Class into generic sp format\n\nchildcare_sp = as(childcare, \"SpatialPoints\")\nsg_sp        = as(sg, \"SpatialPolygons\")"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-generic-sp-format-into-spatstat-ppps-format",
-    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-generic-sp-format-into-spatstat-ppps-format",
-    "title": "In-class Exercise - Spatial Point Patterns Analysis",
-    "section": "3.3 Converting generic sp format into spatstat ppp’s format",
-    "text": "3.3 Converting generic sp format into spatstat ppp’s format\n\nchildcare_ppp <- as(childcare_sp, \"ppp\")\nchildcare_ppp\n\nPlanar point pattern: 1545 points\nwindow: rectangle = [11203.01, 45404.24] x [25667.6, 49300.88] units"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "IS415",
-    "section": "",
-    "text": "Welcome to IS415 Geospatial Analytics and Applications.\nThis is the course website of IS415 I study this semester. You will find all my course work on this website."
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#class-work-and-code",
-    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#class-work-and-code",
-    "title": "In-class Exercise 3",
-    "section": "2.2 Class work and code",
-    "text": "2.2 Class work and code\n\np1 <- tm_shape(NGA_wp) +\n  tm_fill(\"wp_functional\",\n          n = 10,\n          style = \"equal\",\n          palette = \"Blues\") +\n  tm_borders(lwd = 0.1,\n             alpha = 1) +\n  tm_layout(main.title = \"Distribution of functional water point by LGAs\",\n            legend.outside = FALSE)\n\n\np2 <- tm_shape(NGA_wp) +\n  tm_fill(\"total_wp\",\n          n = 10,\n          style = \"equal\",\n          palette = \"Blues\") +\n  tm_borders(lwd = 0.1,\n             alpha = 1) +\n  tm_layout(main.title = \"Distribution of total water point by LGAs\",\n            legend.outside = FALSE)\n\n\ntmap_arrange(p2, p1, nrow = 1)"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#deriving-proportion-of-functional-and-non-functional-water-points",
-    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#deriving-proportion-of-functional-and-non-functional-water-points",
-    "title": "In-class Exercise 3",
-    "section": "3.1 Deriving Proportion of Functional and Non-functional Water Points",
-    "text": "3.1 Deriving Proportion of Functional and Non-functional Water Points\n\nNGA_wp = NGA_wp %>%\n  mutate(pct_functional = wp_functional / total_wp) %>%\n  mutate(pct_nonfunctional = wp_nonfunctional / total_wp)"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#plotting-map-of-rates",
-    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#plotting-map-of-rates",
-    "title": "In-class Exercise 3",
-    "section": "3.2 Plotting Map of Rates",
-    "text": "3.2 Plotting Map of Rates\n\ntm_shape(NGA_wp) +\n  tm_fill(\"pct_functional\",\n          n = 10,\n          style = \"equal\",\n          palette = \"Blues\",\n          legend.hist = TRUE) +\n  tm_borders(lwd = 0.1,\n             alpha = 1) +\n  tm_layout(main.title = \"Rate map of functional  water points by LGAs\",\n            legend.outside = TRUE)"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#percentile-map",
-    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#percentile-map",
-    "title": "In-class Exercise 3",
-    "section": "4.1 Percentile Map",
-    "text": "4.1 Percentile Map\n\n4.1.1 Data Preparation\n\nNGA_wp = NGA_wp %>%\n  drop_na()\n\n\npercent <- c(0,.01,.1,.5,.9,.99,1)\nvar <- NGA_wp[\"pct_functional\"] %>%\n  st_set_geometry(NULL)\nquantile(var[,1], percent)\n\n       0%        1%       10%       50%       90%       99%      100% \n0.0000000 0.0000000 0.2169811 0.4791667 0.8611111 1.0000000 1.0000000 \n\n\n\n\n4.1.2 Creating the get.var() function\n\nget.var <- function(vname,df) {\n  v <- df[vname] %>% \n    st_set_geometry(NULL)\n  v <- unname(v[,1])\n  return(v)\n}\n\n\n\n4.1.3 A percentile mapping function\n\npercentmap <- function(vnam, df, legtitle=NA, mtitle=\"Percentile Map\"){\n  percent <- c(0,.01,.1,.5,.9,.99,1)\n  var <- get.var(vnam, df)\n  bperc <- quantile(var, percent)\n  tm_shape(df) +\n  tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,\n             title=legtitle,\n             breaks=bperc,\n             palette=\"Blues\",\n          labels=c(\"< 1%\", \"1% - 10%\", \"10% - 50%\", \"50% - 90%\", \"90% - 99%\", \"> 99%\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"right\",\"bottom\"))\n}\n\n\n\n4.1.4 Test drive the percentile mapping function\n\npercentmap(\"total_wp\", NGA_wp)"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#box-map",
-    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#box-map",
-    "title": "In-class Exercise 3",
-    "section": "4.2 Box map",
-    "text": "4.2 Box map\n\nggplot(data = NGA_wp,\n       aes(x = \"\",\n           y = wp_nonfunctional)) +\n  geom_boxplot()\n\n\n\n\n\n4.2.1 Creating the boxbreaks function\n\nboxbreaks <- function(v,mult=1.5) {\n  qv <- unname(quantile(v))\n  iqr <- qv[4] - qv[2]\n  upfence <- qv[4] + mult * iqr\n  lofence <- qv[2] - mult * iqr\n  # initialize break points vector\n  bb <- vector(mode=\"numeric\",length=7)\n  # logic for lower and upper fences\n  if (lofence < qv[1]) {  # no lower outliers\n    bb[1] <- lofence\n    bb[2] <- floor(qv[1])\n  } else {\n    bb[2] <- lofence\n    bb[1] <- qv[1]\n  }\n  if (upfence > qv[5]) { # no upper outliers\n    bb[7] <- upfence\n    bb[6] <- ceiling(qv[5])\n  } else {\n    bb[6] <- upfence\n    bb[7] <- qv[5]\n  }\n  bb[3:5] <- qv[2:4]\n  return(bb)\n}\n\n\n\n4.2.2 Test drive the newly created function\n\nvar <- get.var(\"wp_nonfunctional\", NGA_wp) \nboxbreaks(var)\n\n[1] -56.5   0.0  14.0  34.0  61.0 131.5 278.0\n\n\n\n\n4.2.3 Boxmap function\n\nboxmap <- function(vnam, df, \n                   legtitle=NA,\n                   mtitle=\"Box Map\",\n                   mult=1.5){\n  var <- get.var(vnam,df)\n  bb <- boxbreaks(var)\n  tm_shape(df) +\n    tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,title=legtitle,\n             breaks=bb,\n             palette=\"Blues\",\n          labels = c(\"lower outlier\", \n                     \"< 25%\", \n                     \"25% - 50%\", \n                     \"50% - 75%\",\n                     \"> 75%\", \n                     \"upper outlier\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"left\",\n                               \"top\"))\n}\n\n\ntmap_mode(\"plot\")\nboxmap(\"wp_nonfunctional\", NGA_wp)\n\n\n\n\n\n\n4.2.4 Recode NA values to zero\n\nNGA_wp <- NGA_wp %>%\n  mutate(wp_functional = na_if(\n    total_wp, total_wp < 0))"
-  },
-  {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#colour-scheme",
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#colour-scheme",
     "title": "Hands-on Exercise - Choropleth Mapping with R",
@@ -445,7 +291,189 @@
     "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#clark-and-evans-test-choa-chu-kang-planning-area",
     "title": "Hands-on Exercise - 1st Order Spatial Point Patterns Analysis",
     "section": "6.2 Clark and Evans Test: Choa Chu Kang planning area",
-    "text": "6.2 Clark and Evans Test: Choa Chu Kang planning area\n\nclarkevans.test(childcare_ck_ppp,\n                correction=\"none\",\n                clipregion=NULL,\n                alternative=c(\"two.sided\"),\n                nsim=999)\n\n\n    Clark-Evans test\n    No edge correction\n    Monte Carlo test based on 999 simulations of CSR with fixed n\n\ndata:  childcare_ck_ppp\nR = 0.91175, p-value = 0.054\nalternative hypothesis: two-sided"
+    "text": "6.2 Clark and Evans Test: Choa Chu Kang planning area\n\nclarkevans.test(childcare_ck_ppp,\n                correction=\"none\",\n                clipregion=NULL,\n                alternative=c(\"two.sided\"),\n                nsim=999)\n\n\n    Clark-Evans test\n    No edge correction\n    Monte Carlo test based on 999 simulations of CSR with fixed n\n\ndata:  childcare_ck_ppp\nR = 0.95385, p-value = 0.16\nalternative hypothesis: two-sided"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "",
+    "text": "pacman::p_load(sf, tidyverse, readr, funModeling)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#import-shp-file---geospatial-data",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#import-shp-file---geospatial-data",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "2.1 Import shp file - Geospatial data",
+    "text": "2.1 Import shp file - Geospatial data\n\nnga = st_read(dsn = \"data/geospatial\",\n                   layer = \"nga_admbnda_adm2\") %>% st_transform(crs = 26391)\n\nReading layer `nga_admbnda_adm2' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex02\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 774 features and 16 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442\nGeodetic CRS:  WGS 84"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#understanding-the-data",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#understanding-the-data",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "2.2 Understanding the data",
+    "text": "2.2 Understanding the data\n\n2.2.1 Nigeria Level-2 Administrative Boundary (example)\n\nst_geometry(nga)\n\nGeometry set for 774 features \nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 28879.72 ymin: 30292.37 xmax: 1343798 ymax: 1094244\nProjected CRS: Minna / Nigeria West Belt\nFirst 5 geometries:\n\n\n\nglimpse(nga)\n\nRows: 774\nColumns: 17\n$ Shape_Leng <dbl> 0.2370744, 0.2624772, 3.0753158, 2.5379842, 0.6871498, 1.06…\n$ Shape_Area <dbl> 0.0015239210, 0.0035311037, 0.3268678399, 0.0683785064, 0.0…\n$ ADM2_EN    <chr> \"Aba North\", \"Aba South\", \"Abadam\", \"Abaji\", \"Abak\", \"Abaka…\n$ ADM2_PCODE <chr> \"NG001001\", \"NG001002\", \"NG008001\", \"NG015001\", \"NG003001\",…\n$ ADM2_REF   <chr> \"Aba North\", \"Aba South\", \"Abadam\", \"Abaji\", \"Abak\", \"Abaka…\n$ ADM2ALT1EN <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ ADM2ALT2EN <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ ADM1_EN    <chr> \"Abia\", \"Abia\", \"Borno\", \"Federal Capital Territory\", \"Akwa…\n$ ADM1_PCODE <chr> \"NG001\", \"NG001\", \"NG008\", \"NG015\", \"NG003\", \"NG011\", \"NG02…\n$ ADM0_EN    <chr> \"Nigeria\", \"Nigeria\", \"Nigeria\", \"Nigeria\", \"Nigeria\", \"Nig…\n$ ADM0_PCODE <chr> \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\", \"NG\",…\n$ date       <date> 2016-11-29, 2016-11-29, 2016-11-29, 2016-11-29, 2016-11-29…\n$ validOn    <date> 2019-04-17, 2019-04-17, 2019-04-17, 2019-04-17, 2019-04-17…\n$ validTo    <date> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…\n$ SD_EN      <chr> \"Abia South\", \"Abia South\", \"Borno North\", \"Federal Capital…\n$ SD_PCODE   <chr> \"NG00103\", \"NG00103\", \"NG00802\", \"NG01501\", \"NG00302\", \"NG0…\n$ geometry   <MULTIPOLYGON [m]> MULTIPOLYGON (((552560.3 12..., MULTIPOLYGON (…\n\n\n\n# head(nga)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-aspatial-data-into-r-workbook",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#importing-aspatial-data-into-r-workbook",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "2.3 Importing Aspatial data into R Workbook",
+    "text": "2.3 Importing Aspatial data into R Workbook\n\n2.3.1 Import csv file - Aspatial data\n\nwpdx_nigeria = filter(read_csv(\"data/aspatial/Water_Point_Data_Exchange_-_Plus__WPdx__.csv\"), `#clean_country_name` == \"Nigeria\")\n\n\n\n2.3.2 Convert Aspatial into Geospatial data\n\nwpdx_nigeria$Geometry = st_as_sfc(wpdx_nigeria$`New Georeferenced Column`)\nwpdx_sf = st_sf(wpdx_nigeria, crs = 4326) %>% st_transform(crs = 26391)\nwpdx_sf\n\nSimple feature collection with 95008 features and 70 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 32536.82 ymin: 33461.24 xmax: 1292096 ymax: 1091052\nProjected CRS: Minna / Nigeria West Belt\n# A tibble: 95,008 × 71\n   row_id `#source`      #lat_…¹ #lon_…² #repo…³ #stat…⁴ #wate…⁵ #wate…⁶ #wate…⁷\n *  <dbl> <chr>            <dbl>   <dbl> <chr>   <chr>   <chr>   <chr>   <chr>  \n 1 429068 GRID3             7.98    5.12 08/29/… Unknown <NA>    <NA>    Tapsta…\n 2 222071 Federal Minis…    6.96    3.60 08/16/… Yes     Boreho… Well    Mechan…\n 3 160612 WaterAid          6.49    7.93 12/04/… Yes     Boreho… Well    Hand P…\n 4 160669 WaterAid          6.73    7.65 12/04/… Yes     Boreho… Well    <NA>   \n 5 160642 WaterAid          6.78    7.66 12/04/… Yes     Boreho… Well    Hand P…\n 6 160628 WaterAid          6.96    7.78 12/04/… Yes     Boreho… Well    Hand P…\n 7 160632 WaterAid          7.02    7.84 12/04/… Yes     Boreho… Well    Hand P…\n 8 642747 Living Water …    7.33    8.98 10/03/… Yes     Boreho… Well    Mechan…\n 9 642456 Living Water …    7.17    9.11 10/03/… Yes     Boreho… Well    Hand P…\n10 641347 Living Water …    7.20    9.22 03/28/… Yes     Boreho… Well    Hand P…\n# … with 94,998 more rows, 62 more variables: `#water_tech_category` <chr>,\n#   `#facility_type` <chr>, `#clean_country_name` <chr>, `#clean_adm1` <chr>,\n#   `#clean_adm2` <chr>, `#clean_adm3` <chr>, `#clean_adm4` <chr>,\n#   `#install_year` <dbl>, `#installer` <chr>, `#rehab_year` <lgl>,\n#   `#rehabilitator` <lgl>, `#management_clean` <chr>, `#status_clean` <chr>,\n#   `#pay` <chr>, `#fecal_coliform_presence` <chr>,\n#   `#fecal_coliform_value` <dbl>, `#subjective_quality` <chr>, …"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#exclude-redundant-fields",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#exclude-redundant-fields",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "3.1 Exclude redundant fields",
+    "text": "3.1 Exclude redundant fields\n\nnga <- nga %>%\n  select(c(3:4, 8:9))"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#checking-for-duplicates-with-ifelse-statement",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#checking-for-duplicates-with-ifelse-statement",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "3.2 Checking for duplicates with IFELSE() statement",
+    "text": "3.2 Checking for duplicates with IFELSE() statement\n\nduplicated_LGA <- nga$ADM2_EN[duplicated(nga$ADM2_EN)==TRUE]\nnga$ADM2_EN = ifelse(nga$ADM2_EN %in% duplicated_LGA, paste(nga$ADM2_EN, nga$ADM1_EN, sep=\", \"), nga$ADM2_EN)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#extracting-water-point-data",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#extracting-water-point-data",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "4.1 Extracting Water Point Data",
+    "text": "4.1 Extracting Water Point Data\n\nwp_functional <- wp_sf_nga %>%\n  filter(status_clean %in%\n           c(\"Functional\",\n             \"Functional but not in use\",\n             \"Functional but needs repair\"))\n\n\nwp_nonfunctional <- wp_sf_nga %>%\n  filter(status_clean %in%\n           c(\"Abandoned/Decommissioned\",\n             \"Abandoned\",\n             \"Non-Functional due to dry season\",\n             \"Non-Functional\",\n             \"Non functional due to dry season\"))\n\n\nwp_unknown <- wp_sf_nga %>%\n  filter(status_clean == \"unknown\")\n\n\nfreq(data = wp_functional,\n     input = 'status_clean')\n\n\n\n\n                 status_clean frequency percentage cumulative_perc\n1                  Functional     45883      87.99           87.99\n2 Functional but needs repair      4579       8.78           96.77\n3   Functional but not in use      1686       3.23          100.00\n\n\n\nfreq(data = wp_nonfunctional,\n     input = 'status_clean')\n\n\n\n\n                      status_clean frequency percentage cumulative_perc\n1                   Non-Functional     29385      91.25           91.25\n2 Non-Functional due to dry season      2403       7.46           98.71\n3         Abandoned/Decommissioned       234       0.73           99.44\n4                        Abandoned       175       0.54           99.98\n5 Non functional due to dry season         7       0.02          100.00\n\n\n\nfreq(data = wp_unknown,\n     input = 'status_clean')\n\n\n\n\n  status_clean frequency percentage cumulative_perc\n1      unknown     10656        100             100"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#performing-point-in-polygon-count",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#performing-point-in-polygon-count",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "4.2 Performing Point-in-Polygon Count",
+    "text": "4.2 Performing Point-in-Polygon Count\n\nNGA_wp <- nga %>% \n  mutate(`total_wp` = lengths(\n    st_intersects(nga, wp_sf_nga))) %>%\n  mutate(`wp_functional` = lengths(\n    st_intersects(nga, wp_functional))) %>%\n  mutate(`wp_nonfunctional` = lengths(\n    st_intersects(nga, wp_nonfunctional))) %>%\n  mutate(`wp_unknown` = lengths(\n    st_intersects(nga, wp_unknown)))"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#visualing-attributes-by-using-statistical-graphs",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#visualing-attributes-by-using-statistical-graphs",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "4.3 Visualing attributes by using statistical graphs",
+    "text": "4.3 Visualing attributes by using statistical graphs\n\nggplot(data = NGA_wp,\n       aes(x = total_wp)) + \n  geom_histogram(bins=20,\n                 color=\"black\",\n                 fill=\"light blue\") +\n  geom_vline(aes(xintercept=mean(\n    total_wp, na.rm=T)),\n             color=\"red\", \n             linetype=\"dashed\", \n             size=0.8) +\n  ggtitle(\"Distribution of total water points by LGA\") +\n  xlab(\"No. of water points\") +\n  ylab(\"No. of\\nLGAs\") +\n  theme(axis.title.y=element_text(angle = 0))"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#saving-the-analytical-data-in-rds-format",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#saving-the-analytical-data-in-rds-format",
+    "title": "In-Class Exercise - Geospatial Data Wrangling",
+    "section": "4.4 Saving the analytical data in rds format",
+    "text": "4.4 Saving the analytical data in rds format\n\nwrite_rds(NGA_wp, \"data/rds/NGA_wp.rds\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html",
+    "title": "In-class Exercise 3",
+    "section": "",
+    "text": "pacman::p_load(tidyverse, tmap, sf)\n\n\n\n\n\nNGA_wp <- read_rds(\"data/rds/NGA_wp.rds\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#visualising-distribution-of-non-functional-water-point",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#visualising-distribution-of-non-functional-water-point",
+    "title": "In-class Exercise 3",
+    "section": "2.1 Visualising distribution of non-functional water point",
+    "text": "2.1 Visualising distribution of non-functional water point\n\ntm_shape(NGA_wp)+\n  tm_fill(\"wp_nonfunctional\",\n          n = 10,\n          style=\"equal\",\n          palette=\"Blues\")+\n  tm_borders(lwd=0.1)+\n  tm_layout(main.title = \"Distribution of nonfunctional water point by LGAs\",\n            legend.outside = FALSE)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#class-work-and-code",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#class-work-and-code",
+    "title": "In-class Exercise 3",
+    "section": "2.2 Class work and code",
+    "text": "2.2 Class work and code\n\np1 <- tm_shape(NGA_wp) +\n  tm_fill(\"wp_functional\",\n          n = 10,\n          style = \"equal\",\n          palette = \"Blues\") +\n  tm_borders(lwd = 0.1,\n             alpha = 1) +\n  tm_layout(main.title = \"Distribution of functional water point by LGAs\",\n            legend.outside = FALSE)\n\n\np2 <- tm_shape(NGA_wp) +\n  tm_fill(\"total_wp\",\n          n = 10,\n          style = \"equal\",\n          palette = \"Blues\") +\n  tm_borders(lwd = 0.1,\n             alpha = 1) +\n  tm_layout(main.title = \"Distribution of total water point by LGAs\",\n            legend.outside = FALSE)\n\n\ntmap_arrange(p2, p1, nrow = 1)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#deriving-proportion-of-functional-and-non-functional-water-points",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#deriving-proportion-of-functional-and-non-functional-water-points",
+    "title": "In-class Exercise 3",
+    "section": "3.1 Deriving Proportion of Functional and Non-functional Water Points",
+    "text": "3.1 Deriving Proportion of Functional and Non-functional Water Points\n\nNGA_wp = NGA_wp %>%\n  mutate(pct_functional = wp_functional / total_wp) %>%\n  mutate(pct_nonfunctional = wp_nonfunctional / total_wp)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#plotting-map-of-rates",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#plotting-map-of-rates",
+    "title": "In-class Exercise 3",
+    "section": "3.2 Plotting Map of Rates",
+    "text": "3.2 Plotting Map of Rates\n\ntm_shape(NGA_wp) +\n  tm_fill(\"pct_functional\",\n          n = 10,\n          style = \"equal\",\n          palette = \"Blues\",\n          legend.hist = TRUE) +\n  tm_borders(lwd = 0.1,\n             alpha = 1) +\n  tm_layout(main.title = \"Rate map of functional  water points by LGAs\",\n            legend.outside = TRUE)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#percentile-map",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#percentile-map",
+    "title": "In-class Exercise 3",
+    "section": "4.1 Percentile Map",
+    "text": "4.1 Percentile Map\n\n4.1.1 Data Preparation\n\nNGA_wp = NGA_wp %>%\n  drop_na()\n\n\npercent <- c(0,.01,.1,.5,.9,.99,1)\nvar <- NGA_wp[\"pct_functional\"] %>%\n  st_set_geometry(NULL)\nquantile(var[,1], percent)\n\n       0%        1%       10%       50%       90%       99%      100% \n0.0000000 0.0000000 0.2169811 0.4791667 0.8611111 1.0000000 1.0000000 \n\n\n\n\n4.1.2 Creating the get.var() function\n\nget.var <- function(vname,df) {\n  v <- df[vname] %>% \n    st_set_geometry(NULL)\n  v <- unname(v[,1])\n  return(v)\n}\n\n\n\n4.1.3 A percentile mapping function\n\npercentmap <- function(vnam, df, legtitle=NA, mtitle=\"Percentile Map\"){\n  percent <- c(0,.01,.1,.5,.9,.99,1)\n  var <- get.var(vnam, df)\n  bperc <- quantile(var, percent)\n  tm_shape(df) +\n  tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,\n             title=legtitle,\n             breaks=bperc,\n             palette=\"Blues\",\n          labels=c(\"< 1%\", \"1% - 10%\", \"10% - 50%\", \"50% - 90%\", \"90% - 99%\", \"> 99%\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"right\",\"bottom\"))\n}\n\n\n\n4.1.4 Test drive the percentile mapping function\n\npercentmap(\"total_wp\", NGA_wp)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#box-map",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#box-map",
+    "title": "In-class Exercise 3",
+    "section": "4.2 Box map",
+    "text": "4.2 Box map\n\nggplot(data = NGA_wp,\n       aes(x = \"\",\n           y = wp_nonfunctional)) +\n  geom_boxplot()\n\n\n\n\n\n4.2.1 Creating the boxbreaks function\n\nboxbreaks <- function(v,mult=1.5) {\n  qv <- unname(quantile(v))\n  iqr <- qv[4] - qv[2]\n  upfence <- qv[4] + mult * iqr\n  lofence <- qv[2] - mult * iqr\n  # initialize break points vector\n  bb <- vector(mode=\"numeric\",length=7)\n  # logic for lower and upper fences\n  if (lofence < qv[1]) {  # no lower outliers\n    bb[1] <- lofence\n    bb[2] <- floor(qv[1])\n  } else {\n    bb[2] <- lofence\n    bb[1] <- qv[1]\n  }\n  if (upfence > qv[5]) { # no upper outliers\n    bb[7] <- upfence\n    bb[6] <- ceiling(qv[5])\n  } else {\n    bb[6] <- upfence\n    bb[7] <- qv[5]\n  }\n  bb[3:5] <- qv[2:4]\n  return(bb)\n}\n\n\n\n4.2.2 Test drive the newly created function\n\nvar <- get.var(\"wp_nonfunctional\", NGA_wp) \nboxbreaks(var)\n\n[1] -56.5   0.0  14.0  34.0  61.0 131.5 278.0\n\n\n\n\n4.2.3 Boxmap function\n\nboxmap <- function(vnam, df, \n                   legtitle=NA,\n                   mtitle=\"Box Map\",\n                   mult=1.5){\n  var <- get.var(vnam,df)\n  bb <- boxbreaks(var)\n  tm_shape(df) +\n    tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,title=legtitle,\n             breaks=bb,\n             palette=\"Blues\",\n          labels = c(\"lower outlier\", \n                     \"< 25%\", \n                     \"25% - 50%\", \n                     \"50% - 75%\",\n                     \"> 75%\", \n                     \"upper outlier\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"left\",\n                               \"top\"))\n}\n\n\ntmap_mode(\"plot\")\nboxmap(\"wp_nonfunctional\", NGA_wp)\n\n\n\n\n\n\n4.2.4 Recode NA values to zero\n\nNGA_wp <- NGA_wp %>%\n  mutate(wp_functional = na_if(\n    total_wp, total_wp < 0))"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
+    "title": "In-class Exercise - Spatial Point Patterns Analysis",
+    "section": "",
+    "text": "pacman::p_load(maptools, sf, raster, spatstat, tmap)\n\nThings to learn from this code chunk.\n\n\n\n\nchildcare_sf = st_read(\"data/child-care-services-geojson.geojson\") %>%\n  st_transform(crs=3414)\n\nReading layer `child-care-services-geojson' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex04\\data\\child-care-services-geojson.geojson' \n  using driver `GeoJSON'\nSimple feature collection with 1545 features and 2 fields\nGeometry type: POINT\nDimension:     XYZ\nBounding box:  xmin: 103.6824 ymin: 1.248403 xmax: 103.9897 ymax: 1.462134\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84\n\n\n\nsg_sf = st_read(dsn=\"data\", layer=\"CostalOutline\")\n\nReading layer `CostalOutline' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex04\\data' using driver `ESRI Shapefile'\nSimple feature collection with 60 features and 4 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 2663.926 ymin: 16357.98 xmax: 56047.79 ymax: 50244.03\nProjected CRS: SVY21\n\n\n\nmpsz_sf = st_read(dsn=\"data\", layer=\"MP14_SUBZONE_WEB_PL\")\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex04\\data' using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-sf-data-frames-into-sp-spatial-class",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-sf-data-frames-into-sp-spatial-class",
+    "title": "In-class Exercise - Spatial Point Patterns Analysis",
+    "section": "3.1 Converting sf data frames into sp Spatial* Class",
+    "text": "3.1 Converting sf data frames into sp Spatial* Class\n\nchildcare = as_Spatial(childcare_sf)\nmpsz      = as_Spatial(mpsz_sf)\nsg        = as_Spatial(sg_sf)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-spatial-class-into-generic-sp-format",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-spatial-class-into-generic-sp-format",
+    "title": "In-class Exercise - Spatial Point Patterns Analysis",
+    "section": "3.2 Converting Spatial* Class into generic sp format",
+    "text": "3.2 Converting Spatial* Class into generic sp format\n\nchildcare_sp = as(childcare, \"SpatialPoints\")\nsg_sp        = as(sg, \"SpatialPolygons\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-generic-sp-format-into-spatstat-ppps-format",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#converting-generic-sp-format-into-spatstat-ppps-format",
+    "title": "In-class Exercise - Spatial Point Patterns Analysis",
+    "section": "3.3 Converting generic sp format into spatstat ppp’s format",
+    "text": "3.3 Converting generic sp format into spatstat ppp’s format\n\nchildcare_ppp <- as(childcare_sp, \"ppp\")\nchildcare_ppp\n\nPlanar point pattern: 1545 points\nwindow: rectangle = [11203.01, 45404.24] x [25667.6, 49300.88] units"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#section-1",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#section-1",
+    "title": "In-class Exercise - Spatial Point Patterns Analysis",
+    "section": "4.1",
+    "text": "4.1\n\ntmap_mode('view')\ntm_shape(childcare_sf)+\n  tm_dots(alpha = 0.5,\n          size = 0.01)+\n  tm_view(set.zoom.limits = c(11, 13))\n\n\n\n\n\n\n\ntmap_mode(\"plot\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/data/stores.html",
+    "href": "In-class_Ex/In-class_Ex05/data/stores.html",
+    "title": "IS415",
+    "section": "",
+    "text": "<!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’>     \n\n\n        0 0     false"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/data/study_area.html",
+    "href": "In-class_Ex/In-class_Ex05/data/study_area.html",
+    "title": "IS415",
+    "section": "",
+    "text": "<!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’>     dataset\n\n\n        0 0     false"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05.html",
+    "href": "In-class_Ex/In-class_Ex05/In-class_Ex05.html",
+    "title": "In-class Exercise - Spatial Point Patterns Analysis",
+    "section": "",
+    "text": "pacman::p_load(tidyverse, tmap, sf, sfdep)\n\n\nstudyArea = st_read(dsn = \"data\",\n                    layer = \"study_area\") %>%\n  st_transform(crs = 3829)\n\nReading layer `study_area' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex05\\data' using driver `ESRI Shapefile'\nSimple feature collection with 7 features and 7 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 121.4836 ymin: 25.00776 xmax: 121.592 ymax: 25.09288\nGeodetic CRS:  TWD97\n\n\n\nstores = st_read(dsn = \"data\",\n                    layer = \"stores\") %>%\n  st_transform(crs = 3829)\n\nReading layer `stores' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex05\\data' using driver `ESRI Shapefile'\nSimple feature collection with 1409 features and 4 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 121.4902 ymin: 25.01257 xmax: 121.5874 ymax: 25.08557\nGeodetic CRS:  TWD97\n\n\n\ntmap_mode(\"view\")\ntm_shape(studyArea)+\n  tm_polygons()+\ntm_shape(stores)+\n  tm_dots(col = \"Name\",\n          size = 0.01,\n          border.col = \"black\",\n          border.lwd = 0.5)+\n  tm_view(set.zoom.limits = c(12, 16))\n\n\n\n\n\n\n\nLocal Colocation Quotients (LCLQ)\n\nnb = include_self(st_knn(st_geometry(stores), 6))\n\nwt = st_kernel_weights(nb, stores, \"gaussian\", adaptive = TRUE)\n\n\nFamilyMart = stores %>%\n  filter(Name == \"Family Mart\")\nA = FamilyMart$Name\n\n\nSevenEleven = stores %>%\n  filter(Name == \"7-Eleven\")\nB = SevenEleven$Name\n\n\nLCLQ = local_colocation(A, B, nb, wt, 49)\n\n\nLCLQ_stores = cbind(stores, LCLQ)\n\n\ntmap_mode(\"view\")\ntm_shape(studyArea)+\n  tm_polygons()+\ntm_shape(LCLQ_stores)+\n  tm_dots(col = \"X7.Eleven\",\n          size = 0.01,\n          border.col = \"black\",\n          border.lwd = 0.5)+\n  tm_view(set.zoom.limits = c(12, 16))"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "IS415",
+    "section": "",
+    "text": "Welcome to IS415 Geospatial Analytics and Applications.\nThis is the course website of IS415 I study this semester. You will find all my course work on this website."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex1.html#installing-and-loading-packages",
@@ -525,6 +553,20 @@
     "text": "6.1 - Kernel Density Estimation\nOur first step to KDE is to derive two density maps for functional and non-functional water points to check for any potential data problem. Here, we suspect that the scale of density values will be expressed in meters. The default measurement unit of Nigeria’s projected coordinate system – EPSG:26391 – is expressed in meters. We shall verify that and correct it to kilometers to get a more desirable map output (scale).\nFor starters, we should use the density() function to compute kernel density estimates for both types of water points. We use bw.ppl method for smoothing the bandwidth for the kernel estimation point process intensity and leave the default kernel smoothing method – it is the Gaussian method.\n\nkde_wpfunc <- density(wp_functional_ppp, \n                               sigma=bw.ppl, \n                               edge=TRUE)\n\nkde_wpnonfunc <- density(wp_nonfunctional_ppp,\n                             sigma=bw.ppl,\n                             edge=TRUE)\n\n\n\nShow code\npar(mfrow=c(1,2))\nplot(kde_wpfunc, \n     main = \"Functional Water Points\",\n     ribside=c(\"bottom\"))\nplot(kde_wpnonfunc,\n     main = \"Non-Functional Water Points\",\n     ribside=c(\"bottom\"))\n\n\n\n\n\nThe density values of the output range from 0 to 0.000006 and it makes for an output difficult to comprehend and interpret. Thus, we will rescale our density values to get an output in “number of points per square kilometer”.\n\n6.1.1 - Rescalling KDE values\nTo change the scale of the density values, we use the rescale() function from the spatstat.geom package. Here, we multiply values of our two objects of class ppp by 1000. We thus express them in kilometers and define the unit name to be “km”.\n\nwp_functional_ppp.km <- rescale(wp_functional_ppp, 1000, \"km\")\n\nwp_nonfunctional_ppp.km <- rescale(wp_nonfunctional_ppp, 1000, \"km\")\n\nWe can now run the previously used density() function using the rescaled data and plot the output KDE map.\n\n\nShow code\nkde_wpfunc.km <- density(wp_functional_ppp.km, \n                               sigma=bw.ppl, \n                               edge=TRUE)\n\nkde_wpnonfunc.km <- density(wp_nonfunctional_ppp.km,\n                             sigma=bw.ppl,\n                             edge=TRUE)\n\npar(mfrow=c(1,2))\nplot(kde_wpfunc.km, \n     main = \"Functional Water Points\",\n     ribside=c(\"bottom\"))\nplot(kde_wpnonfunc.km,\n     main = \"Non-Functional Water Points\",\n     ribside=c(\"bottom\"))\n\n\n\n\n\nWe start observing signs of potential clustering but, for now, we shall focus on transforming our im objects into rasters to plot our KDE maps using the tmap package. We will talk more about CSR and clustering later.\n\n\n6.1.2 - Convert KDE output into grid object\n\ngridded_wpfunc <- as.SpatialGridDataFrame.im(kde_wpfunc.km)\ngridded_wpnonfunc <- as.SpatialGridDataFrame.im(kde_wpnonfunc.km)\n\nspplot(gridded_wpfunc)\nspplot(gridded_wpnonfunc)\n\n\n\n\n\n\n\n(a) Functional Water Points\n\n\n\n\n\n\n\n(b) Non-Functional Water Points\n\n\n\n\nFigure 1: ?(caption)\n\n\n\n\n\n6.1.3 - Converting grid object into raster\n\nkde_wpfunc_raster <- raster(gridded_wpfunc)\nkde_wpfunc_raster\n\nclass      : RasterLayer \ndimensions : 128, 128, 16384  (nrow, ncol, ncell)\nresolution : 0.8896887, 0.9630582  (x, y)\nextent     : 178.3987, 292.2789, 329.4634, 452.7349  (xmin, xmax, ymin, ymax)\ncrs        : NA \nsource     : memory\nnames      : v \nvalues     : -3.514656e-16, 11.15238  (min, max)\n\n\n\nkde_wpnonfunc_raster <- raster(gridded_wpnonfunc)\nkde_wpnonfunc_raster\n\nclass      : RasterLayer \ndimensions : 128, 128, 16384  (nrow, ncol, ncell)\nresolution : 0.8896887, 0.9630582  (x, y)\nextent     : 178.3987, 292.2789, 329.4634, 452.7349  (xmin, xmax, ymin, ymax)\ncrs        : NA \nsource     : memory\nnames      : v \nvalues     : -3.628555e-16, 10.26005  (min, max)\n\n\n\n\n6.1.4 - Assigning projection systems\n\nprojection(kde_wpfunc_raster) <- CRS(\"+init=EPSG:26391 +datum:WGS84 +units=km\")\nkde_wpfunc_raster\n\nclass      : RasterLayer \ndimensions : 128, 128, 16384  (nrow, ncol, ncell)\nresolution : 0.8896887, 0.9630582  (x, y)\nextent     : 178.3987, 292.2789, 329.4634, 452.7349  (xmin, xmax, ymin, ymax)\ncrs        : +init=EPSG:26391 +datum:WGS84 +units=km \nsource     : memory\nnames      : v \nvalues     : -3.514656e-16, 11.15238  (min, max)\n\n\n\nprojection(kde_wpnonfunc_raster) <- CRS(\"+init=EPSG:26391 +datum:WGS84 +units=km\")\nkde_wpnonfunc_raster\n\nclass      : RasterLayer \ndimensions : 128, 128, 16384  (nrow, ncol, ncell)\nresolution : 0.8896887, 0.9630582  (x, y)\nextent     : 178.3987, 292.2789, 329.4634, 452.7349  (xmin, xmax, ymin, ymax)\ncrs        : +init=EPSG:26391 +datum:WGS84 +units=km \nsource     : memory\nnames      : v \nvalues     : -3.628555e-16, 10.26005  (min, max)"
   },
   {
+    "objectID": "Take-home_Ex/Take-home_Ex1.html#visualizing-kde-with-tmap",
+    "href": "Take-home_Ex/Take-home_Ex1.html#visualizing-kde-with-tmap",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "6.2 - Visualizing KDE with tmap",
+    "text": "6.2 - Visualizing KDE with tmap\n\ntmap_mode('view')\ntm_basemap(\"OpenStreetMap\") +\ntm_shape(kde_wpfunc_raster) +\n  tm_raster(\"v\")\n\n\n\n\n\n\ntmap_mode('view')\ntm_basemap(\"OpenStreetMap\") +\ntm_shape(kde_wpnonfunc_raster) +\n  tm_raster(\"v\")"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex1.html#nearest-neighbor-index",
+    "href": "Take-home_Ex/Take-home_Ex1.html#nearest-neighbor-index",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "6.3 - Nearest Neighbor Index",
+    "text": "6.3 - Nearest Neighbor Index\nBefore moving on to the Second-order Spatial Points Analysis, I would like to perform the Clark-Evans test to measure aggregation of functional and non-functional water points. The goal is to test the randomness of the data points and assess whether they are randomly distributed, clustered or dispersed.\nWe will perform a series of 2 tests, first on functional water points and, second, on non-functional water points. We will be using the clarkevans.test() function of the spatstat package.\nThe hypotheses are the following:\nTest 1\nH0 : Functional Water Points are randomly distributed\nH1 : Functional Water Points are not randomly distributed, they are clustered\nTest 2\nH0 : Non-functional Water Points are randomly distributed\nH1 : Non-functional Water Points are not randomly distributed, they are clustered\nAs you may have read above, we determine the alternative hypothesis to be that water points are clustered. This decision is based on an intuition that derives from the previously seen visual representations of functional and non-functional water points. Indeed, we observed in our KDE plots some concentration of data points across the Osun State. Thus, we would like to test for clustering directly to prove this intuition.\nPlease note that when conducting our tests, we will use a 5% significance level.\n\n6.3.1 - Test 1 on functional water points\nFirst test on functional water points.\n\nclarkevans.test(wp_functional_ppp,\n                correction=\"none\",\n                clipregion=NULL,\n                alternative=c(\"clustered\"),\n                nsim=99)\n\n\n    Clark-Evans test\n    No edge correction\n    Monte Carlo test based on 99 simulations of CSR with fixed n\n\ndata:  wp_functional_ppp\nR = 0.44265, p-value = 0.01\nalternative hypothesis: clustered (R < 1)\n\n\n\n\n6.3.2 - Test 2 on non-functional water points\nSecond test on non-functional water points\n\nclarkevans.test(wp_nonfunctional_ppp,\n                correction=\"none\",\n                clipregion=NULL,\n                alternative=c(\"clustered\"),\n                nsim=99)\n\n\n    Clark-Evans test\n    No edge correction\n    Monte Carlo test based on 99 simulations of CSR with fixed n\n\ndata:  wp_nonfunctional_ppp\nR = 0.43223, p-value = 0.01\nalternative hypothesis: clustered (R < 1)\n\n\n\n\n6.3.3 - Conclusion\nConclusion?"
+  },
+  {
     "objectID": "Take-home_Ex/Take-home_Ex1.html#formulate-the-null-hypothesis-and-alternative-hypothesis-and-select-the-confidence-level",
     "href": "Take-home_Ex/Take-home_Ex1.html#formulate-the-null-hypothesis-and-alternative-hypothesis-and-select-the-confidence-level",
     "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
@@ -565,47 +607,5 @@
     "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
     "section": "8.3 - With reference to the analysis results, draw statistical conclusions",
     "text": "8.3 - With reference to the analysis results, draw statistical conclusions"
-  },
-  {
-    "objectID": "Take-home_Ex/Take-home_Ex1.html#nearest-neighbor-index",
-    "href": "Take-home_Ex/Take-home_Ex1.html#nearest-neighbor-index",
-    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
-    "section": "6.3 - Nearest Neighbor Index",
-    "text": "6.3 - Nearest Neighbor Index\nBefore moving on to the Second-order Spatial Points Analysis, I would like to perform the Clark-Evans test to measure aggregation of functional and non-functional water points. The goal is to test the randomness of the data points and assess whether they are randomly distributed, clustered or dispersed.\nWe will perform a series of 2 tests, first on functional water points and, second, on non-functional water points. We will be using the clarkevans.test() function of the spatstat package.\nThe hypotheses are the following:\nTest 1\nH0 : Functional Water Points are randomly distributed\nH1 : Functional Water Points are not randomly distributed, they are clustered\nTest 2\nH0 : Non-functional Water Points are randomly distributed\nH1 : Non-functional Water Points are not randomly distributed, they are clustered\nAs you may have read above, we determine the alternative hypothesis to be that water points are clustered. This decision is based on an intuition that derives from the previously seen visual representations of functional and non-functional water points. Indeed, we observed in our KDE plots some concentration of data points across the Osun State. Thus, we would like to test for clustering directly to prove this intuition.\nPlease note that when conducting our tests, we will use a 5% significance level.\n\n6.3.1 - Test 1 on functional water points\nFirst test on functional water points.\n\nclarkevans.test(wp_functional_ppp,\n                correction=\"none\",\n                clipregion=NULL,\n                alternative=c(\"clustered\"),\n                nsim=99)\n\n\n    Clark-Evans test\n    No edge correction\n    Monte Carlo test based on 99 simulations of CSR with fixed n\n\ndata:  wp_functional_ppp\nR = 0.44265, p-value = 0.01\nalternative hypothesis: clustered (R < 1)\n\n\n\n\n6.3.2 - Test 2 on non-functional water points\nSecond test on non-functional water points\n\nclarkevans.test(wp_nonfunctional_ppp,\n                correction=\"none\",\n                clipregion=NULL,\n                alternative=c(\"clustered\"),\n                nsim=99)\n\n\n    Clark-Evans test\n    No edge correction\n    Monte Carlo test based on 99 simulations of CSR with fixed n\n\ndata:  wp_nonfunctional_ppp\nR = 0.43223, p-value = 0.01\nalternative hypothesis: clustered (R < 1)\n\n\n\n\n6.3.3 - Conclusion\nConclusion?"
-  },
-  {
-    "objectID": "Take-home_Ex/Take-home_Ex1.html#visualizing-kde-with-tmap",
-    "href": "Take-home_Ex/Take-home_Ex1.html#visualizing-kde-with-tmap",
-    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
-    "section": "6.2 - Visualizing KDE with tmap",
-    "text": "6.2 - Visualizing KDE with tmap\n\ntmap_mode('view')\ntm_basemap(\"OpenStreetMap\") +\ntm_shape(kde_wpfunc_raster) +\n  tm_raster(\"v\")\n\n\n\n\n\n\ntmap_mode('view')\ntm_basemap(\"OpenStreetMap\") +\ntm_shape(kde_wpnonfunc_raster) +\n  tm_raster(\"v\")"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#section-1",
-    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#section-1",
-    "title": "In-class Exercise - Spatial Point Patterns Analysis",
-    "section": "4.1",
-    "text": "4.1\n\ntmap_mode('view')\ntm_shape(childcare_sf)+\n  tm_dots(alpha = 0.5,\n          size = 0.01)+\n  tm_view(set.zoom.limits = c(11, 13))\n\n\n\n\n\n\n\ntmap_mode(\"plot\")"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05.html",
-    "href": "In-class_Ex/In-class_Ex05/In-class_Ex05.html",
-    "title": "In-class Exercise - Spatial Point Patterns Analysis",
-    "section": "",
-    "text": "pacman::p_load(tidyverse, tmap, sf, sfdep)\n\n\nstudyArea = st_read(dsn = \"data\",\n                    layer = \"study_area\") %>%\n  st_transform(crs = 3829)\n\nReading layer `study_area' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex05\\data' using driver `ESRI Shapefile'\nSimple feature collection with 7 features and 7 fields\nGeometry type: POLYGON\nDimension:     XY\nBounding box:  xmin: 121.4836 ymin: 25.00776 xmax: 121.592 ymax: 25.09288\nGeodetic CRS:  TWD97\n\n\n\nstores = st_read(dsn = \"data\",\n                    layer = \"stores\") %>%\n  st_transform(crs = 3829)\n\nReading layer `stores' from data source \n  `C:\\p-haas\\IS415\\In-class_Ex\\In-class_Ex05\\data' using driver `ESRI Shapefile'\nSimple feature collection with 1409 features and 4 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: 121.4902 ymin: 25.01257 xmax: 121.5874 ymax: 25.08557\nGeodetic CRS:  TWD97\n\n\n\ntmap_mode(\"view\")\ntm_shape(studyArea)+\n  tm_polygons()+\ntm_shape(stores)+\n  tm_dots(col = \"Name\",\n          size = 0.01,\n          border.col = \"black\",\n          border.lwd = 0.5)+\n  tm_view(set.zoom.limits = c(12, 16))\n\n\n\n\n\n\n\nLocal Colocation Quotients (LCLQ)\n\nnb = include_self(st_knn(st_geometry(stores), 6))\n\nwt = st_kernel_weights(nb, stores, \"gaussian\", adaptive = TRUE)\n\n\nFamilyMart = stores %>%\n  filter(Name == \"Family Mart\")\nA = FamilyMart$Name\n\n\nSevenEleven = stores %>%\n  filter(Name == \"7-Eleven\")\nB = SevenEleven$Name\n\n\nLCLQ = local_colocation(A, B, nb, wt, 49)\n\n\nLCLQ_stores = cbind(stores, LCLQ)\n\n\ntmap_mode(\"view\")\ntm_shape(studyArea)+\n  tm_polygons()+\ntm_shape(LCLQ_stores)+\n  tm_dots(col = \"X7.Eleven\",\n          size = 0.01,\n          border.col = \"black\",\n          border.lwd = 0.5)+\n  tm_view(set.zoom.limits = c(12, 16))"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex05/data/stores.html",
-    "href": "In-class_Ex/In-class_Ex05/data/stores.html",
-    "title": "IS415",
-    "section": "",
-    "text": "<!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’>     \n\n\n        0 0     false"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex05/data/study_area.html",
-    "href": "In-class_Ex/In-class_Ex05/data/study_area.html",
-    "title": "IS415",
-    "section": "",
-    "text": "<!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’>     dataset\n\n\n        0 0     false"
   }
 ]
