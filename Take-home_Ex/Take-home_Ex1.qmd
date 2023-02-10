@@ -25,7 +25,7 @@ number-sections: true
 Here, you will find a list with the data used, its type, format, and source it was extracted from.
 
 | Type         | Data                                                               | Format | Source                                                                                                                                                                                                                                                                                                        |
-|-----------------|-----------------|-----------------|---------------------|
+|------------------|------------------|------------------|-------------------|
 | *Geospatial* | State GIS boundary data of Nigeria - Administration Level 1, 2 & 3 | *.shp* | [OCHA](https://data.humdata.org/dataset/cod-ab-nga) data, extracted from the [Humanitarian Data Exchange](https://data.humdata.org/) portal ([data](https://data.humdata.org/dataset/81ac1d38-f603-4a98-804d-325c658599a3/resource/aa69f07b-ed8e-456a-9233-b20674730be6/download/nga_adm_osgof_20190417.zip)) |
 | *Geospatial* | State GIS boundary data of Nigeria - Administration Level 2        | *.shp* | Data collected from [geoboundaries.org](https://www.geoboundaries.org/)                                                                                                                                                                                                                                       |
 | *Aspatial*   | Water Point Data Exchange Plus                                     | *.csv* | [Data](https://data.waterpointdata.org/dataset/Water-Point-Data-Exchange-Plus-WPDx-/eqje-vguj/data) extracted from WPdx Global Data Repositories                                                                                                                                                              |
@@ -50,8 +50,15 @@ For the purpose of our analysis, we will be using the following libraries:
 
 -   **tidyverse** and readr, dplyr, ggplot2 & tidyr dependencies
 
+-   **pacman**
+
+To installl and load the packages, we will be using the function *p_load()* of the **pacman** package. This will ensure that all packages are installed and loaded properly.
+
 ```{r}
-pacman::p_load(sf, tmap, funModeling, maptools, spatstat, tidyverse, raster)
+#| code-fold: true
+#| code-summary: Show code
+
+pacman::p_load(sf, tmap, funModeling, maptools, spatstat, tidyverse, raster, sfdep)
 ```
 
 # Handling Geospatial Data
@@ -76,7 +83,7 @@ wp_nga = read_csv("data/aspatial/Water_Point_Data_Exchange_-_Plus__WPdx__.csv", 
 Before diving into Data Wrangling, the first step is to get an understanding of the data and its attributes. By using the function *glimpse()* of the **dplyr** package, we will be able to view the attributes of this data set and data type of each field.
 
 ```{r}
-list(wp_nga)
+glimpse(wp_nga)
 ```
 
 The output reveals that we have a tible data frame -- *wp_nga* -- composed of 406,566 data points and 70 columns. It is now time to take a few seconds to browse through the data to get a proper look at the different attributes in the data set.
@@ -110,10 +117,11 @@ wp_nga$Geometry = st_as_sfc(wp_nga$`New Georeferenced Column`)
 wp_nga
 ```
 
-Now, we can convert the tibble data frame into a **sf** object using the *st_sf()* function. We shall also specify the georeferencing system, crs code. Here, it seems like the data is referenced in WGS84.
+Now, we can convert the tibble data frame into a **sf** object using the *st_sf()* function. We shall also specify the georeferencing system (crs code). Here, it seems like the data is referenced in WGS84.
 
 ```{r}
-wp_sf <- st_sf(wp_nga, crs=4326)
+wp_sf <- wp_nga %>%
+  st_sf(crs=4326)
 wp_sf
 ```
 
@@ -132,36 +140,78 @@ wp_sf <- wp_sf %>%
 
 ### The NGA data set
 
+::: panel-tabset
+#### Import data
+
+We use the function st_read() from sf package to import our geospatial data. Here, we import the NGA data set, which is stored in our data folder as a shp file. Since our analysis is focused on the Osun State (Nigeria), we will use the filter() function to select the data corresponding to the Administration Level 1 of Osun State.
+
 ```{r}
 nga = st_read(dsn = "data/geospatial",
                    layer = "nga_admbnda_adm2") %>%
   filter(ADM1_EN == "Osun")
 ```
 
+#### Check CRS
+
+Before proceeding to the next steps, I would like to retrieve the CRS code from the sf object to perform a quick check that the CRS and code match. To do so, we use the st_crs() function which helps us do that.
+
 ```{r}
 st_crs(nga)
 ```
 
+The CRS and id match, therefore we can move on to the next step and transform the data into the Nigerian projected coordinate system.
+
+#### st_transform()
+
+As explained before, using st_transform(), we convert the sf coordinates into the Nigerian projected coordinate system.
+
 ```{r}
 nga <- nga %>%
   st_transform(crs = 26391)
+nga
 ```
+
+The projected CRS now corresponds to the Nigerian one, we will be able to perform data wrangling from now on.
+:::
 
 ### The geoBoundaries data set
 
+In this section, we will follow the same steps as the NGA data set but for the geoBoundaries data this time, however, since we will choose the NGA data over the latter, we can refrain from performing the next steps. Yet, I include the code if one chooses to work with the geoBoundaries data set.
+
+::: panel-tabset
+#### Import data
+
 ```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: Show code
+
 geoNGA = st_read(dsn = "data/geospatial",
                  layer = "geoBoundaries-NGA-ADM2")
 ```
 
+#### st_crs()
+
 ```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: Show code
+
 st_crs(geoNGA)
 ```
 
+#### st_tansform()
+
 ```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: Show code
+
 geoNGA <- geoNGA %>%
   st_transform(crs = 26391)
+geoNGA
 ```
+:::
 
 # Data Cleaning & Wrangling
 
@@ -169,18 +219,30 @@ geoNGA <- geoNGA %>%
 
 ### Excluding redundant fields
 
+To simplify our work, we shall reduce our data set and use only necessary attributes. Using the select() function, we will choose fields 3, 4, 8, and 9. By doing so, we exclude redundant fields.
+
 ```{r}
 nga <- nga %>%
   dplyr::select(c(3:4, 8:9))
 ```
 
+Note that the Geometry field remains in our sf data frame.
+
 ### Checking for duplicated name
+
+Checking for duplicates is an essential part of data cleaning. Here, we shall check if any ... have the same name within the Osun State.
 
 ```{r}
 nga$ADM2_EN[duplicated(nga$ADM2_EN)==TRUE]
 ```
 
+There are no duplicates in the data set. We shall then move on to the data wrangling of the water points.
+
 ## Data Wrangling for Water Point Data
+
+Given the nature of our work which focuses on analyzing the distribution of functional and non-functional water points throughout the Osun State in Nigeria, we should explore the attribute that stores such information.
+
+Looking back at the previous work done, it seems that the field `#status_clean` indicates the nature of the water point. By using the freq() function from the funModeling package, we display the information about the water points on a bar plot.
 
 ```{r}
 #| warning: false
@@ -189,15 +251,34 @@ funModeling::freq(data = wp_sf,
      input = '#status_clean')
 ```
 
+Looking at the above bar plot, we learn that:
+
+-   15% of observations are not classified, we should treat that issue next;
+
+-   the functional water points are classified into 3 categories, namely "Functional", "Functional but needs repair", and "Functional but in use";
+
+-   the non-functional water points are classified into 4 categories, namely "Non-Functional", "Non-Functional due to dry season", "Abandoned", and "Abandoned/Decommissioned";
+
+Before extracting the water point data, we will simplify our work by creating an alternate data frame using the rename(), select(), and mutate() functions.
+
+-   We use rename() to rename the '#status_clean' field to status_clean, it will make data handling easier;
+
+-   We use select() of the dplyr package to include the status_clean attribute in the output sf data frame;
+
+-   We use replace_na() to change all NA values from the status_clean column into unknown.
+
 ```{r}
 wp_sf_nga <- wp_sf %>% 
   rename(status_clean = '#status_clean') %>%
   dplyr::select(status_clean) %>%
   mutate(status_clean = replace_na(
     status_clean, "unknown"))
+head(wp_sf_nga)
 ```
 
 ### Extracting water point data
+
+In order to perform tests on the different water point categories, we should extract the water point data according to their status. We will use the function filter() to do so, and shall include all relevant categories to functional and non-functional water points as mentioned earlier.
 
 ```{r}
 wp_sf_functional <- wp_sf_nga %>%
@@ -213,13 +294,7 @@ wp_sf_nonfunctional <- wp_sf_nga %>%
            c("Abandoned/Decommissioned",
              "Abandoned",
              "Non-Functional due to dry season",
-             "Non-Functional",
-             "Non functional due to dry season"))
-```
-
-```{r}
-wp_sf_unknown <- wp_sf_nga %>%
-  filter(status_clean == "unknown")
+             "Non-Functional"))
 ```
 
 ### Performing Point-in-Polygon Count
@@ -315,10 +390,12 @@ This section has for objective:
 
 Our first step to KDE is to derive two density maps for functional and non-functional water points to check for any potential data problem. Here, we suspect that the scale of density values will be expressed in meters. The default measurement unit of Nigeria's projected coordinate system -- [EPSG:26391](https://epsg.io/26391) -- is expressed in meters. We shall verify that and correct it to kilometers to get a more desirable map output (scale).
 
-For starters, we should use the *density()* function to compute kernel density estimates for both types of water points. We will use two methods for smoothing the bandwidth for the kernel estimation point process intensity and leave the default kernel smoothing method -- the Gaussian method.
+For starters, we should use the *density()* function to compute kernel density estimates for both types of water points. We will use two methods for smoothing the bandwidth for the kernel estimation point process intensity.
 
 ::: panel-tabset
 #### Adaptive Bandwidth
+
+The first method uses adaptive estimate of the intensity function of a point pattern. We plot side-by-side the KDE maps for functional and non-functional WP.
 
 ```{r}
 #| warning: false
@@ -334,13 +411,19 @@ kde_wpnonfunc.m <- adaptive.density(wp_nonfunctional_ppp,
 par(mfrow=c(1,2))
 plot(kde_wpfunc.m,
      main = "Functional Water Points",
-     ribside=c("right"))
+     ribside=c("bottom"))
 plot(kde_wpnonfunc.m,
      main = "Non-Functional Water Points",
-     ribside=c("right"))
+     ribside=c("bottom"))
 ```
 
+We observe potential clustering as some areas of the maps seem to have higher concentration of observations.
+
+We also observe that the scale is set in meters, thus we will take action and re-scale our data points to kilometers.
+
 #### Automatic Bandwidth
+
+Please find an alternative method for computing the bandwidth of our kernel density estimations.
 
 ```{r}
 #| warning: false
@@ -510,6 +593,9 @@ kde_wpnonfunc_raster
 
 ## Visualizing KDE with tmap
 
+::: panel-tabset
+#### Functional WP map
+
 ```{r}
 tmap_mode('view')
 tm_basemap("OpenStreetMap") +
@@ -517,12 +603,15 @@ tm_shape(kde_wpfunc_raster) +
   tm_raster("v")
 ```
 
+#### Non-functional WP map
+
 ```{r}
 tmap_mode('view')
 tm_basemap("OpenStreetMap") +
 tm_shape(kde_wpnonfunc_raster) +
   tm_raster("v")
 ```
+:::
 
 ## Nearest Neighbor Index
 
@@ -548,7 +637,8 @@ As you may have read above, we determine the alternative hypothesis to be that w
 
 Please note that when conducting our tests, we will use a 5% significance level.
 
-### Test 1 on functional water points
+::: panel-tabset
+#### Test 1 functional WP
 
 First test on functional water points.
 
@@ -560,7 +650,7 @@ clarkevans.test(wp_functional_ppp,
                 nsim=99)
 ```
 
-### Test 2 on non-functional water points
+#### Test 2 non-functional WP
 
 Second test on non-functional water points
 
@@ -571,6 +661,7 @@ clarkevans.test(wp_nonfunctional_ppp,
                 alternative=c("clustered"),
                 nsim=99)
 ```
+:::
 
 ### Conclusion
 
@@ -587,6 +678,16 @@ Conclusion?
 # plot(G_tm)
 ```
 
+```{r}
+#L_wpfunc = Lest(wp_functional_ppp, correction = "Ripley")
+#plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
+```
+
+```{r}
+# L_wp1.csr <- envelope(wp1_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
+# plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Functional WP in Borepe")
+```
+
 ## 7.3 - With reference to the analysis results, draw statistical conclusions
 
 # 8 - Spatial Correlation Analysis
@@ -598,18 +699,50 @@ In this section, you are required to confirm statistically if the spatial distri
 ## 8.2 - Perform the test by using appropriate Second order spatial point patterns analysis technique
 
 ```{r}
-#L_wpfunc = Lest(wp_functional_ppp, correction = "Ripley")
-#plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
+nb = include_self(st_knn(st_geometry(wp_sf_nga), 6))
+
+wt = st_kernel_weights(nb, wp_sf_nga, "gaussian", adaptive = TRUE)
 ```
 
 ```{r}
-# L_wp1.csr <- envelope(wp1_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
-# plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Functional WP in Borepe")
+functional = wp_sf_nga %>%
+  filter(status_clean %in%
+           c("Functional",
+             "Functional but not in use",
+             "Functional but needs repair"))
+
+A = functional$status_clean
 ```
 
 ```{r}
-# K_wpnonfunc = Kest(wp_nonfunctional_ppp, correction = "isotropic")
-# plot(K_wpnonfunc, . -r ~ r, ylab= "K(d)-r", xlab = "d(m)", xlim=c(0,1000))
+nonfunctional = wp_sf_nga %>%
+  filter(status_clean %in%
+           c("Abandoned/Decommissioned",
+             "Abandoned",
+             "Non-Functional due to dry season",
+             "Non-Functional",
+             "Non functional due to dry season"))
+B = nonfunctional$status_clean
+```
+
+```{r}
+LCLQ = local_colocation(A, B, nb, wt, 49)
+```
+
+```{r}
+LCLQ_stores = cbind(wp_sf_nga, LCLQ)
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(nga)+
+  tm_polygons()+
+tm_shape(LCLQ_stores)+
+  tm_dots(col = c("Abandoned", "Abandoned.Decommissioned", "Non.Functional", "Non.Functional.due.to.dry.season"),
+          size = 0.01,
+          border.col = "black",
+          border.lwd = 0.5)#+
+  #tm_view(set.zoom.limits = c(12, 16))
 ```
 
 ## 8.3 - With reference to the analysis results, draw statistical conclusions
