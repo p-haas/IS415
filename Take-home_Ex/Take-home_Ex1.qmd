@@ -306,9 +306,7 @@ nga_wp <- nga %>%
   mutate(`wp_functional` = lengths(
     st_intersects(nga, wp_sf_functional))) %>%
   mutate(`wp_nonfunctional` = lengths(
-    st_intersects(nga, wp_sf_nonfunctional))) %>%
-  mutate(`wp_unknown` = lengths(
-    st_intersects(nga, wp_sf_unknown)))
+    st_intersects(nga, wp_sf_nonfunctional)))
 ```
 
 ## Converting *sf* data frames to *sp's* Spatial\* class
