@@ -213,7 +213,7 @@ geoNGA
 ```
 :::
 
-# Data Cleaning & Wrangling
+# Data Cleaning
 
 ## Geospatial Data Cleaning
 
@@ -297,6 +297,16 @@ wp_sf_nonfunctional <- wp_sf_nga %>%
              "Non-Functional"))
 ```
 
+```{r}
+#freq(data = wp_sf_functional,
+ #    input = 'status_clean')
+```
+
+```{r}
+#freq(data = wp_sf_nonfunctional,
+ #    input = 'status_clean')
+```
+
 ### Performing Point-in-Polygon Count
 
 ```{r}
@@ -309,32 +319,93 @@ nga_wp <- nga %>%
     st_intersects(nga, wp_sf_nonfunctional)))
 ```
 
+```{r}
+ggplot(data = nga_wp,
+       aes(x = wp_nonfunctional)) + 
+  geom_histogram(bins=20,
+                 color="black",
+                 fill="light blue") +
+  geom_vline(aes(xintercept=mean(
+    wp_nonfunctional, na.rm=T)),
+             color="red", 
+             linetype="dashed", 
+             size=0.8) +
+  ggtitle("Distribution of total water points by LGA") +
+  xlab("No. of water points") +
+  ylab("No. of\nLGAs") +
+  theme(axis.title.y=element_text(angle = 0))
+```
+
+# Geospatial Data Wrangling
+
+In order to perform first-order spatial point pattern analysis and plot kernel density estimation maps, a few necessary steps remain. Indeed, **spatstat** package requires us to use analytical data in *ppp* object form. We call that geospatial data wrangling. In the following parts, we will convert our **sf** data frames into *ppp* and *owin* objects.
+
+Note that we will be working with the three following data frames:
+
+-   ***wp_sf_functional**,* being the **sf** data frame that stores the geometry of functional water points;
+
+-   ***wp_sf_nonfunctional***, being the **sf** data frame that stores the geometry of non-functional water points;
+
+-   ***nga***, being the **sf** data frame that stores the geometry of level 2 administrative boundaries in Nigeria;
+
 ## Converting *sf* data frames to *sp's* Spatial\* class
+
+The first step to converting an sf data frame to a ppp class object is to use the as_Spatial() function of the sf package. It converts the geospatial data from sf data frame to sp's Spatial\* class.
+
+Below, we perform this transformation on the three data frames.
+
+::: panel-tabset
+### Functional Water Points
 
 ```{r}
 wp_functional = as_Spatial(wp_sf_functional)
-wp_nonfunctional = as_Spatial(wp_sf_nonfunctional)
-nga_spat = as_Spatial(nga)
-```
-
-```{r}
 wp_functional
 ```
 
+Note that ***wp_functional*** is a Spatial Points data frame.
+
+### Non-Functional Water Points
+
 ```{r}
+wp_nonfunctional = as_Spatial(wp_sf_nonfunctional)
 wp_nonfunctional
 ```
 
+Note that ***wp_nonfunctional*** is a Spatial Points data frame.
+
+### Level-2 Administrative boundaries
+
 ```{r}
+nga_spat = as_Spatial(nga)
 nga_spat
 ```
 
+Note that ***nga_spat*** is a Spatial Polygons data frame.
+:::
+
 ## Converting the Spatial\* class into generic *sp* format
+
+:::panel-tabset
+
+### Functional Water Points
 
 ```{r}
 wp_functional_sp <- as(wp_functional, "SpatialPoints")
+wp_functional_sp
+```
+
+### Non-Functional Water Points
+
+```{r}
 wp_nonfunctional_sp <- as(wp_nonfunctional, "SpatialPoints")
+wp_nonfunctional_sp
+```
+
+### Level-2 Administrative boundaries
+
+```{r}
 nga_sp <- as(nga_spat, "SpatialPolygons")
+nga_sp
 ```
 
 ## Converting the generic *sp* format into *spatstat's* ppp format
@@ -350,10 +421,6 @@ wp_functional_ppp
 
 ```{r}
 plot(wp_functional_ppp)
-```
-
-```{r}
-summary(wp_functional_ppp)
 ```
 
 ## Creating *owin* object
@@ -661,7 +728,7 @@ clarkevans.test(wp_nonfunctional_ppp,
 ```
 :::
 
-### Conclusion
+### Conclusion of the test
 
 Conclusion?
 
@@ -682,6 +749,32 @@ Conclusion?
 ```
 
 ```{r}
+1:30
+```
+
+```{r}
+#for (i in 1:30){
+ # nga1 = nga[i,]
+  #print(nga1)
+  #nga_spat = as_Spatial(nga1)
+  #nga_sp = as(nga_spat, "SpatialPolygons")
+  #nga_owin = as(nga_sp, "owin")
+  #wp_functional_R = wp_functional_ppp[nga_owin]
+  #L_wp1.csr <- envelope(wp_functional_R, Lest, nsim = 39, rank = 1, glocal=TRUE)
+  #plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = #"L-test for Functional WP in Borepe")
+#}
+```
+
+```{r}
+#nga1 = nga[1,]
+#nga1
+```
+
+```{r}
+#nga_spat
+```
+
+```{r}
 # L_wp1.csr <- envelope(wp1_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
 # plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Functional WP in Borepe")
 ```
@@ -697,13 +790,26 @@ In this section, you are required to confirm statistically if the spatial distri
 ## 8.2 - Perform the test by using appropriate Second order spatial point patterns analysis technique
 
 ```{r}
-nb = include_self(st_knn(st_geometry(wp_sf_nga), 6))
-
-wt = st_kernel_weights(nb, wp_sf_nga, "gaussian", adaptive = TRUE)
+water_points = wp_sf_nga %>%
+  mutate(status_clean = recode(status_clean, "Functional but not in use" = 'Functional', "Functional but needs repair" = 'Functional', "Abandoned/Decommissioned" = 'Non-Functional', "Abandoned" = 'Non-Functional', "Non-Functional due to dry season" = 'Non-Functional')) %>%
+  filter(status_clean %in%
+           c("Functional",
+             "Functional but not in use",
+             "Functional but needs repair",
+             "Abandoned/Decommissioned",
+             "Abandoned",
+             "Non-Functional due to dry season",
+             "Non-Functional"))
 ```
 
 ```{r}
-functional = wp_sf_nga %>%
+nb = include_self(st_knn(st_geometry(water_points), 6))
+
+wt = st_kernel_weights(nb, water_points, "gaussian", adaptive = TRUE)
+```
+
+```{r}
+functional = water_points %>%
   filter(status_clean %in%
            c("Functional",
              "Functional but not in use",
@@ -713,13 +819,13 @@ A = functional$status_clean
 ```
 
 ```{r}
-nonfunctional = wp_sf_nga %>%
+nonfunctional = water_points %>%
   filter(status_clean %in%
            c("Abandoned/Decommissioned",
              "Abandoned",
              "Non-Functional due to dry season",
-             "Non-Functional",
-             "Non functional due to dry season"))
+             "Non-Functional"))
+
 B = nonfunctional$status_clean
 ```
 
@@ -728,7 +834,7 @@ LCLQ = local_colocation(A, B, nb, wt, 49)
 ```
 
 ```{r}
-LCLQ_stores = cbind(wp_sf_nga, LCLQ)
+LCLQ_stores = cbind(water_points, LCLQ)
 ```
 
 ```{r}
@@ -736,7 +842,7 @@ tmap_mode("view")
 tm_shape(nga)+
   tm_polygons()+
 tm_shape(LCLQ_stores)+
-  tm_dots(col = c("Abandoned", "Abandoned.Decommissioned", "Non.Functional", "Non.Functional.due.to.dry.season"),
+  tm_dots(col = c("Non.Functional"),
           size = 0.01,
           border.col = "black",
           border.lwd = 0.5)#+
