@@ -16,8 +16,6 @@ editor: visual
 number-sections: true
 ---
 
-# Introduction
-
 # Getting Started
 
 ## Retrieving Data from the Web
@@ -510,6 +508,8 @@ plot(wp_nonfunctional_ppp)
 ```
 :::
 
+Looking at the plots above, we obtain two point maps with the water points located within the nga_owin object, so within the Osun State.
+
 # Exploratory Spatial Data Analysis
 
 This section has for objective:
@@ -858,6 +858,8 @@ We will be using a 5% significance level in our tests. By doing so, we will be r
 
 ## Perform the test by using appropriate Second order spatial point patterns analysis technique
 
+This first piece of code you can find just below is the code you would use to perform a single analysis for Functional Water Points in the case of the code chunk below.
+
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -865,6 +867,17 @@ We will be using a 5% significance level in our tests. By doing so, we will be r
 
 L_wpfunc = Lest(wp_functional_ppp, correction = "Ripley")
 plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
+```
+
+This second piece of code is the one you would use to perform a Monte-Carlo simulation on Functional Water Points in the Osun State of Nigeria. As explained, the computational power of my laptop does not allow me to run the code chunk in a reasonable amount of time, so I will be doing Admin Level-2 boudary analysis.
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: Show code
+
+L_wp1.csr <- envelope(wp_functional_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
+plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Functional Water Points in Osun State")
 ```
 
 ::: panel-tabset
@@ -918,24 +931,31 @@ for (i in 1:30){
 
 ## With reference to the analysis results, draw statistical conclusions
 
+To make the purpose of drawing statistical conclusion, I will walk you through the interpretation of the first three level-2 administrative boundaries for functional water points.
+
+Looking at the Aiyedade boundary, we see that the observed L value is above the theoretical line and directly jumps above the envelope. Given our observation, we can conclude that at a 5% significance level, the functional water points in Aiyedade are concentrated. Spatial clustering is statistically significant.
+
+Looking at the Aiyedire boundary, we have the same statistical conclusion. The L values are always above the upper limit of the envelope, meaning that spatial clustering of functional water points is statistically significant at a 5% signifance level.
+
+Finally, looking at the Atakumose East boundary, we see that at a distance of 0 to 2100, L values are above the higher limit of the envelope, so the clustering is statistically significant. Between distances of 2100 - 3900 and 4100 - 5000, the L values are located within the envelope, so spatial clustering for these distances is not significant. Between distances of 3900 and 4100, the L values are below the lower limit of the envelope, meaning that spatial dispersion for these distances is statistically significant.
+
 # Spatial Correlation Analysis
 
 In this section, you are required to confirm statistically if the spatial distribution of functional and non-functional water points are independent from each other.
 
 ## Visualizing the sf layers
 
+First, we rename the status into two main groups, functional and non-functional. It will help us in our local collocation quotient analysis. Using the *mutate()* and *recode()* functions, we can do as explained above.
+
 ```{r}
 water_points = wp_sf_nga %>%
   mutate(status_clean = recode(status_clean, "Functional but not in use" = 'Functional', "Functional but needs repair" = 'Functional', "Abandoned/Decommissioned" = 'Non-Functional', "Abandoned" = 'Non-Functional', "Non-Functional due to dry season" = 'Non-Functional')) %>%
   filter(status_clean %in%
            c("Functional",
-             "Functional but not in use",
-             "Functional but needs repair",
-             "Abandoned/Decommissioned",
-             "Abandoned",
-             "Non-Functional due to dry season",
              "Non-Functional"))
 ```
+
+We then visualize the new categories on a map using the tmap package.
 
 ```{r}
 tmap_mode("view")
