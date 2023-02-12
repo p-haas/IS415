@@ -280,6 +280,9 @@ head(wp_sf_nga)
 
 In order to perform tests on the different water point categories, we should extract the water point data according to their status. We will use the function filter() to do so, and shall include all relevant categories to functional and non-functional water points as mentioned earlier.
 
+::: panel-tabset
+#### Functional Water Points
+
 ```{r}
 wp_sf_functional <- wp_sf_nga %>%
   filter(status_clean %in%
@@ -287,6 +290,13 @@ wp_sf_functional <- wp_sf_nga %>%
              "Functional but not in use",
              "Functional but needs repair"))
 ```
+
+```{r}
+funModeling::freq(data = wp_sf_functional,
+     input = 'status_clean')
+```
+
+#### Non-Functional Water Points
 
 ```{r}
 wp_sf_nonfunctional <- wp_sf_nga %>%
@@ -298,14 +308,10 @@ wp_sf_nonfunctional <- wp_sf_nga %>%
 ```
 
 ```{r}
-#freq(data = wp_sf_functional,
- #    input = 'status_clean')
+funModeling::freq(data = wp_sf_nonfunctional,
+                  input = 'status_clean')
 ```
-
-```{r}
-#freq(data = wp_sf_nonfunctional,
- #    input = 'status_clean')
-```
+:::
 
 ### Performing Point-in-Polygon Count
 
@@ -319,22 +325,45 @@ nga_wp <- nga %>%
     st_intersects(nga, wp_sf_nonfunctional)))
 ```
 
+::: panel-tabset
+#### Functional Water Points
+
 ```{r}
 ggplot(data = nga_wp,
-       aes(x = wp_nonfunctional)) + 
+       aes(x = wp_functional)) + 
   geom_histogram(bins=20,
                  color="black",
                  fill="light blue") +
   geom_vline(aes(xintercept=mean(
-    wp_nonfunctional, na.rm=T)),
+    wp_functional, na.rm=T)),
              color="red", 
              linetype="dashed", 
              size=0.8) +
-  ggtitle("Distribution of total water points by LGA") +
+  ggtitle("Distribution of Functional water points by LGA") +
   xlab("No. of water points") +
   ylab("No. of\nLGAs") +
   theme(axis.title.y=element_text(angle = 0))
 ```
+
+#### Non-Functional Water Points
+
+```{r}
+ggplot(data = nga_wp,
+       aes(x = wp_functional)) + 
+  geom_histogram(bins=20,
+                 color="black",
+                 fill="light blue") +
+  geom_vline(aes(xintercept=mean(
+    wp_functional, na.rm=T)),
+             color="red", 
+             linetype="dashed", 
+             size=0.8) +
+  ggtitle("Distribution of Functional water points by LGA") +
+  xlab("No. of water points") +
+  ylab("No. of\nLGAs") +
+  theme(axis.title.y=element_text(angle = 0))
+```
+:::
 
 # Geospatial Data Wrangling
 
@@ -463,7 +492,10 @@ summary(nga_owin)
 
 ## Combining point events object and *owin* object
 
-we shall end our geospatial data wrangling by extracting the functional and non-functional water points located within the Osun State in Nigeria. Using the code chunks below help us do that. :::panel-tabset \### Functional Water Points
+we shall end our geospatial data wrangling by extracting the functional and non-functional water points located within the Osun State in Nigeria. Using the code chunks below help us do that.
+
+::: panel-tabset
+### Functional Water Points
 
 ```{r}
 wp_functional_ppp = wp_functional_ppp[nga_owin]
@@ -476,7 +508,6 @@ plot(wp_functional_ppp)
 wp_nonfunctional_ppp = wp_nonfunctional_ppp[nga_owin]
 plot(wp_nonfunctional_ppp)
 ```
-
 :::
 
 # Exploratory Spatial Data Analysis
@@ -706,6 +737,9 @@ kde_wpfunc_raster.ppl
 #### Non-functional Water Points
 
 ```{r}
+#| code-fold: true
+#| code-summary: Show code
+
 projection(kde_wpnonfunc_raster) <- CRS("+init=EPSG:26391 +datum:WGS84 +units=km")
 projection(kde_wpnonfunc_raster.ppl) <- CRS("+init=EPSG:26391 +datum:WGS84 +units=km")
 
@@ -716,6 +750,8 @@ kde_wpnonfunc_raster.ppl
 
 ## Visualizing KDE with tmap
 
+Since we converted our KDE maps to raster objects, we will be able to plot the maps with the tmap package. Using the tm_basemap() function, we set OpenStreetMap as the default view mode on our interactive map. Then, using tm_shape() and tm_raster(), we plot the density estimates on the map and the Osun State layer.
+
 ::: panel-tabset
 #### Functional WP map
 
@@ -725,12 +761,6 @@ tm_basemap("OpenStreetMap") +
 tm_shape(kde_wpfunc_raster) +
   tm_raster("v")
 ```
-
-The kernel density maps reveal few concentrations of functional water points in certain location within the Osun State of Nigeria.
-
-We observe peaks of up to 26 water points located within a bandwidth of ...
-
-we find similar results with the non-functional water points.
 
 #### Non-functional WP map
 
@@ -748,11 +778,15 @@ tmap_mode("plot")
 
 ### Conclusion
 
+The kernel density maps reveal locations with higher density of functional and non-functional water points. We observe density peaks of up to 27 functional water points and 23 non-functional water points.
+
+It seems that we can observe clusters of functional and non-functional water points across the Osun state, however, this is just an intuition and it should be validated with further testing.
+
 Looking back at the point maps and comparing with these new KDE maps, it seems obvious that the latter offers much better clarity in terms of interpretation. What appeared to look like strongly concentrated functional and non-functional water points on the lint map, now looks much neater and many of these zones disappear.
 
--\> better understanding of the concentration, how much concentrated/dense?
+The KDE maps help us get a better understanding of the concentration and intensity. The point map gives us only a rough idea and no clear possible interpretation.
 
-Open question? Correlation between the two? What explains this concentration (outside the scope of this assignment)?
+However, we should note that KDE maps are only good to display the data in an understandable manner. I believe that extra-work should be put into understanding what factors may explain the higher density zones and if there are any correlation between the location of functional and non-functional water points.
 
 ## Nearest Neighbor Index
 
@@ -837,9 +871,8 @@ plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
 ### Functional Water Points
 
 ```{r}
-#| layout-ncol: 2
-
 for (i in 1:30){
+  print(paste("Test", i))
   print(paste("Now analyzing Administrative Level-2:", nga$ADM2_EN[i]))
   
   nga1 = nga[i,]
@@ -854,6 +887,8 @@ for (i in 1:30){
   
   title = paste("L-test for Functional Water Points in", nga$ADM2_EN[i])
   plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = title)
+  
+  print("—————————————————————————————————————————————————————————————————————")
 }
 ```
 
@@ -875,6 +910,8 @@ for (i in 1:30){
   
   title = paste("L-test for Non-Functional Water Points in", nga$ADM2_EN[i])
   plot(L_wp2.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = title)
+  
+  print("—————————————————————————————————————————————————————————————————————")
 }
 ```
 :::
