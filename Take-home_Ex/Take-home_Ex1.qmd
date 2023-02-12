@@ -837,6 +837,8 @@ plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
 ### Functional Water Points
 
 ```{r}
+#| layout-ncol: 2
+
 for (i in 1:30){
   print(paste("Now analyzing Administrative Level-2:", nga$ADM2_EN[i]))
   
@@ -907,10 +909,16 @@ tm_shape(st_intersection(water_points, nga))+
           size = 0.01,
           border.col = "black",
           border.lwd = 0.5)+
-  tm_view(set.zoom.limits = c(8, 12))
+  tm_view(set.zoom.limits = c(9, 12))
 ```
 
 ## Formulate the null hypothesis and alternative hypothesis and select the confidence level
+
+**H~0~ :** Functional and Non-Functional Water Points are randomly distributed
+
+**H~1~ :** Functional and Non-Functional Water Points are not randomly distributed (e.g.,they are collocated or isolated)
+
+We will use a 5% significance level, in other words, a 95% confidence level.
 
 ## Perform the test by using appropriate Second order spatial point patterns analysis technique
 
@@ -942,27 +950,33 @@ B = nonfunctional$status_clean
 ```
 
 ```{r}
-LCLQ = local_colocation(A, B, nb, wt, 49)
+LCLQ = local_colocation(A, B, nb, wt, 99)
 ```
 
 ```{r}
-LCLQ_stores = cbind(water_points, LCLQ)
+LCLQ_wp = cbind(water_points, LCLQ)
 ```
 
 ```{r}
 tmap_mode("view")
 tm_shape(nga)+
   tm_polygons()+
-tm_shape(LCLQ_stores)+
+tm_shape(st_intersection(LCLQ_wp, nga))+
   tm_dots(col = c("Non.Functional"),
           size = 0.01,
           border.col = "black",
-          border.lwd = 0.5)#+
-  #tm_view(set.zoom.limits = c(12, 16))
+          border.lwd = 0.5)+
+  tm_view(set.zoom.limits = c(9, 12))
 ```
 
 ```{r}
 tmap_mode("plot")
 ```
 
+```{r}
+head(LCLQ_wp[order(LCLQ_wp$p_sim_Non.Functional),])
+```
+
 ## With reference to the analysis results, draw statistical conclusions
+
+When cross referencing the points indicated on our above map as statistically significant and our data frame, we observe that their Local Collocation Quotient tends towards 1. It means that for each feature A -- namely Functional Water Points - it is as likely to have a category B feature -- Non-Functional Water Points - as we might expect (interpretation based on [ArcGIS Pro tool referencing](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/learnmorecolocationanalysis.htm)).
