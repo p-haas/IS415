@@ -740,6 +740,10 @@ tm_basemap("OpenStreetMap") +
 tm_shape(kde_wpnonfunc_raster) +
   tm_raster("v")
 ```
+
+```{r}
+tmap_mode("plot")
+```
 :::
 
 ### Conclusion
@@ -871,7 +875,6 @@ for (i in 1:30){
   plot(L_wp2.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = title)
 }
 ```
-
 :::
 
 ## With reference to the analysis results, draw statistical conclusions
@@ -880,9 +883,7 @@ for (i in 1:30){
 
 In this section, you are required to confirm statistically if the spatial distribution of functional and non-functional water points are independent from each other.
 
-## Formulate the null hypothesis and alternative hypothesis and select the confidence level
-
-## Perform the test by using appropriate Second order spatial point patterns analysis technique
+## Visualizing the sf layers
 
 ```{r}
 water_points = wp_sf_nga %>%
@@ -896,6 +897,22 @@ water_points = wp_sf_nga %>%
              "Non-Functional due to dry season",
              "Non-Functional"))
 ```
+
+```{r}
+tmap_mode("view")
+tm_shape(nga)+
+  tm_polygons()+
+tm_shape(st_intersection(water_points, nga))+
+  tm_dots(col = "status_clean",
+          size = 0.01,
+          border.col = "black",
+          border.lwd = 0.5)+
+  tm_view(set.zoom.limits = c(8, 12))
+```
+
+## Formulate the null hypothesis and alternative hypothesis and select the confidence level
+
+## Perform the test by using appropriate Second order spatial point patterns analysis technique
 
 ```{r}
 nb = include_self(st_knn(st_geometry(water_points), 6))
@@ -942,6 +959,10 @@ tm_shape(LCLQ_stores)+
           border.col = "black",
           border.lwd = 0.5)#+
   #tm_view(set.zoom.limits = c(12, 16))
+```
+
+```{r}
+tmap_mode("plot")
 ```
 
 ## With reference to the analysis results, draw statistical conclusions

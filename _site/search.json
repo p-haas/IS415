@@ -557,7 +557,7 @@
     "href": "Take-home_Ex/Take-home_Ex1.html#visualizing-kde-with-tmap",
     "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
     "section": "6.2 Visualizing KDE with tmap",
-    "text": "6.2 Visualizing KDE with tmap\n\nFunctional WP mapNon-functional WP map\n\n\n\ntmap_mode('view')\ntm_basemap(\"OpenStreetMap\") +\ntm_shape(kde_wpfunc_raster) +\n  tm_raster(\"v\")\n\n\n\n\n\nThe kernel density maps reveal few concentrations of functional water points in certain location within the Osun State of Nigeria.\nWe observe peaks of up to 26 water points located within a bandwidth of …\nwe find similar results with the non-functional water points.\n\n\n\ntmap_mode('view')\ntm_basemap(\"OpenStreetMap\") +\ntm_shape(kde_wpnonfunc_raster) +\n  tm_raster(\"v\")\n\n\n\n\n\n\n\n\n\n6.2.1 Conclusion\nLooking back at the point maps and comparing with these new KDE maps, it seems obvious that the latter offers much better clarity in terms of interpretation. What appeared to look like strongly concentrated functional and non-functional water points on the lint map, now looks much neater and many of these zones disappear.\n-> better understanding of the concentration, how much concentrated/dense?\nOpen question? Correlation between the two? What explains this concentration (outside the scope of this assignment)?"
+    "text": "6.2 Visualizing KDE with tmap\n\nFunctional WP mapNon-functional WP map\n\n\n\ntmap_mode('view')\ntm_basemap(\"OpenStreetMap\") +\ntm_shape(kde_wpfunc_raster) +\n  tm_raster(\"v\")\n\n\n\n\n\nThe kernel density maps reveal few concentrations of functional water points in certain location within the Osun State of Nigeria.\nWe observe peaks of up to 26 water points located within a bandwidth of …\nwe find similar results with the non-functional water points.\n\n\n\ntmap_mode('view')\ntm_basemap(\"OpenStreetMap\") +\ntm_shape(kde_wpnonfunc_raster) +\n  tm_raster(\"v\")\n\n\n\n\n\n\ntmap_mode(\"plot\")\n\n\n\n\n\n6.2.1 Conclusion\nLooking back at the point maps and comparing with these new KDE maps, it seems obvious that the latter offers much better clarity in terms of interpretation. What appeared to look like strongly concentrated functional and non-functional water points on the lint map, now looks much neater and many of these zones disappear.\n-> better understanding of the concentration, how much concentrated/dense?\nOpen question? Correlation between the two? What explains this concentration (outside the scope of this assignment)?"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex1.html#nearest-neighbor-index",
@@ -591,22 +591,22 @@
     "objectID": "Take-home_Ex/Take-home_Ex1.html#formulate-the-null-hypothesis-and-alternative-hypothesis-and-select-the-confidence-level-1",
     "href": "Take-home_Ex/Take-home_Ex1.html#formulate-the-null-hypothesis-and-alternative-hypothesis-and-select-the-confidence-level-1",
     "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
-    "section": "8.1 Formulate the null hypothesis and alternative hypothesis and select the confidence level",
-    "text": "8.1 Formulate the null hypothesis and alternative hypothesis and select the confidence level"
+    "section": "8.2 Formulate the null hypothesis and alternative hypothesis and select the confidence level",
+    "text": "8.2 Formulate the null hypothesis and alternative hypothesis and select the confidence level"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex1.html#perform-the-test-by-using-appropriate-second-order-spatial-point-patterns-analysis-technique-1",
     "href": "Take-home_Ex/Take-home_Ex1.html#perform-the-test-by-using-appropriate-second-order-spatial-point-patterns-analysis-technique-1",
     "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
-    "section": "8.2 Perform the test by using appropriate Second order spatial point patterns analysis technique",
-    "text": "8.2 Perform the test by using appropriate Second order spatial point patterns analysis technique\n\nwater_points = wp_sf_nga %>%\n  mutate(status_clean = recode(status_clean, \"Functional but not in use\" = 'Functional', \"Functional but needs repair\" = 'Functional', \"Abandoned/Decommissioned\" = 'Non-Functional', \"Abandoned\" = 'Non-Functional', \"Non-Functional due to dry season\" = 'Non-Functional')) %>%\n  filter(status_clean %in%\n           c(\"Functional\",\n             \"Functional but not in use\",\n             \"Functional but needs repair\",\n             \"Abandoned/Decommissioned\",\n             \"Abandoned\",\n             \"Non-Functional due to dry season\",\n             \"Non-Functional\"))\n\n\nnb = include_self(st_knn(st_geometry(water_points), 6))\n\nwt = st_kernel_weights(nb, water_points, \"gaussian\", adaptive = TRUE)\n\n\nfunctional = water_points %>%\n  filter(status_clean %in%\n           c(\"Functional\",\n             \"Functional but not in use\",\n             \"Functional but needs repair\"))\n\nA = functional$status_clean\n\n\nnonfunctional = water_points %>%\n  filter(status_clean %in%\n           c(\"Abandoned/Decommissioned\",\n             \"Abandoned\",\n             \"Non-Functional due to dry season\",\n             \"Non-Functional\"))\n\nB = nonfunctional$status_clean\n\n\nLCLQ = local_colocation(A, B, nb, wt, 49)\n\n\nLCLQ_stores = cbind(water_points, LCLQ)\n\n\ntmap_mode(\"view\")\ntm_shape(nga)+\n  tm_polygons()+\ntm_shape(LCLQ_stores)+\n  tm_dots(col = c(\"Non.Functional\"),\n          size = 0.01,\n          border.col = \"black\",\n          border.lwd = 0.5)#+\n\n\n\n\n\n  #tm_view(set.zoom.limits = c(12, 16))"
+    "section": "8.3 Perform the test by using appropriate Second order spatial point patterns analysis technique",
+    "text": "8.3 Perform the test by using appropriate Second order spatial point patterns analysis technique\n\nnb = include_self(st_knn(st_geometry(water_points), 6))\n\nwt = st_kernel_weights(nb, water_points, \"gaussian\", adaptive = TRUE)\n\n\nfunctional = water_points %>%\n  filter(status_clean %in%\n           c(\"Functional\",\n             \"Functional but not in use\",\n             \"Functional but needs repair\"))\n\nA = functional$status_clean\n\n\nnonfunctional = water_points %>%\n  filter(status_clean %in%\n           c(\"Abandoned/Decommissioned\",\n             \"Abandoned\",\n             \"Non-Functional due to dry season\",\n             \"Non-Functional\"))\n\nB = nonfunctional$status_clean\n\n\nLCLQ = local_colocation(A, B, nb, wt, 49)\n\n\nLCLQ_stores = cbind(water_points, LCLQ)\n\n\ntmap_mode(\"view\")\ntm_shape(nga)+\n  tm_polygons()+\ntm_shape(LCLQ_stores)+\n  tm_dots(col = c(\"Non.Functional\"),\n          size = 0.01,\n          border.col = \"black\",\n          border.lwd = 0.5)#+\n\n\n\n\n\n  #tm_view(set.zoom.limits = c(12, 16))\n\n\ntmap_mode(\"plot\")"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex1.html#with-reference-to-the-analysis-results-draw-statistical-conclusions-1",
     "href": "Take-home_Ex/Take-home_Ex1.html#with-reference-to-the-analysis-results-draw-statistical-conclusions-1",
     "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
-    "section": "8.3 With reference to the analysis results, draw statistical conclusions",
-    "text": "8.3 With reference to the analysis results, draw statistical conclusions"
+    "section": "8.4 With reference to the analysis results, draw statistical conclusions",
+    "text": "8.4 With reference to the analysis results, draw statistical conclusions"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex1.html#retrieving-data-from-the-web",
@@ -614,5 +614,12 @@
     "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
     "section": "2.1 Retrieving Data from the Web",
     "text": "2.1 Retrieving Data from the Web\nHere, you will find a list with the data used, its type, format, and source it was extracted from.\n\n\n\nType\nData\nFormat\nSource\n\n\n\n\nGeospatial\nState GIS boundary data of Nigeria - Administration Level 1, 2 & 3\n.shp\nOCHA data, extracted from the Humanitarian Data Exchange portal (data)\n\n\nGeospatial\nState GIS boundary data of Nigeria - Administration Level 2\n.shp\nData collected from geoboundaries.org\n\n\nAspatial\nWater Point Data Exchange Plus\n.csv\nData extracted from WPdx Global Data Repositories\n\n\n\nNote that the geoboundaries and OCHA data serve the same purpose. I decided to included both data set before choosing the most convenient one, based on a practical analysis of the variables included in the data sets."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex1.html#visualizing-the-sf-layers",
+    "href": "Take-home_Ex/Take-home_Ex1.html#visualizing-the-sf-layers",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "8.1 Visualizing the sf layers",
+    "text": "8.1 Visualizing the sf layers\n\nwater_points = wp_sf_nga %>%\n  mutate(status_clean = recode(status_clean, \"Functional but not in use\" = 'Functional', \"Functional but needs repair\" = 'Functional', \"Abandoned/Decommissioned\" = 'Non-Functional', \"Abandoned\" = 'Non-Functional', \"Non-Functional due to dry season\" = 'Non-Functional')) %>%\n  filter(status_clean %in%\n           c(\"Functional\",\n             \"Functional but not in use\",\n             \"Functional but needs repair\",\n             \"Abandoned/Decommissioned\",\n             \"Abandoned\",\n             \"Non-Functional due to dry season\",\n             \"Non-Functional\"))\n\n\ntmap_mode(\"view\")\ntm_shape(nga)+\n  tm_polygons()+\ntm_shape(st_intersection(water_points, nga))+\n  tm_dots(col = \"status_clean\",\n          size = 0.01,\n          border.col = \"black\",\n          border.lwd = 0.5)+\n  tm_view(set.zoom.limits = c(8, 12))"
   }
 ]
