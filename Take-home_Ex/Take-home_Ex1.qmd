@@ -385,10 +385,9 @@ Note that ***nga_spat*** is a Spatial Polygons data frame.
 
 ## Converting the Spatial\* class into generic *sp* format
 
-Since we are looking to convert the data frames to ppp objects and there are no direct methods to convert Spatial* classes into ppp objects, we shall find an alternative way.
-We need to convert the Spatial* classes into sp objects first. To do so, we use the as() function to coerce our Spatial* objects to their respective sp classes (e.g., 'SpatialPoints' and 'SpatialPolygons'). We shall perform this transformation on our three data sets.
+Since we are looking to convert the data frames to ppp objects and there are no direct methods to convert Spatial\* classes into ppp objects, we shall find an alternative way. We need to convert the Spatial\* classes into sp objects first. To do so, we use the as() function to coerce our Spatial\* objects to their respective sp classes (e.g., 'SpatialPoints' and 'SpatialPolygons'). We shall perform this transformation on our three data sets.
 
-:::panel-tabset
+::: panel-tabset
 ### Functional Water Points
 
 ```{r}
@@ -409,12 +408,11 @@ wp_nonfunctional_sp
 nga_sp <- as(nga_spat, "SpatialPolygons")
 nga_sp
 ```
-
 :::
 
 ## Converting the generic *sp* format into *spatstat's* ppp format
 
-:::panel-tabset
+::: panel-tabset
 ### Functional Water Points
 
 ```{r}
@@ -430,8 +428,8 @@ plot(wp_functional_ppp)
 summary(wp_functional_ppp)
 ```
 
-
 ### Non-Functional Water Points
+
 ```{r}
 wp_nonfunctional_ppp <- as(wp_nonfunctional_sp, "ppp")
 wp_nonfunctional_ppp
@@ -444,7 +442,6 @@ plot(wp_nonfunctional_sp)
 ```{r}
 summary(wp_nonfunctional_sp)
 ```
-
 :::
 
 ## Creating *owin* object
@@ -464,13 +461,9 @@ plot(nga_owin)
 summary(nga_owin)
 ```
 
-
 ## Combining point events object and *owin* object
 
-we shall end our geospatial data wrangling by extracting the functional and non-functional water points located within the Osun State in Nigeria.
-Using the code chunks below help us do that.
-:::panel-tabset
-### Functional Water Points
+we shall end our geospatial data wrangling by extracting the functional and non-functional water points located within the Osun State in Nigeria. Using the code chunks below help us do that. :::panel-tabset \### Functional Water Points
 
 ```{r}
 wp_functional_ppp = wp_functional_ppp[nga_owin]
@@ -478,6 +471,7 @@ plot(wp_functional_ppp)
 ```
 
 ### Non-Functional Water Points
+
 ```{r}
 wp_nonfunctional_ppp = wp_nonfunctional_ppp[nga_owin]
 plot(wp_nonfunctional_ppp)
@@ -665,8 +659,7 @@ spplot(gridded_wpnonfunc.ppl)
 
 ### Converting grid object into raster
 
-Now, we shall convert the gridded KDE objects into RasterLayer objects using the raster() function of the raster package.
-RasterLayer objects being compatible with the tmap functions, it allows us to plot our KDE map using OpenStreetView.
+Now, we shall convert the gridded KDE objects into RasterLayer objects using the raster() function of the raster package. RasterLayer objects being compatible with the tmap functions, it allows us to plot our KDE map using OpenStreetView.
 
 ::: panel-tabset
 #### Adaptive Bandwidth
@@ -733,6 +726,12 @@ tm_shape(kde_wpfunc_raster) +
   tm_raster("v")
 ```
 
+The kernel density maps reveal few concentrations of functional water points in certain location within the Osun State of Nigeria.
+
+We observe peaks of up to 26 water points located within a bandwidth of ...
+
+we find similar results with the non-functional water points.
+
 #### Non-functional WP map
 
 ```{r}
@@ -742,6 +741,14 @@ tm_shape(kde_wpnonfunc_raster) +
   tm_raster("v")
 ```
 :::
+
+### Conclusion
+
+Looking back at the point maps and comparing with these new KDE maps, it seems obvious that the latter offers much better clarity in terms of interpretation. What appeared to look like strongly concentrated functional and non-functional water points on the lint map, now looks much neater and many of these zones disappear.
+
+-\> better understanding of the concentration, how much concentrated/dense?
+
+Open question? Correlation between the two? What explains this concentration (outside the scope of this assignment)?
 
 ## Nearest Neighbor Index
 
@@ -768,7 +775,7 @@ As you may have read above, we determine the alternative hypothesis to be that w
 Please note that when conducting our tests, we will use a 5% significance level.
 
 ::: panel-tabset
-#### Test 1 functional WP
+#### Test on Functional Water Points
 
 First test on functional water points.
 
@@ -780,7 +787,7 @@ clarkevans.test(wp_functional_ppp,
                 nsim=99)
 ```
 
-#### Test 2 non-functional WP
+#### Test on Non-Functional Water Points
 
 Second test on non-functional water points
 
@@ -795,64 +802,74 @@ clarkevans.test(wp_nonfunctional_ppp,
 
 ### Conclusion of the test
 
-Conclusion?
+Since both p-values of the respective tests (0.01 and 0.01) are below the significance level and that the R-values are below 1, we reject the null hypothesis suggesting that functional and non-functional water points are clustered. Note that this is just a preliminary test and that we shall confirm this conclusion using second-order spatial point patterns analysis methods.
 
-# 7 - Second-order Spatial Point Patterns Analysis
+# Second-order Spatial Point Patterns Analysis
 
-## 7.1 - Formulate the null hypothesis and alternative hypothesis and select the confidence level
+For the purpose of our second-order SPPA, we will use the L function using *Lest()* of the **spatstat** package. Most importantly, we will perform Monte-Carlo simulation tests using the *envelope()* function of **spatstat**.
 
-## 7.2 - Perform the test by using appropriate Second order spatial point patterns analysis technique
+Note that it requires a lot of computation power to perform the Monte-Carlo simulations. Therefore, to run the code faster, we will be performing tests for all level-2 administrative zones separately.
 
-```{r}
-# G_tm = Gest(wp_functional_ppp, correction = "best")
-# plot(G_tm)
-```
+## Formulate the null hypothesis and alternative hypothesis and select the confidence level
 
-```{r}
-#L_wpfunc = Lest(wp_functional_ppp, correction = "Ripley")
-#plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
-```
+**H~0~ :** Functional Water Points are randomly distributed
 
-```{r}
-1:30
-```
+**H~1~ :** Functional Water Points are not randomly distributed
+
+We will be using a 5% significance level in our tests. By doing so, we will be running 40 Monte-Carlo simulations and it should contribute to making the code easier to run.
+
+## Perform the test by using appropriate Second order spatial point patterns analysis technique
 
 ```{r}
-#for (i in 1:30){
- # nga1 = nga[i,]
-  #print(nga1)
-  #nga_spat = as_Spatial(nga1)
-  #nga_sp = as(nga_spat, "SpatialPolygons")
-  #nga_owin = as(nga_sp, "owin")
-  #wp_functional_R = wp_functional_ppp[nga_owin]
-  #L_wp1.csr <- envelope(wp_functional_R, Lest, nsim = 39, rank = 1, glocal=TRUE)
-  #plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = #"L-test for Functional WP in Borepe")
-#}
+#| eval: false
+ 
+L_wpfunc = Lest(wp_functional_ppp, correction = "Ripley")
+plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
 ```
+
+::: panel-tabset
+### Functional Water Points
 
 ```{r}
-#nga1 = nga[1,]
-#nga1
+#| eval: false
+
+for (i in 1:30){
+  nga1 = nga[i,]
+  nga_spat = as_Spatial(nga1)
+  nga_sp = as(nga_spat, "SpatialPolygons")
+  nga_owin = as(nga_sp, "owin")
+  wp_functional_R = wp_functional_ppp[nga_owin]
+  L_wp1.csr <- envelope(wp_functional_R, Lest, nsim = 39, rank = 1, glocal=TRUE)
+  plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Functional WP by Region")
+}
 ```
+
+### Non-Functional Water Points
 
 ```{r}
-#nga_spat
+#| eval: false
+
+for (i in 1:30){
+  nga1 = nga[i,]
+  nga_spat = as_Spatial(nga1)
+  nga_sp = as(nga_spat, "SpatialPolygons")
+  nga_owin = as(nga_sp, "owin")
+  wp_nonfunctional_R = wp_nonfunctional_ppp[nga_owin]
+  L_wp2.csr <- envelope(wp_nonfunctional_R, Lest, nsim = 39, rank = 1, glocal=TRUE)
+  plot(L_wp2.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Non-Functional WP by Region")
+}
 ```
+:::
 
-```{r}
-# L_wp1.csr <- envelope(wp1_ppp, Lest, nsim = 99, rank = 1, glocal=TRUE)
-# plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Functional WP in Borepe")
-```
+## With reference to the analysis results, draw statistical conclusions
 
-## 7.3 - With reference to the analysis results, draw statistical conclusions
-
-# 8 - Spatial Correlation Analysis
+# Spatial Correlation Analysis
 
 In this section, you are required to confirm statistically if the spatial distribution of functional and non-functional water points are independent from each other.
 
-## 8.1 - Formulate the null hypothesis and alternative hypothesis and select the confidence level
+## Formulate the null hypothesis and alternative hypothesis and select the confidence level
 
-## 8.2 - Perform the test by using appropriate Second order spatial point patterns analysis technique
+## Perform the test by using appropriate Second order spatial point patterns analysis technique
 
 ```{r}
 water_points = wp_sf_nga %>%
@@ -914,4 +931,4 @@ tm_shape(LCLQ_stores)+
   #tm_view(set.zoom.limits = c(12, 16))
 ```
 
-## 8.3 - With reference to the analysis results, draw statistical conclusions
+## With reference to the analysis results, draw statistical conclusions
