@@ -822,7 +822,9 @@ We will be using a 5% significance level in our tests. By doing so, we will be r
 
 ```{r}
 #| eval: false
- 
+#| code-fold: true
+#| code-summary: Show code
+
 L_wpfunc = Lest(wp_functional_ppp, correction = "Ripley")
 plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
 ```
@@ -831,34 +833,45 @@ plot(L_wpfunc, . -r ~ r, ylab= "L(d)-r", xlab = "d(m)")
 ### Functional Water Points
 
 ```{r}
-#| eval: false
-
 for (i in 1:30){
+  print(paste("Now analyzing Administrative Level-2:", nga$ADM2_EN[i]))
+  
   nga1 = nga[i,]
+  
   nga_spat = as_Spatial(nga1)
   nga_sp = as(nga_spat, "SpatialPolygons")
   nga_owin = as(nga_sp, "owin")
+  
   wp_functional_R = wp_functional_ppp[nga_owin]
+  
   L_wp1.csr <- envelope(wp_functional_R, Lest, nsim = 39, rank = 1, glocal=TRUE)
-  plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Functional WP by Region")
+  
+  title = paste("L-test for Functional Water Points in", nga$ADM2_EN[i])
+  plot(L_wp1.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = title)
 }
 ```
 
 ### Non-Functional Water Points
 
 ```{r}
-#| eval: false
-
 for (i in 1:30){
+  print(paste("Now analyzing Administrative Level-2:", nga$ADM2_EN[i]))
+  
   nga1 = nga[i,]
+  
   nga_spat = as_Spatial(nga1)
   nga_sp = as(nga_spat, "SpatialPolygons")
   nga_owin = as(nga_sp, "owin")
+  
   wp_nonfunctional_R = wp_nonfunctional_ppp[nga_owin]
+  
   L_wp2.csr <- envelope(wp_nonfunctional_R, Lest, nsim = 39, rank = 1, glocal=TRUE)
-  plot(L_wp2.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = "L-test for Non-Functional WP by Region")
+  
+  title = paste("L-test for Non-Functional Water Points in", nga$ADM2_EN[i])
+  plot(L_wp2.csr, . - r ~ r, xlab="d", ylab="L(d)-r", main = title)
 }
 ```
+
 :::
 
 ## With reference to the analysis results, draw statistical conclusions
