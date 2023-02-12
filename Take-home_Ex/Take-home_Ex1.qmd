@@ -385,8 +385,10 @@ Note that ***nga_spat*** is a Spatial Polygons data frame.
 
 ## Converting the Spatial\* class into generic *sp* format
 
-:::panel-tabset
+Since we are looking to convert the data frames to ppp objects and there are no direct methods to convert Spatial* classes into ppp objects, we shall find an alternative way.
+We need to convert the Spatial* classes into sp objects first. To do so, we use the as() function to coerce our Spatial* objects to their respective sp classes (e.g., 'SpatialPoints' and 'SpatialPolygons'). We shall perform this transformation on our three data sets.
 
+:::panel-tabset
 ### Functional Water Points
 
 ```{r}
@@ -408,14 +410,15 @@ nga_sp <- as(nga_spat, "SpatialPolygons")
 nga_sp
 ```
 
+:::
+
 ## Converting the generic *sp* format into *spatstat's* ppp format
+
+:::panel-tabset
+### Functional Water Points
 
 ```{r}
 wp_functional_ppp <- as(wp_functional_sp, "ppp")
-wp_nonfunctional_ppp <- as(wp_nonfunctional_sp, "ppp")
-```
-
-```{r}
 wp_functional_ppp
 ```
 
@@ -423,23 +426,64 @@ wp_functional_ppp
 plot(wp_functional_ppp)
 ```
 
+```{r}
+summary(wp_functional_ppp)
+```
+
+
+### Non-Functional Water Points
+```{r}
+wp_nonfunctional_ppp <- as(wp_nonfunctional_sp, "ppp")
+wp_nonfunctional_ppp
+```
+
+```{r}
+plot(wp_nonfunctional_sp)
+```
+
+```{r}
+summary(wp_nonfunctional_sp)
+```
+
+:::
+
 ## Creating *owin* object
+
+Still using the as() function, we will be creating an owin object out of the nga_sp data frame. It is the perfect way to confine our analysis to the Osun State, Nigeria. As you may see next.
 
 ```{r}
 nga_owin <- as(nga_sp, "owin")
+nga_owin
+```
+
+```{r}
 plot(nga_owin)
 ```
 
+```{r}
+summary(nga_owin)
+```
+
+
 ## Combining point events object and *owin* object
+
+we shall end our geospatial data wrangling by extracting the functional and non-functional water points located within the Osun State in Nigeria.
+Using the code chunks below help us do that.
+:::panel-tabset
+### Functional Water Points
 
 ```{r}
 wp_functional_ppp = wp_functional_ppp[nga_owin]
-wp_nonfunctional_ppp = wp_nonfunctional_ppp[nga_owin]
-```
-
-```{r}
 plot(wp_functional_ppp)
 ```
+
+### Non-Functional Water Points
+```{r}
+wp_nonfunctional_ppp = wp_nonfunctional_ppp[nga_owin]
+plot(wp_nonfunctional_ppp)
+```
+
+:::
 
 # Exploratory Spatial Data Analysis
 
@@ -579,6 +623,8 @@ We start observing signs of potential clustering but, for now, we shall focus on
 
 ### Convert KDE output into grid object
 
+Here, we convert our KDE objects into grid objects for mapping purposes.
+
 ::: panel-tabset
 #### Adaptive Bandwidth
 
@@ -619,40 +665,59 @@ spplot(gridded_wpnonfunc.ppl)
 
 ### Converting grid object into raster
 
+Now, we shall convert the gridded KDE objects into RasterLayer objects using the raster() function of the raster package.
+RasterLayer objects being compatible with the tmap functions, it allows us to plot our KDE map using OpenStreetView.
+
 ::: panel-tabset
-#### Functional
+#### Adaptive Bandwidth
 
 ```{r}
 kde_wpfunc_raster <- raster(gridded_wpfunc)
-kde_wpfunc_raster
-```
-
-#### Non-functional
-
-```{r}
 kde_wpnonfunc_raster <- raster(gridded_wpnonfunc)
+
+kde_wpfunc_raster
 kde_wpnonfunc_raster
 ```
+
+Note that the CRS is NA.
+
+#### Automatic Bandwidth
+
+```{r}
+kde_wpfunc_raster.ppl <- raster(gridded_wpfunc.ppl)
+kde_wpnonfunc_raster.ppl <- raster(gridded_wpnonfunc.ppl)
+
+kde_wpfunc_raster.ppl
+kde_wpnonfunc_raster.ppl
+```
+
+Note that the CRS is NA.
 :::
 
 ### Assigning projection systems
 
 ::: panel-tabset
-#### Functional WP
+#### Functional Water Points
 
 ```{r}
 #| code-fold: true
 #| code-summary: Show code
 
 projection(kde_wpfunc_raster) <- CRS("+init=EPSG:26391 +datum:WGS84 +units=km")
+projection(kde_wpfunc_raster.ppl) <- CRS("+init=EPSG:26391 +datum:WGS84 +units=km")
+
 kde_wpfunc_raster
+kde_wpfunc_raster.ppl
 ```
 
-#### Non-functional WP
+#### Non-functional Water Points
 
 ```{r}
 projection(kde_wpnonfunc_raster) <- CRS("+init=EPSG:26391 +datum:WGS84 +units=km")
+projection(kde_wpnonfunc_raster.ppl) <- CRS("+init=EPSG:26391 +datum:WGS84 +units=km")
+
 kde_wpnonfunc_raster
+kde_wpnonfunc_raster.ppl
 ```
 :::
 
