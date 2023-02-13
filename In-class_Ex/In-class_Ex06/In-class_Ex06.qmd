@@ -40,3 +40,71 @@ hunanGeo = st_read(dsn = "data/geospatial",
 glimpse(hunanGeo)
 ```
 
+## Combining data frames
+
+```{r}
+hunan_gdppc = left_join(hunanGeo, hunan2012) %>%
+  select(1:4, 7, 15)
+```
+
+Note that we keep columns *NAME_3* and *County* to double check that the left join was done correctly and that spelling is the same across the two columns.
+
+## Plotting a Choropleth map
+
+```{r}
+tm_shape(hunan_gdppc)+
+  tm_fill("GDPPC",
+          style = "quantile",
+          palette = "Blues",
+          title = "GDP / cap")+
+  tm_layout(main.title = "Distribution of GDP per capita by ",
+          main.title.position = "center",
+          main.title.size = 1.2,
+          legend.height = 0.45,
+          legend.width = 0.35,
+          frame = TRUE)+
+  tm_borders(alpha = 0.5)+
+  tm_compass(type = "8star", size = 2)+
+  tm_scale_bar()+
+  tm_grid(alpha = 0.2)
+  
+```
+
+## Contiguity Neighbors Analysis
+
+Using the Queen method
+
+```{r}
+cn_queen = hunan_gdppc %>%
+  mutate(nb = st_contiguity(geometry),
+         .before = 1)
+```
+
+Using the Rooks method
+
+```{r}
+cn_rooks = hunan_gdppc %>%
+  mutate(nb = st_contiguity(geometry, queen = FALSE),
+         .before = 1)
+```
+
+## Computing Contiguity Weights
+
+Using the Queen method
+
+```{r}
+wm_q = hunan_gdppc %>%
+  mutate(nb = st_contiguity(geometry),
+         wt = st_weights(nb),
+         .before = 1)
+```
+
+Using the Rooks method
+
+```{r}
+wm_r = hunan_gdppc %>%
+  mutate(nb = st_contiguity(geometry),
+         queen = FALSE,
+         wt = st_weights(nb),
+         .before = 1)
+```
