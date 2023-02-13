@@ -1,0 +1,41 @@
+---
+title: "In-Class Exercise - "
+
+author: "Pierre HAAS"
+
+date: "February 13, 2023"
+date-modified: "`r Sys.Date()`"
+
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+
+number-sections: true
+---
+
+# Getting Started
+
+## Installing and Loading Packages
+
+```{r}
+pacman::p_load(sf, sfdep, tmap, tidyverse)
+```
+
+## Import data sets
+
+### Aspatial data
+
+```{r}
+hunan2012 = read_csv("data/aspatial/Hunan_2012.csv")
+head(hunan2012)
+```
+
+### Geospatial data
+
+```{r}
+hunanGeo = st_read(dsn = "data/geospatial",
+                   layer = "Hunan")
+glimpse(hunanGeo)
+```
