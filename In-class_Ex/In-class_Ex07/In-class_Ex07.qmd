@@ -81,13 +81,128 @@ Look at the p-value, we will reject the null hypothesis. Moran statistic is abov
 set.seed(1234)
 ```
 
-
 ```{r}
 global_moran_perm(wm_q$GDPPC, 
                   wm_q$nb,
                   wm_q$wt,
                   nsim = 99)
 ```
+
+## Computing local Moran' I
+
+```{r}
+lisa = wm_q %>%
+  mutate(local_moran = local_moran(GDPPC, nb, wt, nsim = 99),
+         .before = 1) %>%
+  unnest(local_moran)
+
+lisa
+```
+
+## Visualizing local Moran' I
+
+```{r}
+tmap_mode("plot")
+tm_shape(lisa)+
+  tm_fill("ii")+
+  tm_borders(alpha = 0.5)+
+  tm_view(set.zoom.limits = c(6, 8))
+```
+
+```{r}
+tmap_mode("plot")
+tm_shape(lisa)+
+  tm_fill("p_ii")+
+  tm_borders(alpha = 0.5)
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+tmap_mode("plot")
+tm_shape(lisa)+
+  tm_polygons()+
+  tm_borders(alpha = 0.5)
+```
+
+## Computing local G\*
+
+```{r}
+HCSA = wm_q %>%
+  mutate(local_Gi = local_gstar_perm(GDPPC, nb, wt, nsim = 99),
+         .before = 1) %>%
+  unnest(local_Gi)
+
+HCSA
+```
+
+##Visualizing local G*
+
+```{r}
+tmap_mode("view")
+tm_shape(HCSA)+
+  tm_fill("gi_star")+
+  tm_borders(alpha = 0.5)+
+  tm_view(set.zoom.limits = c(6, 8))
+
+```
+
+```{r}
+tmap_mode("plot")
+tm_shape(HCSA)+
+  tm_fill("p_sim")+
+  tm_borders(alpha = 0.5)
+```
+
+# Getting Started
+
+## Install and Load new packages
+
+```{r}
+pacman::p_load(plotly, zoo)
+```
+
+## Importing data
+
+### Import Aspatial data
+
+```{r}
+GDPPC = read_csv("data/aspatial/hunan_GDPPC.csv")
+```
+
+## Creating a Time Series cube
+
+```{r}
+GDPPC_st = spacetime(GDPPC, hunanGeo,
+                     .loc_col = "County",
+                     .time_col = "Year")
+```
+
+```{r}
+GDPPC_nb = GDPPC_st %>%
+  activate("geometry") %>%
+  mutate(nb = include_self(st_contiguity(geometry)),
+         wt = st_weights(nb)) %>%
+  set_nbs("nb") %>%
+  set_wts("wt")
+```
+
+## Compute Gi*
+
+```{r}
+#| eval: false
+#| echo: false
+
+gi_stars = GDPPC_nb %>%
+  mutate(local_Gi = local_gstar_perm(GDPPC_st, nb, wt, nsim = 99),
+         .before = 1) %>%
+  unnest(local_Gi)
+
+gi_stars
+```
+
+
 
 
 
