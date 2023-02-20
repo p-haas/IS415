@@ -15,3 +15,81 @@ editor: visual
 
 number-sections: true
 ---
+
+# Getting Started
+
+## Installing and Loading Packages
+
+```{r}
+pacman::p_load(sf, sfdep, tmap, tidyverse)
+```
+
+## Importing data
+
+### Aspatial data
+
+```{r}
+hunan2012 = read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+### Geospatial data
+
+```{r}
+hunanGeo = st_read(dsn = "data/geospatial",
+                layer = "Hunan")
+```
+
+### Left Join
+
+```{r}
+hunan_gdppc = left_join(hunanGeo, hunan2012) %>%
+  select(1:4, 7, 15)
+```
+
+# Deriving contiguity weights: Queen's method
+
+```{r}
+wm_q = hunan_gdppc %>%
+  mutate(nb = st_contiguity(geometry),
+         wt = st_weights(nb),
+         .before = 1)
+```
+
+# Class work
+
+## Computing Global Moran' I
+
+```{r}
+moranI = global_moran(wm_q$GDPPC,
+                      wm_q$nb,
+                      wm_q$wt)
+```
+
+## Performing Global Moran' I test
+
+```{r}
+global_moran_test(wm_q$GDPPC, 
+                  wm_q$nb,
+                  wm_q$wt)
+```
+
+Look at the p-value, we will reject the null hypothesis. Moran statistic is above 0, it indicates signs of cluster.
+
+### Performing Global Moran' I permutation test
+
+```{r}
+set.seed(1234)
+```
+
+
+```{r}
+global_moran_perm(wm_q$GDPPC, 
+                  wm_q$nb,
+                  wm_q$wt,
+                  nsim = 99)
+```
+
+
+
+
+

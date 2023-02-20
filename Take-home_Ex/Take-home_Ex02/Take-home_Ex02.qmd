@@ -34,12 +34,12 @@ dki = st_read(dsn = "data/geospatial",
 ```
 
 ```{r}
-df %>%
+dki %>%
   st_crs()
 ```
 
 ```{r}
-df = df %>%
+dki = dki %>%
   st_transform(crs=23837)
 ```
 
