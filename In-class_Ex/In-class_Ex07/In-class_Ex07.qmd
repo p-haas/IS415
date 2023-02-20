@@ -1,0 +1,17 @@
+---
+title: "In-class Exercise - Application of Spatial Point Patterns Analysis"
+subtitle: "Discover the geographical distribution of functional and non-function water points in Osun State, Nigeria"
+
+author: "Pierre HAAS"
+
+date: "February 20, 2023"
+date-modified: "`r Sys.Date()`"
+
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+
+number-sections: true
+---

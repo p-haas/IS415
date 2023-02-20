@@ -1,0 +1,77 @@
+---
+title: "Take-home Exercise - Application of Spatial Point Patterns Analysis"
+subtitle: "Discover the geographical distribution of functional and non-function water points in Osun State, Nigeria"
+
+author: "Pierre HAAS"
+
+date: "February 18, 2023"
+date-modified: "`r Sys.Date()`"
+
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+
+number-sections: true
+---
+
+# Getting started
+
+## Installing and Loading Packages
+
+```{r}
+pacman::p_load(sf, sfdep, sp, tmap, plyr, tidyverse, readxl)
+```
+
+## Importing data
+
+### Geospatial data
+
+```{r}
+dki = st_read(dsn = "data/geospatial",
+             layer = "BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA")
+```
+
+```{r}
+df %>%
+  st_crs()
+```
+
+```{r}
+df = df %>%
+  st_transform(crs=23837)
+```
+
+### Aspatial data
+
+```{r}
+vaccination = read_excel("data/aspatial/July.xlsx") %>%
+  select(2,3,4,5,6,9)
+
+colnames(vaccination)[6] = "Vaccine Administered July"
+
+months = c('August', 'September', 'October', 'November', 'December', 'January', 'February', 'March', 'April', 'May', 'June')
+count = 0
+
+for (i in months){
+  count = count + 1
+  filename = paste("data/aspatial/", i, ".xlsx", sep = "")
+  df = read_excel(filename)
+  
+  colnb = ifelse(count < 8, 9, 10)
+  colnames(df)[colnb] = paste( "Vaccine Administered", i)
+  cleaned_df = df %>%
+    select(4, colnb)
+  
+  vaccination = vaccination %>%
+    merge(cleaned_df, by='KELURAHAN')
+}
+```
+
+
+
+
+
+
+
