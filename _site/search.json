@@ -634,7 +634,7 @@
     "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html",
     "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
     "section": "",
-    "text": "pacman::p_load(sf, sfdep, sp, tmap, plyr, tidyverse, readxl)\n\n\n\n\n\n\n\ndki = st_read(dsn = \"data/geospatial\",\n             layer = \"BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA\")\n\nReading layer `BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA' from data source \n  `C:\\p-haas\\IS415\\Take-home_Ex\\Take-home_Ex02\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 269 features and 161 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 106.3831 ymin: -6.370815 xmax: 106.9728 ymax: -5.184322\nGeodetic CRS:  WGS 84\n\n\n\ndki %>%\n  st_crs()\n\nCoordinate Reference System:\n  User input: WGS 84 \n  wkt:\nGEOGCRS[\"WGS 84\",\n    DATUM[\"World Geodetic System 1984\",\n        ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n            LENGTHUNIT[\"metre\",1]]],\n    PRIMEM[\"Greenwich\",0,\n        ANGLEUNIT[\"degree\",0.0174532925199433]],\n    CS[ellipsoidal,2],\n        AXIS[\"latitude\",north,\n            ORDER[1],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        AXIS[\"longitude\",east,\n            ORDER[2],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n    ID[\"EPSG\",4326]]\n\n\n\ndki = dki %>%\n  st_transform(crs=23837)\n\n\n\n\n\nvaccination = read_excel(\"data/aspatial/July.xlsx\") %>%\n  select(2,3,4,5,6,9)\n\ncolnames(vaccination)[6] = \"Vaccine Administered July\"\n\nmonths = c('August', 'September', 'October', 'November', 'December', 'January', 'February', 'March', 'April', 'May', 'June')\ncount = 0\n\nfor (i in months){\n  count = count + 1\n  filename = paste(\"data/aspatial/\", i, \".xlsx\", sep = \"\")\n  df = read_excel(filename)\n  \n  colnb = ifelse(count < 8, 9, 10)\n  colnames(df)[colnb] = paste( \"Vaccine Administered\", i)\n  cleaned_df = df %>%\n    select(4, colnb)\n  \n  vaccination = vaccination %>%\n    merge(cleaned_df, by='KELURAHAN')\n}"
+    "text": "pacman::p_load(sf, sfdep, sp, tmap, plyr, tidyverse, readxl, magrittr, knitr)"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex07/In-class_Ex07.html#computing-global-moran-i",
@@ -698,5 +698,75 @@
     "title": "In-class Exercise - Application of Spatial Point Patterns Analysis",
     "section": "4.4 Compute Gi*",
     "text": "4.4 Compute Gi*"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#geospatial-data",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#geospatial-data",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "2.1 Geospatial data",
+    "text": "2.1 Geospatial data\n\ndki = st_read(dsn = \"data/geospatial\",\n             layer = \"BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA\")\n\nReading layer `BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA' from data source \n  `C:\\p-haas\\IS415\\Take-home_Ex\\Take-home_Ex02\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 269 features and 161 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 106.3831 ymin: -6.370815 xmax: 106.9728 ymax: -5.184322\nGeodetic CRS:  WGS 84\n\n\n\n2.1.1 Data exploration\n\ndki = dki %>%\n  select(c(1:9))\n\n\n2.1.1.1 Transform CRS\n\ndki %>%\n  st_crs()\n\n\ndki = dki %>%\n  st_transform(crs=23837)\n\n\n\n2.1.1.2 Check NA values and duplicates\n\nany(is.na(dki))\n\n\nhead(dki[is.na(dki$DESA_KELUR),])\n\nThe Kelurahan information seems to be missing. We will be using the DESA and KODE_DESA to cross check with the aspatial data what may be the name to fill in the rows. We could consider dropping these two rows now, but I prefer to wait and confirm before dropping NA values."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#aspatial-data",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#aspatial-data",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "2.2 Aspatial data",
+    "text": "2.2 Aspatial data\nSince we need to merge a series of data sets, we will first take a quick look a them to understand what are the relevant fields for our analysis and what work needs to be performed to have one single data set that will allow us to find the monthly vaccination rate.\nThe first step is to look at the data set of June 2021. Even though this data set takes record of data from the month prior our analysis period (July 2021 - June 2022) and does not seem relevant, I still think that it is important to compute the monthly vaccination (in dosis administered) and consequently we start with the data of June 2021.\n\nvaccination = read_excel(\"data/aspatial/before.xlsx\")\nglimpse(vaccination)\n\nRows: 268\nColumns: 21\n$ `KODE KELURAHAN`                             <chr> NA, \"3172051003\", \"317304…\n$ `WILAYAH KOTA`                               <chr> NA, \"JAKARTA UTARA\", \"JAK…\n$ KECAMATAN                                    <chr> NA, \"PADEMANGAN\", \"TAMBOR…\n$ KELURAHAN                                    <chr> \"TOTAL\", \"ANCOL\", \"ANGKE\"…\n$ SASARAN                                      <dbl> 7739060, 20393, 25785, 25…\n$ `BELUM VAKSIN`                               <dbl> 5113425, 13394, 16743, 19…\n$ `JUMLAH\\r\\nDOSIS 1`                          <dbl> 2623759, 6992, 9033, 6082…\n$ `JUMLAH\\r\\nDOSIS 2`                          <dbl> 1179448, 3277, 3217, 2636…\n$ `TOTAL VAKSIN\\r\\nDIBERIKAN`                  <dbl> 3803207, 10269, 12250, 87…\n$ `LANSIA\\r\\nDOSIS 1`                          <dbl> 502210, 1296, 1999, 816, …\n$ `LANSIA\\r\\nDOSIS 2`                          <dbl> 448944, 1128, 1746, 702, …\n$ `LANSIA TOTAL \\r\\nVAKSIN DIBERIKAN`          <dbl> 951154, 2424, 3745, 1518,…\n$ `PELAYAN PUBLIK\\r\\nDOSIS 1`                  <dbl> 2014605, 5551, 6859, 4959…\n$ `PELAYAN PUBLIK\\r\\nDOSIS 2`                  <dbl> 654533, 2044, 1364, 1726,…\n$ `PELAYAN PUBLIK TOTAL\\r\\nVAKSIN DIBERIKAN`   <dbl> 2669138, 7595, 8223, 6685…\n$ `GOTONG ROYONG\\r\\nDOSIS 1`                   <dbl> 33766, 44, 84, 99, 56, 73…\n$ `GOTONG ROYONG\\r\\nDOSIS 2`                   <dbl> 10610, 12, 27, 22, 13, 24…\n$ `GOTONG ROYONG TOTAL\\r\\nVAKSIN DIBERIKAN`    <dbl> 44376, 56, 111, 121, 69, …\n$ `TENAGA KESEHATAN\\r\\nDOSIS 1`                <dbl> 73178, 101, 91, 208, 70, …\n$ `TENAGA KESEHATAN\\r\\nDOSIS 2`                <dbl> 65361, 93, 80, 186, 63, 3…\n$ `TENAGA KESEHATAN TOTAL\\r\\nVAKSIN DIBERIKAN` <dbl> 138539, 194, 171, 394, 13…\n\n\nUsing the glimpse() function we can take a look at the different fields of the data sets that will be imported next. Looking at the fields, it looks like we will be selecting only 3 fields:\n\nKELURAHAN; this field gives information about the sub-district\nSASARAN; this field represents the vaccination target of each sub-district\nBELUM VAKSIN; this field informs about the population that is yet-to-be vaccinated\n\nBefore moving on with the examination of the aspatial data, we shall quickly check for the missing values found in the previous data frame.\n\nvaccination %>%\n  filter(`KODE KELURAHAN` == 31888888)\n\nWe may want to check based on the name and will be looking for cells that may contain the DANAU string.\n\nvaccination %>%\n  filter(grepl('Danau', KELURAHAN))\n\nIt seems like we can drop the two rows from the dki data set, however, for the purpose of our analysis, I prefer to keep these two sub-districts in the data frame. We may have missing values in our choropleth maps, but it is no problem.\nPlease find the code chunk necessary to drop NA values in case you deem it to be necessary.\n\ndki = na.omit(dki)\n\n\nvaccination = vaccination %>%\n  select(4, 5, 6) %>%\n  rename(\"Initial Target\" = 2, \"Initial Yet-to-be Vaccinated\" = 3)\n\nNow that we have taken a look at the data and selected the relevant fields, we can move on with the data cleaning and merge the vaccination data from July 2021 to June 2022 into the vaccination data frame.\nTo do so, we will be using a for loop in which we will be performing the following tasks:\n\nCreate a list called months that stores the name of every month in our analysis period, this will allow us to customize the name of the columns;\nLine 1 and 2 of the loop help us count the month number of our analysis. If you take a quick peak into the later data sets, it seems like Indonesia and the Jakarta region adopted a 3-dosis vaccination plan, meaning that the TOTAL VAKSIN DIBERIKAN is now located on the 10th column from March 2022 on-wards;\nUsing the paste() function, we replicate the name of the data sets stored in our data folder and use the read_excel() function of the readxl package, we store the data frame into the variable df;\nThe remaining part of the code serves the purpose of storing Vaccination target data and Yet-to-be Vaccinated data;\n\n\ncount = 0\nmonths = c('July', 'August', 'September', 'October', \n           'November', 'December', 'January', 'February', \n           'March', 'April', 'May', 'June')\n\nfor (i in months){\n  filename = paste(\"data/aspatial/\", i, \".xlsx\", sep = \"\")\n  df = read_excel(filename)\n  \n  colname1 = paste(\"Yet-to-be Vaccinated\", i)\n  colname2 = paste(\"Target\", i)\n  \n  vaccination[colname2] = df %>%\n    select(5)\n  vaccination[colname1] = df %>%\n    select(6)\n}\n\nBefore merging the aspatial data – vaccination data frame – with the geospatial data – dki data frame – we will perform some data exploration to remove any redundant fields and look for any potential duplicates or missing values.\n\n2.2.1 Data exploration\nWe will begin our data exploration by looking at the target columns. I have an intuition that target data might be the same across some periods of our analysis. To do so, we select only the columns that contain the string Target using the grepl() function.\n\nhead(vaccination[ , grepl( \"Target\" , names( vaccination ) ) ])\n\nLooking at the above print, it looks like target data is the same across our 12-month analysis period, thus we will drop the all the above columns and keep only one column for our reference.\n\nZ = vaccination %>%\n  select(4) %>%\n  setNames(c(\"Vaccination Target\"))\n\nvaccination = cbind(vaccination[ , !grepl( \"Target\" , names( vaccination ) ) ], Z)\n\n\nhead(vaccination)\n\nLooking at the above print, we have successfully replaceed all the target columns for a single one that is now located at the right end of the data frame. We will push it to the front with the following code chunk.\n\nvaccination = vaccination %>% \n  relocate(\"Vaccination Target\", .after=\"KELURAHAN\")\n\n\nkable(vaccination)\n\nNow, we will look for any potential redundant fields or duplicated regions. We shall use the code chunk below to check for duplicates.\n\nany(duplicated(vaccination))\n\nThere are no duplicates in the data frame. Finally, we will look for NA values.\n\nany(is.na(vaccination))\n\nThere are no missing values in the data frame, we will now move on to merging the data frame vaccination with the kdi sf data frame."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#data-visualization",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#data-visualization",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "3.1 Data visualization",
+    "text": "3.1 Data visualization\n\ntmap_mode(\"plot\")\nqtm(dataMerged)\n\n\n\n\nIt looks like the Pulau Islands are included in our data frame. We will take the necessary steps to remove them from the sf data frame."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#data-cleaning",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#data-cleaning",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "3.2 Data cleaning",
+    "text": "3.2 Data cleaning\n\ndataCleaned = dataMerged %>% \n  filter(!grepl('PULAU', DESA_KELUR))\n\n\ntmap_mode(\"plot\")\nqtm(dataCleaned)\n\n\n\n\nWe can now start answering the objectives of the Hands-on Exercise 2."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#monthly-vaccination-rate",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#monthly-vaccination-rate",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "4.1 Monthly Vaccination Rate",
+    "text": "4.1 Monthly Vaccination Rate\n\nvac_minus1 = dataCleaned %>%\n  extract2(colnames(dataCleaned)[grepl(\"Initial\" , names(dataCleaned))])\nvac_target = dataCleaned %>%\n  extract2(colnames(dataCleaned)[grepl(\"Target\" , names(dataCleaned))])\n\nfor (i in months){\n  \n  vac_current = dataCleaned %>%\n  extract2(colnames(dataCleaned)[grepl(i , names(dataCleaned))])\n  \n  colname = paste(\"Vaccination Rate for\", i, sep = \" \")\n  dataCleaned[colname] = abs(vac_current - vac_minus1) / vac_target\n  \n  vac_minus1 = vac_current\n}"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#part-b",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#part-b",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "4.2 Part B",
+    "text": "4.2 Part B\n\nvac_rate = c(colnames(dataCleaned)[grepl(\"Vaccination Rate\" , colnames(dataCleaned))])\n\ntm_shape(dataCleaned)+\n  tm_fill(vac_rate, \n          style = \"jenks\",\n          palette = \"Blues\")+\n  tm_borders(alpha = 0.5)+\n  tm_layout(legend.position = c(\"left\", \"bottom\"))\n\n\n\n\n\n\n\n\n\ntmap_arrange(youngmap, agedmap, asp=1, ncol=2)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#part-c",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#part-c",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "4.3 Part C",
+    "text": "4.3 Part C"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#monthly-vaccination-rate-computation",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#monthly-vaccination-rate-computation",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "4.1 Monthly Vaccination Rate Computation",
+    "text": "4.1 Monthly Vaccination Rate Computation\n\nvac_minus1 = dataCleaned %>%\n  extract2(colnames(dataCleaned)[grepl(\"Initial\" , names(dataCleaned))])\nvac_target = dataCleaned %>%\n  extract2(colnames(dataCleaned)[grepl(\"Target\" , names(dataCleaned))])\n\nfor (i in months){\n  \n  vac_current = dataCleaned %>%\n  extract2(colnames(dataCleaned)[grepl(i , names(dataCleaned))])\n  \n  colname = paste(\"Vaccination Rate for\", i, sep = \" \")\n  dataCleaned[colname] = abs(vac_current - vac_minus1) / vac_target\n  \n  vac_minus1 = vac_current\n}"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#monthly-vaccination-rate-visualization",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#monthly-vaccination-rate-visualization",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "4.2 Monthly Vaccination Rate Visualization",
+    "text": "4.2 Monthly Vaccination Rate Visualization\n\nvac_rate = c(colnames(dataCleaned)[grepl(\"Vaccination Rate\" , colnames(dataCleaned))])\n\ntm_shape(dataCleaned)+\n  tm_fill(vac_rate, \n          style = \"equal\",\n          palette = \"Blues\")+\n  tm_layout(title = vac_rate,\n            title.position = c(\"center\", \"top\"), \n            title.size = 1.2,\n            legend.position = c(\"left\", \"bottom\"),\n            legend.height = 0.45, \n            legend.width = 0.35,\n            frame = TRUE)+\n  tm_borders(alpha = 0.5) +\n  tm_compass(type=\"8star\", size = 2) +\n  tm_scale_bar(width = 0.15) +\n  tm_grid(lwd = 0.1, alpha = 0.2)\n\n\n\n\n\ntmap_arrange(youngmap, agedmap, asp=1, ncol=2)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#conclusion",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html#conclusion",
+    "title": "Take-home Exercise - Application of Spatial Point Patterns Analysis",
+    "section": "4.3 Conclusion",
+    "text": "4.3 Conclusion"
   }
 ]

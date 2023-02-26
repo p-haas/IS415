@@ -241,11 +241,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started"><span class="toc-section-number">1</span>  Getting started</a>
   <ul class="collapse">
   <li><a href="#installing-and-loading-packages" id="toc-installing-and-loading-packages" class="nav-link" data-scroll-target="#installing-and-loading-packages"><span class="toc-section-number">1.1</span>  Installing and Loading Packages</a></li>
-  <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data"><span class="toc-section-number">1.2</span>  Importing data</a>
-  <ul class="collapse">
-  <li><a href="#geospatial-data" id="toc-geospatial-data" class="nav-link" data-scroll-target="#geospatial-data"><span class="toc-section-number">1.2.1</span>  Geospatial data</a></li>
-  <li><a href="#aspatial-data" id="toc-aspatial-data" class="nav-link" data-scroll-target="#aspatial-data"><span class="toc-section-number">1.2.2</span>  Aspatial data</a></li>
   </ul></li>
+  <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data"><span class="toc-section-number">2</span>  Importing data</a>
+  <ul class="collapse">
+  <li><a href="#geospatial-data" id="toc-geospatial-data" class="nav-link" data-scroll-target="#geospatial-data"><span class="toc-section-number">2.1</span>  Geospatial data</a>
+  <ul class="collapse">
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"><span class="toc-section-number">2.1.1</span>  Data exploration</a></li>
+  </ul></li>
+  <li><a href="#aspatial-data" id="toc-aspatial-data" class="nav-link" data-scroll-target="#aspatial-data"><span class="toc-section-number">2.2</span>  Aspatial data</a>
+  <ul class="collapse">
+  <li><a href="#data-exploration-1" id="toc-data-exploration-1" class="nav-link" data-scroll-target="#data-exploration-1"><span class="toc-section-number">2.2.1</span>  Data exploration</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#merging-the-data" id="toc-merging-the-data" class="nav-link" data-scroll-target="#merging-the-data"><span class="toc-section-number">3</span>  Merging the data</a>
+  <ul class="collapse">
+  <li><a href="#data-visualization" id="toc-data-visualization" class="nav-link" data-scroll-target="#data-visualization"><span class="toc-section-number">3.1</span>  Data visualization</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning"><span class="toc-section-number">3.2</span>  Data cleaning</a></li>
+  </ul></li>
+  <li><a href="#choropleth-mapping-and-analysis" id="toc-choropleth-mapping-and-analysis" class="nav-link" data-scroll-target="#choropleth-mapping-and-analysis"><span class="toc-section-number">4</span>  Choropleth Mapping and Analysis</a>
+  <ul class="collapse">
+  <li><a href="#monthly-vaccination-rate-computation" id="toc-monthly-vaccination-rate-computation" class="nav-link" data-scroll-target="#monthly-vaccination-rate-computation"><span class="toc-section-number">4.1</span>  Monthly Vaccination Rate Computation</a></li>
+  <li><a href="#monthly-vaccination-rate-visualization" id="toc-monthly-vaccination-rate-visualization" class="nav-link" data-scroll-target="#monthly-vaccination-rate-visualization"><span class="toc-section-number">4.2</span>  Monthly Vaccination Rate Visualization</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="toc-section-number">4.3</span>  Conclusion</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -280,7 +297,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 20, 2023</p>
+      <p class="date-modified">February 26, 2023</p>
     </div>
   </div>
     
@@ -294,13 +311,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="installing-and-loading-packages" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="installing-and-loading-packages"><span class="header-section-number">1.1</span> Installing and Loading Packages</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, sfdep, sp, tmap, plyr, tidyverse, readxl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, sfdep, sp, tmap, plyr, tidyverse, readxl, magrittr, knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="importing-data" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="importing-data"><span class="header-section-number">1.2</span> Importing data</h2>
-<section id="geospatial-data" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="geospatial-data"><span class="header-section-number">1.2.1</span> Geospatial data</h3>
+</section>
+<section id="importing-data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Importing data</h1>
+<section id="geospatial-data" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="geospatial-data"><span class="header-section-number">2.1</span> Geospatial data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dki <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>,</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">layer =</span> <span class="st">"BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -315,62 +333,319 @@ Bounding box:  xmin: 106.3831 ymin: -6.370815 xmax: 106.9728 ymax: -5.184322
 Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
+<section id="data-exploration" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="data-exploration"><span class="header-section-number">2.1.1</span> Data exploration</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dki <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_crs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Coordinate Reference System:
-  User input: WGS 84 
-  wkt:
-GEOGCRS["WGS 84",
-    DATUM["World Geodetic System 1984",
-        ELLIPSOID["WGS 84",6378137,298.257223563,
-            LENGTHUNIT["metre",1]]],
-    PRIMEM["Greenwich",0,
-        ANGLEUNIT["degree",0.0174532925199433]],
-    CS[ellipsoidal,2],
-        AXIS["latitude",north,
-            ORDER[1],
-            ANGLEUNIT["degree",0.0174532925199433]],
-        AXIS["longitude",east,
-            ORDER[2],
-            ANGLEUNIT["degree",0.0174532925199433]],
-    ID["EPSG",4326]]</code></pre>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dki <span class="ot">=</span> dki <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="transform-crs" class="level4" data-number="2.1.1.1">
+<h4 data-number="2.1.1.1" class="anchored" data-anchor-id="transform-crs"><span class="header-section-number">2.1.1.1</span> Transform CRS</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dki <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_crs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dki <span class="ot">=</span> dki <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs=</span><span class="dv">23837</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="aspatial-data" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="aspatial-data"><span class="header-section-number">1.2.2</span> Aspatial data</h3>
+<section id="check-na-values-and-duplicates" class="level4" data-number="2.1.1.2">
+<h4 data-number="2.1.1.2" class="anchored" data-anchor-id="check-na-values-and-duplicates"><span class="header-section-number">2.1.1.2</span> Check NA values and duplicates</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>vaccination <span class="ot">=</span> <span class="fu">read_excel</span>(<span class="st">"data/aspatial/July.xlsx"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">9</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(vaccination)[<span class="dv">6</span>] <span class="ot">=</span> <span class="st">"Vaccine Administered July"</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>months <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'August'</span>, <span class="st">'September'</span>, <span class="st">'October'</span>, <span class="st">'November'</span>, <span class="st">'December'</span>, <span class="st">'January'</span>, <span class="st">'February'</span>, <span class="st">'March'</span>, <span class="st">'April'</span>, <span class="st">'May'</span>, <span class="st">'June'</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>count <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> months){</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  count <span class="ot">=</span> count <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  filename <span class="ot">=</span> <span class="fu">paste</span>(<span class="st">"data/aspatial/"</span>, i, <span class="st">".xlsx"</span>, <span class="at">sep =</span> <span class="st">""</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">=</span> <span class="fu">read_excel</span>(filename)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  colnb <span class="ot">=</span> <span class="fu">ifelse</span>(count <span class="sc">&lt;</span> <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(df)[colnb] <span class="ot">=</span> <span class="fu">paste</span>( <span class="st">"Vaccine Administered"</span>, i)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  cleaned_df <span class="ot">=</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">4</span>, colnb)</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  vaccination <span class="ot">=</span> vaccination <span class="sc">%&gt;%</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">merge</span>(cleaned_df, <span class="at">by=</span><span class="st">'KELURAHAN'</span>)</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">is.na</span>(dki))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-
-
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dki[<span class="fu">is.na</span>(dki<span class="sc">$</span>DESA_KELUR),])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The Kelurahan information seems to be missing. We will be using the DESA and KODE_DESA to cross check with the aspatial data what may be the name to fill in the rows. We could consider dropping these two rows now, but I prefer to wait and confirm before dropping NA values.</p>
 </section>
+</section>
+</section>
+<section id="aspatial-data" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="aspatial-data"><span class="header-section-number">2.2</span> Aspatial data</h2>
+<p>Since we need to merge a series of data sets, we will first take a quick look a them to understand what are the relevant fields for our analysis and what work needs to be performed to have one single data set that will allow us to find the monthly vaccination rate.</p>
+<p>The first step is to look at the data set of June 2021. Even though this data set takes record of data from the month prior our analysis period (July 2021 - June 2022) and does not seem relevant, I still think that it is important to compute the monthly vaccination (in dosis administered) and consequently we start with the data of June 2021.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>vaccination <span class="ot">=</span> <span class="fu">read_excel</span>(<span class="st">"data/aspatial/before.xlsx"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(vaccination)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 268
+Columns: 21
+$ `KODE KELURAHAN`                             &lt;chr&gt; NA, "3172051003", "317304…
+$ `WILAYAH KOTA`                               &lt;chr&gt; NA, "JAKARTA UTARA", "JAK…
+$ KECAMATAN                                    &lt;chr&gt; NA, "PADEMANGAN", "TAMBOR…
+$ KELURAHAN                                    &lt;chr&gt; "TOTAL", "ANCOL", "ANGKE"…
+$ SASARAN                                      &lt;dbl&gt; 7739060, 20393, 25785, 25…
+$ `BELUM VAKSIN`                               &lt;dbl&gt; 5113425, 13394, 16743, 19…
+$ `JUMLAH\r\nDOSIS 1`                          &lt;dbl&gt; 2623759, 6992, 9033, 6082…
+$ `JUMLAH\r\nDOSIS 2`                          &lt;dbl&gt; 1179448, 3277, 3217, 2636…
+$ `TOTAL VAKSIN\r\nDIBERIKAN`                  &lt;dbl&gt; 3803207, 10269, 12250, 87…
+$ `LANSIA\r\nDOSIS 1`                          &lt;dbl&gt; 502210, 1296, 1999, 816, …
+$ `LANSIA\r\nDOSIS 2`                          &lt;dbl&gt; 448944, 1128, 1746, 702, …
+$ `LANSIA TOTAL \r\nVAKSIN DIBERIKAN`          &lt;dbl&gt; 951154, 2424, 3745, 1518,…
+$ `PELAYAN PUBLIK\r\nDOSIS 1`                  &lt;dbl&gt; 2014605, 5551, 6859, 4959…
+$ `PELAYAN PUBLIK\r\nDOSIS 2`                  &lt;dbl&gt; 654533, 2044, 1364, 1726,…
+$ `PELAYAN PUBLIK TOTAL\r\nVAKSIN DIBERIKAN`   &lt;dbl&gt; 2669138, 7595, 8223, 6685…
+$ `GOTONG ROYONG\r\nDOSIS 1`                   &lt;dbl&gt; 33766, 44, 84, 99, 56, 73…
+$ `GOTONG ROYONG\r\nDOSIS 2`                   &lt;dbl&gt; 10610, 12, 27, 22, 13, 24…
+$ `GOTONG ROYONG TOTAL\r\nVAKSIN DIBERIKAN`    &lt;dbl&gt; 44376, 56, 111, 121, 69, …
+$ `TENAGA KESEHATAN\r\nDOSIS 1`                &lt;dbl&gt; 73178, 101, 91, 208, 70, …
+$ `TENAGA KESEHATAN\r\nDOSIS 2`                &lt;dbl&gt; 65361, 93, 80, 186, 63, 3…
+$ `TENAGA KESEHATAN TOTAL\r\nVAKSIN DIBERIKAN` &lt;dbl&gt; 138539, 194, 171, 394, 13…</code></pre>
+</div>
+</div>
+<p>Using the glimpse() function we can take a look at the different fields of the data sets that will be imported next. Looking at the fields, it looks like we will be selecting only 3 fields:</p>
+<ul>
+<li><p><em>KELURAHAN</em>; this field gives information about the sub-district</p></li>
+<li><p><em>SASARAN</em>; this field represents the vaccination target of each sub-district</p></li>
+<li><p><em>BELUM VAKSIN</em>; this field informs about the population that is yet-to-be vaccinated</p></li>
+</ul>
+<p>Before moving on with the examination of the aspatial data, we shall quickly check for the missing values found in the previous data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>vaccination <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">KODE KELURAHAN</span><span class="st">`</span> <span class="sc">==</span> <span class="dv">31888888</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We may want to check based on the name and will be looking for cells that may contain the DANAU string.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>vaccination <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">'Danau'</span>, KELURAHAN))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It seems like we can drop the two rows from the dki data set, however, for the purpose of our analysis, I prefer to keep these two sub-districts in the data frame. We may have missing values in our choropleth maps, but it is no problem.</p>
+<p>Please find the code chunk necessary to drop NA values in case you deem it to be necessary.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dki <span class="ot">=</span> <span class="fu">na.omit</span>(dki)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>vaccination <span class="ot">=</span> vaccination <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Initial Target"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"Initial Yet-to-be Vaccinated"</span> <span class="ot">=</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now that we have taken a look at the data and selected the relevant fields, we can move on with the data cleaning and merge the vaccination data from July 2021 to June 2022 into the vaccination data frame.</p>
+<p>To do so, we will be using a for loop in which we will be performing the following tasks:</p>
+<ul>
+<li><p>Create a list called months that stores the name of every month in our analysis period, this will allow us to customize the name of the columns;</p></li>
+<li><p>Line 1 and 2 of the loop help us count the month number of our analysis. If you take a quick peak into the later data sets, it seems like Indonesia and the Jakarta region adopted a 3-dosis vaccination plan, meaning that the <em>TOTAL VAKSIN DIBERIKAN</em> is now located on the 10th column from March 2022 on-wards;</p></li>
+<li><p>Using the <em>paste()</em> function, we replicate the name of the data sets stored in our data folder and use the <em>read_excel()</em> function of the <strong>readxl</strong> package, we store the data frame into the variable df;</p></li>
+<li><p>The remaining part of the code serves the purpose of storing Vaccination target data and Yet-to-be Vaccinated data;</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>count <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>months <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'July'</span>, <span class="st">'August'</span>, <span class="st">'September'</span>, <span class="st">'October'</span>, </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">'November'</span>, <span class="st">'December'</span>, <span class="st">'January'</span>, <span class="st">'February'</span>, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>           <span class="st">'March'</span>, <span class="st">'April'</span>, <span class="st">'May'</span>, <span class="st">'June'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> months){</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  filename <span class="ot">=</span> <span class="fu">paste</span>(<span class="st">"data/aspatial/"</span>, i, <span class="st">".xlsx"</span>, <span class="at">sep =</span> <span class="st">""</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">=</span> <span class="fu">read_excel</span>(filename)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  colname1 <span class="ot">=</span> <span class="fu">paste</span>(<span class="st">"Yet-to-be Vaccinated"</span>, i)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  colname2 <span class="ot">=</span> <span class="fu">paste</span>(<span class="st">"Target"</span>, i)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  vaccination[colname2] <span class="ot">=</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">5</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  vaccination[colname1] <span class="ot">=</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">6</span>)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Before merging the aspatial data – vaccination data frame – with the geospatial data – dki data frame – we will perform some data exploration to remove any redundant fields and look for any potential duplicates or missing values.</p>
+<section id="data-exploration-1" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="data-exploration-1"><span class="header-section-number">2.2.1</span> Data exploration</h3>
+<p>We will begin our data exploration by looking at the target columns. I have an intuition that target data might be the same across some periods of our analysis. To do so, we select only the columns that contain the string Target using the <em>grepl()</em> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(vaccination[ , <span class="fu">grepl</span>( <span class="st">"Target"</span> , <span class="fu">names</span>( vaccination ) ) ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Looking at the above print, it looks like target data is the same across our 12-month analysis period, thus we will drop the all the above columns and keep only one column for our reference.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">=</span> vaccination <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">4</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">"Vaccination Target"</span>))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>vaccination <span class="ot">=</span> <span class="fu">cbind</span>(vaccination[ , <span class="sc">!</span><span class="fu">grepl</span>( <span class="st">"Target"</span> , <span class="fu">names</span>( vaccination ) ) ], Z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(vaccination)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Looking at the above print, we have successfully replaceed all the target columns for a single one that is now located at the right end of the data frame. We will push it to the front with the following code chunk.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>vaccination <span class="ot">=</span> vaccination <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="st">"Vaccination Target"</span>, <span class="at">.after=</span><span class="st">"KELURAHAN"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(vaccination)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we will look for any potential redundant fields or duplicated regions. We shall use the code chunk below to check for duplicates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(vaccination))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There are no duplicates in the data frame. Finally, we will look for NA values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">is.na</span>(vaccination))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There are no missing values in the data frame, we will now move on to merging the data frame vaccination with the kdi sf data frame.</p>
+</section>
+</section>
+</section>
+<section id="merging-the-data" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Merging the data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>dataMerged <span class="ot">=</span> <span class="fu">merge</span>(dki, vaccination, </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">by.x =</span> <span class="st">"DESA_KELUR"</span>, <span class="at">by.y =</span> <span class="st">"KELURAHAN"</span>, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">all =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dataMerged)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(dataMerged))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">is.na</span>(dataMerged))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It looks like there are NA values even though both data frames were properly cleaned. We should take a peak at the data to understand where this issue comes from.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dataMerged[<span class="fu">is.na</span>(dataMerged<span class="sc">$</span><span class="st">`</span><span class="at">Vaccination Target</span><span class="st">`</span>),])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dataMerged[<span class="fu">st_is_empty</span>(dataMerged),])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>list.a <span class="ot">=</span> <span class="fu">setdiff</span>(dki<span class="sc">$</span>DESA_KELUR, vaccination<span class="sc">$</span>KELURAHAN)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>list.a <span class="ot">=</span> list.a[<span class="fu">order</span>(list.a)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>list.b <span class="ot">=</span> <span class="fu">setdiff</span>(vaccination<span class="sc">$</span>KELURAHAN, dki<span class="sc">$</span>DESA_KELUR)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>list.b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We should take the “TOTAL” value out both of the above list and data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>list.b <span class="ot">=</span> list.b[<span class="sc">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>vaccination <span class="ot">=</span> vaccination <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'TOTAL'</span>, KELURAHAN))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>list.b[<span class="fu">order</span>(list.b)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>count <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>region <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"BALE KAMBANG"</span>, <span class="st">"HALIM PERDANA KUSUMAH"</span>, <span class="st">"JATI PULO"</span>, </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">"KRAMAT JATI"</span>, <span class="st">"KERENDANG"</span>, <span class="st">"PAL MERIAM"</span>, <span class="st">"PINANG RANTI"</span>, </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>           <span class="st">"RAWA JATI"</span>, <span class="st">"KAMPUNG TENGAH"</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> list.a){</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  count <span class="ot">=</span> count <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  dki<span class="sc">$</span>DESA_KELUR[dki<span class="sc">$</span>DESA_KELUR <span class="sc">==</span> i] <span class="ot">&lt;-</span> region[count]</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we check for any discrepancies within the data frames.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">setdiff</span>(vaccination<span class="sc">$</span>KELURAHAN, dki<span class="sc">$</span>DESA_KELUR), <span class="fu">setdiff</span>(dki<span class="sc">$</span>DESA_KELUR, vaccination<span class="sc">$</span>KELURAHAN))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It seems like we are clear to merge the data frames again.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dataMerged <span class="ot">=</span> <span class="fu">merge</span>(dki, vaccination, </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">by.x =</span> <span class="st">"DESA_KELUR"</span>, <span class="at">by.y =</span> <span class="st">"KELURAHAN"</span>, </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">all =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(dataMerged))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">is.na</span>(dataMerged[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">268</span><span class="sc">:</span><span class="dv">269</span>),]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">st_is_empty</span>(dataMerged))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It looks like our data frame dataMerged is now cleaned. We can now move on to the last steps before the assignments’ objectives.</p>
+<section id="data-visualization" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="data-visualization"><span class="header-section-number">3.1</span> Data visualization</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(dataMerged)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>It looks like the Pulau Islands are included in our data frame. We will take the necessary steps to remove them from the sf data frame.</p>
+</section>
+<section id="data-cleaning" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="data-cleaning"><span class="header-section-number">3.2</span> Data cleaning</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>dataCleaned <span class="ot">=</span> dataMerged <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'PULAU'</span>, DESA_KELUR))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(dataCleaned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can now start answering the objectives of the Hands-on Exercise 2.</p>
+</section>
+</section>
+<section id="choropleth-mapping-and-analysis" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Choropleth Mapping and Analysis</h1>
+<p>Objectives of this section:</p>
+<ul>
+<li><p>Compute the monthly vaccination rate from July 2021 to June 2022 at sub-district (also known as kelurahan in Bahasa Indonesia) level,</p></li>
+<li><p>Prepare the monthly vaccination rate maps by using appropriate tmap functions,</p></li>
+<li><p>Describe the spatial patterns revealed by the choropleth maps (not more than 200 words).</p></li>
+</ul>
+<section id="monthly-vaccination-rate-computation" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="monthly-vaccination-rate-computation"><span class="header-section-number">4.1</span> Monthly Vaccination Rate Computation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>vac_minus1 <span class="ot">=</span> dataCleaned <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract2</span>(<span class="fu">colnames</span>(dataCleaned)[<span class="fu">grepl</span>(<span class="st">"Initial"</span> , <span class="fu">names</span>(dataCleaned))])</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>vac_target <span class="ot">=</span> dataCleaned <span class="sc">%&gt;%</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract2</span>(<span class="fu">colnames</span>(dataCleaned)[<span class="fu">grepl</span>(<span class="st">"Target"</span> , <span class="fu">names</span>(dataCleaned))])</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> months){</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  vac_current <span class="ot">=</span> dataCleaned <span class="sc">%&gt;%</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract2</span>(<span class="fu">colnames</span>(dataCleaned)[<span class="fu">grepl</span>(i , <span class="fu">names</span>(dataCleaned))])</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  colname <span class="ot">=</span> <span class="fu">paste</span>(<span class="st">"Vaccination Rate for"</span>, i, <span class="at">sep =</span> <span class="st">" "</span>)</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  dataCleaned[colname] <span class="ot">=</span> <span class="fu">abs</span>(vac_current <span class="sc">-</span> vac_minus1) <span class="sc">/</span> vac_target</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  vac_minus1 <span class="ot">=</span> vac_current</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="monthly-vaccination-rate-visualization" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="monthly-vaccination-rate-visualization"><span class="header-section-number">4.2</span> Monthly Vaccination Rate Visualization</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>vac_rate <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">colnames</span>(dataCleaned)[<span class="fu">grepl</span>(<span class="st">"Vaccination Rate"</span> , <span class="fu">colnames</span>(dataCleaned))])</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(dataCleaned)<span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(vac_rate, </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"equal"</span>,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette =</span> <span class="st">"Blues"</span>)<span class="sc">+</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">title =</span> vac_rate,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">title.position =</span> <span class="fu">c</span>(<span class="st">"center"</span>, <span class="st">"top"</span>), </span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">title.size =</span> <span class="fl">1.2</span>,</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.height =</span> <span class="fl">0.45</span>, </span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.width =</span> <span class="fl">0.35</span>,</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">frame =</span> <span class="cn">TRUE</span>)<span class="sc">+</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_compass</span>(<span class="at">type=</span><span class="st">"8star"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_scale_bar</span>(<span class="at">width =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_grid</span>(<span class="at">lwd =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(youngmap, agedmap, <span class="at">asp=</span><span class="dv">1</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="conclusion" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4.3</span> Conclusion</h2>
+
+
 </section>
 </section>
 

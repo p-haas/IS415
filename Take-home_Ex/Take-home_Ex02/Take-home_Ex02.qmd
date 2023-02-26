@@ -21,19 +21,29 @@ number-sections: true
 ## Installing and Loading Packages
 
 ```{r}
-pacman::p_load(sf, sfdep, sp, tmap, plyr, tidyverse, readxl)
+pacman::p_load(sf, sfdep, sp, tmap, plyr, tidyverse, readxl, magrittr, knitr)
 ```
 
-## Importing data
+# Importing data
 
-### Geospatial data
+## Geospatial data
 
 ```{r}
 dki = st_read(dsn = "data/geospatial",
              layer = "BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA")
 ```
 
+### Data exploration
+
 ```{r}
+dki = dki %>%
+  select(c(1:9))
+```
+
+#### Transform CRS
+
+```{r}
+#| eval: false
 dki %>%
   st_crs()
 ```
@@ -43,35 +53,343 @@ dki = dki %>%
   st_transform(crs=23837)
 ```
 
-### Aspatial data
+#### Check NA values and duplicates
 
 ```{r}
-vaccination = read_excel("data/aspatial/July.xlsx") %>%
-  select(2,3,4,5,6,9)
+#| eval: false
+any(is.na(dki))
+```
 
-colnames(vaccination)[6] = "Vaccine Administered July"
+```{r}
+#| eval: false
+head(dki[is.na(dki$DESA_KELUR),])
+```
 
-months = c('August', 'September', 'October', 'November', 'December', 'January', 'February', 'March', 'April', 'May', 'June')
+The Kelurahan information seems to be missing. We will be using the DESA and KODE_DESA to cross check with the aspatial data what may be the name to fill in the rows. We could consider dropping these two rows now, but I prefer to wait and confirm before dropping NA values.
+
+## Aspatial data
+
+Since we need to merge a series of data sets, we will first take a quick look a them to understand what are the relevant fields for our analysis and what work needs to be performed to have one single data set that will allow us to find the monthly vaccination rate.
+
+The first step is to look at the data set of June 2021. Even though this data set takes record of data from the month prior our analysis period (July 2021 - June 2022) and does not seem relevant, I still think that it is important to compute the monthly vaccination (in dosis administered) and consequently we start with the data of June 2021.
+
+```{r}
+vaccination = read_excel("data/aspatial/before.xlsx")
+glimpse(vaccination)
+```
+
+Using the glimpse() function we can take a look at the different fields of the data sets that will be imported next. Looking at the fields, it looks like we will be selecting only 3 fields:
+
+-   *KELURAHAN*; this field gives information about the sub-district
+
+-   *SASARAN*; this field represents the vaccination target of each sub-district
+
+-   *BELUM VAKSIN*; this field informs about the population that is yet-to-be vaccinated
+
+Before moving on with the examination of the aspatial data, we shall quickly check for the missing values found in the previous data frame.
+
+```{r}
+#| eval: false
+vaccination %>%
+  filter(`KODE KELURAHAN` == 31888888)
+```
+
+We may want to check based on the name and will be looking for cells that may contain the DANAU string.
+
+```{r}
+#| eval: false
+vaccination %>%
+  filter(grepl('Danau', KELURAHAN))
+```
+
+It seems like we can drop the two rows from the dki data set, however, for the purpose of our analysis, I prefer to keep these two sub-districts in the data frame. We may have missing values in our choropleth maps, but it is no problem.
+
+Please find the code chunk necessary to drop NA values in case you deem it to be necessary.
+
+```{r}
+#| eval: false
+dki = na.omit(dki)
+```
+
+```{r}
+vaccination = vaccination %>%
+  select(4, 5, 6) %>%
+  rename("Initial Target" = 2, "Initial Yet-to-be Vaccinated" = 3)
+```
+
+Now that we have taken a look at the data and selected the relevant fields, we can move on with the data cleaning and merge the vaccination data from July 2021 to June 2022 into the vaccination data frame.
+
+To do so, we will be using a for loop in which we will be performing the following tasks:
+
+-   Create a list called months that stores the name of every month in our analysis period, this will allow us to customize the name of the columns;
+
+-   Line 1 and 2 of the loop help us count the month number of our analysis. If you take a quick peak into the later data sets, it seems like Indonesia and the Jakarta region adopted a 3-dosis vaccination plan, meaning that the *TOTAL VAKSIN DIBERIKAN* is now located on the 10th column from March 2022 on-wards;
+
+-   Using the *paste()* function, we replicate the name of the data sets stored in our data folder and use the *read_excel()* function of the **readxl** package, we store the data frame into the variable df;
+
+-   The remaining part of the code serves the purpose of storing Vaccination target data and Yet-to-be Vaccinated data;
+
+```{r}
+#| warning: false
+
 count = 0
+months = c('July', 'August', 'September', 'October', 
+           'November', 'December', 'January', 'February', 
+           'March', 'April', 'May', 'June')
 
 for (i in months){
-  count = count + 1
   filename = paste("data/aspatial/", i, ".xlsx", sep = "")
   df = read_excel(filename)
   
-  colnb = ifelse(count < 8, 9, 10)
-  colnames(df)[colnb] = paste( "Vaccine Administered", i)
-  cleaned_df = df %>%
-    select(4, colnb)
+  colname1 = paste("Yet-to-be Vaccinated", i)
+  colname2 = paste("Target", i)
   
-  vaccination = vaccination %>%
-    merge(cleaned_df, by='KELURAHAN')
+  vaccination[colname2] = df %>%
+    select(5)
+  vaccination[colname1] = df %>%
+    select(6)
 }
 ```
 
+Before merging the aspatial data -- vaccination data frame -- with the geospatial data -- dki data frame -- we will perform some data exploration to remove any redundant fields and look for any potential duplicates or missing values.
 
+### Data exploration
 
+We will begin our data exploration by looking at the target columns. I have an intuition that target data might be the same across some periods of our analysis. To do so, we select only the columns that contain the string Target using the *grepl()* function.
 
+```{r}
+#| eval: false
+head(vaccination[ , grepl( "Target" , names( vaccination ) ) ])
+```
 
+Looking at the above print, it looks like target data is the same across our 12-month analysis period, thus we will drop the all the above columns and keep only one column for our reference.
 
+```{r}
+Z = vaccination %>%
+  select(4) %>%
+  setNames(c("Vaccination Target"))
 
+vaccination = cbind(vaccination[ , !grepl( "Target" , names( vaccination ) ) ], Z)
+```
+
+```{r}
+#| eval: false
+head(vaccination)
+```
+
+Looking at the above print, we have successfully replaceed all the target columns for a single one that is now located at the right end of the data frame. We will push it to the front with the following code chunk.
+
+```{r}
+vaccination = vaccination %>% 
+  relocate("Vaccination Target", .after="KELURAHAN")
+```
+
+```{r}
+#| eval: false
+kable(vaccination)
+```
+
+Now, we will look for any potential redundant fields or duplicated regions. We shall use the code chunk below to check for duplicates.
+
+```{r}
+#| eval: false
+any(duplicated(vaccination))
+```
+
+There are no duplicates in the data frame. Finally, we will look for NA values.
+
+```{r}
+#| eval: false
+any(is.na(vaccination))
+```
+
+There are no missing values in the data frame, we will now move on to merging the data frame vaccination with the kdi sf data frame.
+
+# Merging the data
+
+```{r}
+dataMerged = merge(dki, vaccination, 
+             by.x = "DESA_KELUR", by.y = "KELURAHAN", 
+             all = TRUE)
+```
+
+```{r}
+#| eval: false
+head(dataMerged)
+```
+
+```{r}
+#| eval: false
+any(duplicated(dataMerged))
+```
+
+```{r}
+#| eval: false
+any(is.na(dataMerged))
+```
+
+It looks like there are NA values even though both data frames were properly cleaned. We should take a peak at the data to understand where this issue comes from.
+
+```{r}
+#| eval: false
+glimpse(dataMerged[is.na(dataMerged$`Vaccination Target`),])
+```
+
+```{r}
+#| eval: false
+glimpse(dataMerged[st_is_empty(dataMerged),])
+```
+
+```{r}
+list.a = setdiff(dki$DESA_KELUR, vaccination$KELURAHAN)
+list.a = list.a[order(list.a)]
+```
+
+```{r}
+#| eval: false
+list.b = setdiff(vaccination$KELURAHAN, dki$DESA_KELUR)
+list.b
+```
+
+We should take the "TOTAL" value out both of the above list and data frame.
+
+```{r}
+#| eval: false
+list.b = list.b[-1]
+```
+
+```{r}
+vaccination = vaccination %>%
+  filter(!grepl('TOTAL', KELURAHAN))
+```
+
+```{r}
+#| eval: false
+list.b[order(list.b)]
+```
+
+```{r}
+count = 0
+region = c("BALE KAMBANG", "HALIM PERDANA KUSUMAH", "JATI PULO", 
+           "KRAMAT JATI", "KERENDANG", "PAL MERIAM", "PINANG RANTI", 
+           "RAWA JATI", "KAMPUNG TENGAH")
+
+for (i in list.a){
+  count = count + 1
+  dki$DESA_KELUR[dki$DESA_KELUR == i] <- region[count]
+}
+```
+
+Finally, we check for any discrepancies within the data frames.
+
+```{r}
+#| eval: false
+c(setdiff(vaccination$KELURAHAN, dki$DESA_KELUR), setdiff(dki$DESA_KELUR, vaccination$KELURAHAN))
+```
+
+It seems like we are clear to merge the data frames again.
+
+```{r}
+dataMerged = merge(dki, vaccination, 
+             by.x = "DESA_KELUR", by.y = "KELURAHAN", 
+             all = TRUE)
+```
+
+```{r}
+#| eval: false
+any(duplicated(dataMerged))
+```
+
+```{r}
+#| eval: false
+any(is.na(dataMerged[-c(268:269),]))
+```
+
+```{r}
+#| eval: false
+any(st_is_empty(dataMerged))
+```
+
+It looks like our data frame dataMerged is now cleaned. We can now move on to the last steps before the assignments' objectives.
+
+## Data visualization
+
+```{r}
+tmap_mode("plot")
+qtm(dataMerged)
+```
+
+It looks like the Pulau Islands are included in our data frame. We will take the necessary steps to remove them from the sf data frame.
+
+## Data cleaning
+
+```{r}
+dataCleaned = dataMerged %>% 
+  filter(!grepl('PULAU', DESA_KELUR))
+```
+
+```{r}
+tmap_mode("plot")
+qtm(dataCleaned)
+```
+
+We can now start answering the objectives of the Hands-on Exercise 2.
+
+# Choropleth Mapping and Analysis
+
+Objectives of this section:
+
+-   Compute the monthly vaccination rate from July 2021 to June 2022 at sub-district (also known as kelurahan in Bahasa Indonesia) level,
+
+-   Prepare the monthly vaccination rate maps by using appropriate tmap functions,
+
+-   Describe the spatial patterns revealed by the choropleth maps (not more than 200 words).
+
+## Monthly Vaccination Rate Computation
+
+```{r}
+vac_minus1 = dataCleaned %>%
+  extract2(colnames(dataCleaned)[grepl("Initial" , names(dataCleaned))])
+vac_target = dataCleaned %>%
+  extract2(colnames(dataCleaned)[grepl("Target" , names(dataCleaned))])
+
+for (i in months){
+  
+  vac_current = dataCleaned %>%
+  extract2(colnames(dataCleaned)[grepl(i , names(dataCleaned))])
+  
+  colname = paste("Vaccination Rate for", i, sep = " ")
+  dataCleaned[colname] = abs(vac_current - vac_minus1) / vac_target
+  
+  vac_minus1 = vac_current
+}
+```
+
+## Monthly Vaccination Rate Visualization
+
+```{r}
+vac_rate = c(colnames(dataCleaned)[grepl("Vaccination Rate" , colnames(dataCleaned))])
+
+tm_shape(dataCleaned)+
+  tm_fill(vac_rate, 
+          style = "equal",
+          palette = "Blues")+
+  tm_layout(title = vac_rate,
+            title.position = c("center", "top"), 
+            title.size = 1.2,
+            legend.position = c("left", "bottom"),
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            frame = TRUE)+
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar(width = 0.15) +
+  tm_grid(lwd = 0.1, alpha = 0.2)
+```
+
+```{r}
+#| eval: false
+tmap_arrange(youngmap, agedmap, asp=1, ncol=2)
+```
+
+## Conclusion
