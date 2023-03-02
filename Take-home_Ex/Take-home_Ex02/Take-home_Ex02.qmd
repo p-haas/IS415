@@ -21,24 +21,46 @@ number-sections: true
 ## Installing and Loading Packages
 
 ```{r}
-pacman::p_load(sf, sfdep, tmap, plyr, tidyverse, readxl, magrittr, knitr)
+pacman::p_load(sf, sfdep, tmap, plyr, tidyverse, readxl, magrittr, knitr, plotly, Kendall, tidyr)
 ```
+
+## Retrieve the data from the web
+
+
 
 # Importing data
 
+We will import the data in two steps, first the geospatial data and then the aspatial data.
+
 ## Geospatial data
+
+We import the geospatial data using the st_read() function of the sf package.
 
 ```{r}
 dki = st_read(dsn = "data/geospatial",
              layer = "BATAS_DESA_DESEMBER_2019_DUKCAPIL_DKI_JAKARTA")
 ```
+This sf data frame contains Multipolygon geometry type. The data seems to be encoded in WGS 84, we will need to perform a transformation the projected system of Indonesia and Jakarta.
 
 ### Data exploration
 
+Let's take a peak into the data frame using the glimpse() function.
+
+```{r}
+glimpse(dki)
+```
+
+Looking at the above fields, it seems that we are only interested in the first nine columns. We will be selecting them using the select() function.
+
+Note that the geometry field will remain even if not selected.
+
 ```{r}
 dki = dki %>%
-  select(c(1:9))
+  select(c(1:9)) %>%
+  rename("GeoCode" = 2)
 ```
+
+For the purpose of this hands-on exercise and easier processes later, I take the freedom to rename the second column
 
 #### Transform CRS
 
@@ -113,8 +135,14 @@ dki = na.omit(dki)
 
 ```{r}
 vaccination = vaccination %>%
-  select(4, 5, 6) %>%
-  rename("Initial Target" = 2, "Initial Yet-to-be Vaccinated" = 3)
+  select(1, 4, 5, 6) %>%
+  rename("GeoCode" = 1, "Target" = 3, "Yet-to-be Vaccinated" = 4)
+
+vaccination$Date = as.Date("2021-06-30")
+```
+
+```{r}
+str(vaccination)
 ```
 
 Now that we have taken a look at the data and selected the relevant fields, we can move on with the data cleaning and merge the vaccination data from July 2021 to June 2022 into the vaccination data frame.
@@ -132,22 +160,26 @@ To do so, we will be using a for loop in which we will be performing the followi
 ```{r}
 #| warning: false
 
-count = 0
+records = seq(from = as.Date("2021-08-01"), to = as.Date("2022-07-01"), by = 'months') - 1
+
 months = c('July', 'August', 'September', 'October', 
            'November', 'December', 'January', 'February', 
            'March', 'April', 'May', 'June')
 
+count = 1
+
 for (i in months){
   filename = paste("data/aspatial/", i, ".xlsx", sep = "")
-  df = read_excel(filename)
   
-  colname1 = paste("Yet-to-be Vaccinated", i)
-  colname2 = paste("Target", i)
+  df = read_excel(filename) %>% 
+    select(1, 4,5,6) %>%
+    rename("GeoCode" = 1, "Target" = 3, "Yet-to-be Vaccinated" = 4)
   
-  vaccination[colname2] = df %>%
-    select(5)
-  vaccination[colname1] = df %>%
-    select(6)
+  df$Date = records[count]
+  
+  vaccination = rbind(vaccination, df)
+  
+  count = count + 1
 }
 ```
 
@@ -165,23 +197,14 @@ head(vaccination[ , grepl( "Target" , names( vaccination ) ) ])
 Looking at the above print, it looks like target data is the same across our 12-month analysis period, thus we will drop the all the above columns and keep only one column for our reference.
 
 ```{r}
-Z = vaccination %>%
-  select(4) %>%
-  setNames(c("Vaccination Target"))
-
-vaccination = cbind(vaccination[ , !grepl( "Target" , names( vaccination ) ) ], Z)
+vaccination[grep('TOTAL', vaccination$KELURAHAN),]
 ```
+
+It looks like the only vaccination target that differs is the one prior to our analysis period. We won't drop it yet but will drop it as soon as we pivot our data frame.
 
 ```{r}
 #| eval: false
 head(vaccination)
-```
-
-Looking at the above print, we have successfully replaceed all the target columns for a single one that is now located at the right end of the data frame. We will push it to the front with the following code chunk.
-
-```{r}
-vaccination = vaccination %>% 
-  relocate("Vaccination Target", .after="KELURAHAN")
 ```
 
 ```{r}
@@ -189,26 +212,50 @@ vaccination = vaccination %>%
 kable(head(vaccination))
 ```
 
-Now, we will look for any potential redundant fields or duplicated regions. We shall use the code chunk below to check for duplicates.
-
-```{r}
-#| eval: false
-any(duplicated(vaccination))
-```
-
-There are no duplicates in the data frame. Finally, we will look for NA values.
+Now, we will look for any potential NA values. We shall use the code chunk below to check for them.
 
 ```{r}
 #| eval: false
 any(is.na(vaccination))
 ```
 
-There are no missing values in the data frame, we will now move on to merging the data frame vaccination with the kdi sf data frame.
+There are no missing values in the data frame, we will now pivot the data frame.
+
+### Creating a pivot table
+
+```{r}
+vaccination_pivot = vaccination %>%
+  pivot_wider(names_from = Date, values_from = c(`Yet-to-be Vaccinated`, Target))
+```
+
+```{r}
+head(vaccination_pivot[ , grepl( "Target" , names( vaccination_pivot ) ) ])
+```
+
+Looking at the above print, it looks like target data is the same across our 12-month analysis period, thus we will drop the all the above columns and keep only one column for our reference.
+
+```{r}
+vac_target = vaccination_pivot[ , grepl("Target_2021-07-31", names(vaccination_pivot))] %>%
+  setNames(c("Vaccination_Target"))
+
+vaccination_pivot = cbind(vaccination_pivot[ , !grepl( "Target" , names( vaccination_pivot ) ) ], vac_target)
+```
+
+```{r}
+head(vaccination_pivot)
+```
+
+Looking at the above print, we have successfully replaced all the target columns for a single one that is now located at the right end of the data frame. We will push it to the front with the following code chunk.
+
+```{r}
+vaccination_pivot = vaccination_pivot %>% 
+  relocate("Vaccination_Target", .after="KELURAHAN")
+```
 
 # Merging the data
 
 ```{r}
-dataMerged = merge(dki, vaccination, 
+dataMerged = merge(dki, vaccination_pivot, 
              by.x = "DESA_KELUR", by.y = "KELURAHAN", 
              all = TRUE)
 ```
@@ -259,7 +306,7 @@ list.b = list.b[-1]
 ```
 
 ```{r}
-vaccination = vaccination %>%
+vaccination_pivot = vaccination_pivot %>%
   filter(!grepl('TOTAL', KELURAHAN))
 ```
 
@@ -290,7 +337,7 @@ c(setdiff(vaccination$KELURAHAN, dki$DESA_KELUR), setdiff(dki$DESA_KELUR, vaccin
 It seems like we are clear to merge the data frames again.
 
 ```{r}
-dataMerged = merge(dki, vaccination, 
+dataMerged = merge(dki, vaccination_pivot, 
              by.x = "DESA_KELUR", by.y = "KELURAHAN", 
              all = TRUE)
 ```
@@ -349,17 +396,17 @@ Objectives of this section:
 
 ```{r}
 vac_minus1 = dataCleaned %>%
-  extract2(colnames(dataCleaned)[grepl("Initial" , names(dataCleaned))])
+  extract2(colnames(dataCleaned)[grepl("2021-06-30" , names(dataCleaned))])
 vac_target = dataCleaned %>%
   extract2(colnames(dataCleaned)[grepl("Target" , names(dataCleaned))])
 
-for (i in months){
+for (i in 12:23){
   
   vac_current = dataCleaned %>%
-  extract2(colnames(dataCleaned)[grepl(i , names(dataCleaned))])
+  extract2(colnames(dataCleaned)[i])
   
-  colname = paste("Vaccination_Rate_for", i, sep = "_")
-  dataCleaned[colname] = abs(vac_current - vac_minus1) / vac_target
+  colname = paste("Vaccination_Rate_for", months[i-11], sep = "_")
+  dataCleaned[colname] = (vac_current - vac_minus1) / vac_target
   
   vac_minus1 = vac_current
 }
@@ -402,71 +449,123 @@ Objectives of this section:
 
 ## Compute local Gi* values
 
-```{r}
-#| warning: false
+### Preliminary work
 
-wm_idw <- na.omit(dataCleaned) %>%
-  mutate(nb = st_contiguity(geometry),
-         wts = st_inverse_distance(nb, geometry,
-                                   scale = 1,
-                                   alpha = 1),
-         .before = 1)
+We shall start by dropping the rows containing the TOTAL string in the KELURAHAN column.
+
+```{r}
+vaccination = vaccination %>%
+  filter(!grepl('TOTAL', KELURAHAN))
+```
+
+### Convertion to spacetime cube
+
+We will create a space time cube since we are looking at values in a time series.
+
+```{r}
+dataMerged_st <- spacetime(vaccination, dki,
+                        .loc_col = "GeoCode",
+                        .time_col = "Date")
 ```
 
 ```{r}
-local_gi = function(df, varname) {
-  df1 = df %>%
-    st_set_geometry(NULL)
-  HCSA = df %>% 
-    mutate(local_Gi = local_gstar_perm(df1[, grepl(varname, names(df))],
-                                       nb, wt, nsim = 99),
-           .before = 1) %>%
-    unnest(local_Gi)
-}
+is_spacetime_cube(dataMerged_st)
 ```
 
-## Gi* maps of monthly vaccination rate
+The merged data does not seem to be in the space time cube format. It looks like we should take the NA values out of the dki data frame.
 
 ```{r}
-map_plot = function(df, varname){
-  tm_shape(df) +
-    tm_fill("gi_star", midpoint = NA) + 
-    tm_layout(title = gsub("_", " ", varname),
-            legend.position = c("left", "bottom"),
-            frame = TRUE) +
-    tm_borders(alpha = 0.5)
-}
+dki = na.omit(dki)
+```
+
+Let's run the code chunk again.
+
+```{r}
+dataMerged_st <- spacetime(vaccination, dki,
+                        .loc_col = "GeoCode",
+                        .time_col = "Date")
 ```
 
 ```{r}
-columns = colnames(wm_idw)[grepl("Vaccination_Rate", names(wm_idw))]
+is_spacetime_cube(dataMerged_st)
+```
 
-for (i in 1:12){
-  if (i < 12){
-    map = map_plot(local_gi(wm_idw, columns[i]), months[i])
-    assign(paste("map_", i, sep = ""), map)
-  } else {
-    HCSA = wm_idw %>% 
-      mutate(local_Gi = local_gstar_perm(Vaccination_Rate_for_June,
-                                         nb, wt, 
-                                         nsim = 99),
-             .before = 1) %>%
-      unnest(local_Gi)
-  assign(paste("map_", i, sep = ""), map_plot(HCSA, months[12]))
-  }
-}
+It looks like the transformation is successful. Now, we shall continue with the computation of Gi*.
+
+### Data cleaning
+
+We shall compute the monthly vaccination rates.
+
+```{r}
+dataMerged_st = dataMerged_st[order(dataMerged_st$KELURAHAN),] 
+
+dataMerged_st["Monthly_vac_rate"] = (lag(dataMerged_st[,4]) - dataMerged_st[, 4]) / dataMerged_st$Target
+```
+
+Now we shall drop all the rows containing data of 2021-06-30.
+
+```{r}
+dataMerged_st = dataMerged_st %>%
+  filter(!grepl(as.Date("2021-06-30"), Date))
+```
+
+### Deriving the spatial weights
+
+```{r}
+data_nb <- dataMerged_st %>%
+  activate("geometry") %>%
+  mutate(nb = include_self(st_contiguity(geometry)),
+         wt = st_inverse_distance(nb, geometry,
+                                  scale = 1,
+                                  alpha = 1),
+         .before = 1) %>%
+  set_nbs("nb") %>%
+  set_wts("wt")
+```
+
+### Compute Gi* values
+
+```{r}
+gi_stars <- data_nb %>% 
+  group_by(Date) %>% 
+  mutate(gi_star = local_gstar_perm(
+    Monthly_vac_rate, nb, wt)) %>% 
+  tidyr::unnest(gi_star)
+```
+
+## Gi* map of monthly vaccination rate
+
+```{r}
+dki = dki %>% 
+  filter(!grepl('PULAU', DESA_KELUR)) 
+```
+
+
+```{r}
+test = merge(dki, gi_stars) %>%
+  filter(p_value < 0.05)
 ```
 
 ```{r}
-tmap_arrange(map_1, map_2, map_3, map_4,
-             ncol=2)
-tmap_arrange(map_5, map_6, map_7, map_8,
-             ncol=2)
-tmap_arrange(map_9, map_10, map_11, map_12,
-             ncol=2)
+tm_shape(dki) +
+  tm_polygons() +
+tm_shape(test) +
+  tm_fill("p_value",
+          n = 1,
+          breaks = c(0, 0.05),
+          palette = "red") + 
+  tm_facets(by="Date", 
+            free.coords=TRUE, 
+            drop.shapes=TRUE) +
+  tm_layout(legend.show = FALSE,
+            title.position = c("center", "center"), 
+            title.size = 20) +
+  tm_borders(alpha = 0.5)
 ```
 
 ## Conclusion
+
+conclude...
 
 # Emerging Hot Spot Analysis (EHSA)
 
@@ -482,8 +581,80 @@ Objectives of this section:
 
 ## Mann-Kendall Test
 
+```{r}
+cbg <- gi_stars %>% 
+  ungroup() |> 
+  select(KELURAHAN, Date, gi_star)
+```
+
+```{r}
+p <- ggplot(data = cbg, 
+       aes(x = Date, 
+           y = gi_star)) +
+  geom_line() +
+  theme_light()
+
+ggplotly(p)
+```
+
+```{r}
+cbg %>%
+  summarise(mk = list(
+    unclass(
+      Kendall::MannKendall(gi_star)))) %>% 
+  tidyr::unnest_wider(mk)
+```
+
+```{r}
+ehsa <- gi_stars %>%
+  group_by(KELURAHAN) %>%
+  summarise(mk = list(
+    unclass(
+      Kendall::MannKendall(gi_star)))) %>%
+  tidyr::unnest_wider(mk)
+```
+
+```{r}
+emerging <- ehsa %>% 
+  arrange(sl, abs(tau)) %>% 
+  slice(1:5)
+```
+
 ## Temporal Trends in ...
 
+describe
+
 ## EHSA map of Gi* values
+
+```{r}
+ehsa = emerging_hotspot_analysis(
+  x = dataMerged_st, 
+  .var = "Monthly_vac_rate", 
+  k = 1, nsim = 99)
+```
+
+```{r}
+ggplot(data = ehsa,
+       aes(x = classification)) +
+  geom_bar()
+```
+
+```{r}
+dki_ehsa <- dki %>%
+  left_join(ehsa, by = c("GeoCode" = "location"))
+```
+
+```{r}
+ehsa_sig <- dki_ehsa  %>%
+  filter(p_value < 0.05)
+tmap_mode("plot")
+tm_shape(dki_ehsa) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+tm_shape(ehsa_sig) +
+  tm_fill("classification") + 
+  tm_borders(alpha = 0.4)
+```
+
 
 ## Spatial Patterns description
