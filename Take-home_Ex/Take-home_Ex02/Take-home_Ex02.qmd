@@ -21,7 +21,7 @@ number-sections: true
 ## Installing and Loading Packages
 
 ```{r}
-pacman::p_load(sf, sfdep, sp, tmap, plyr, tidyverse, readxl, magrittr, knitr)
+pacman::p_load(sf, sfdep, tmap, plyr, tidyverse, readxl, magrittr, knitr)
 ```
 
 # Importing data
@@ -186,7 +186,7 @@ vaccination = vaccination %>%
 
 ```{r}
 #| eval: false
-kable(vaccination)
+kable(head(vaccination))
 ```
 
 Now, we will look for any potential redundant fields or duplicated regions. We shall use the code chunk below to check for duplicates.
@@ -358,38 +358,132 @@ for (i in months){
   vac_current = dataCleaned %>%
   extract2(colnames(dataCleaned)[grepl(i , names(dataCleaned))])
   
-  colname = paste("Vaccination Rate for", i, sep = " ")
+  colname = paste("Vaccination_Rate_for", i, sep = "_")
   dataCleaned[colname] = abs(vac_current - vac_minus1) / vac_target
   
   vac_minus1 = vac_current
 }
+
+dataCleaned = dataCleaned[, !grepl("Yet-to-be", colnames(dataCleaned))]
 ```
 
 ## Monthly Vaccination Rate Visualization
 
 ```{r}
-vac_rate = c(colnames(dataCleaned)[grepl("Vaccination Rate" , colnames(dataCleaned))])
+vac_rate = c(colnames(dataCleaned)[grepl("Vaccination_Rate" , colnames(dataCleaned))])
 
-tm_shape(dataCleaned)+
+tm_shape(dataCleaned) +
   tm_fill(vac_rate, 
-          style = "equal",
-          palette = "Blues")+
-  tm_layout(title = vac_rate,
-            title.position = c("center", "top"), 
-            title.size = 1.2,
+          style = "jenks",
+          palette = "Blues") +
+  tm_layout(title = gsub("_", " ", vac_rate),
+            title.position = c("center", "top"),
             legend.position = c("left", "bottom"),
-            legend.height = 0.45, 
-            legend.width = 0.35,
-            frame = TRUE)+
+            frame = TRUE) +
   tm_borders(alpha = 0.5) +
-  tm_compass(type="8star", size = 2) +
+  tm_compass(type="4star", size = 2) +
   tm_scale_bar(width = 0.15) +
   tm_grid(lwd = 0.1, alpha = 0.2)
 ```
 
+## Conclusion
+
+here...
+
+# Local Gi* Analysis
+
+Objectives of this section:
+
+-   Compute local Gi* values of the monthly vaccination rate,
+
+-   Display the Gi* maps of the monthly vaccination rate. The maps should only display the significant (i.e. p-value < 0.05),
+
+-   With reference to the analysis results, draw statistical conclusions (not more than 250 words).
+
+## Compute local Gi* values
+
 ```{r}
-#| eval: false
-tmap_arrange(youngmap, agedmap, asp=1, ncol=2)
+#| warning: false
+
+wm_idw <- na.omit(dataCleaned) %>%
+  mutate(nb = st_contiguity(geometry),
+         wts = st_inverse_distance(nb, geometry,
+                                   scale = 1,
+                                   alpha = 1),
+         .before = 1)
+```
+
+```{r}
+local_gi = function(df, varname) {
+  df1 = df %>%
+    st_set_geometry(NULL)
+  HCSA = df %>% 
+    mutate(local_Gi = local_gstar_perm(df1[, grepl(varname, names(df))],
+                                       nb, wt, nsim = 99),
+           .before = 1) %>%
+    unnest(local_Gi)
+}
+```
+
+## Gi* maps of monthly vaccination rate
+
+```{r}
+map_plot = function(df, varname){
+  tm_shape(df) +
+    tm_fill("gi_star", midpoint = NA) + 
+    tm_layout(title = gsub("_", " ", varname),
+            legend.position = c("left", "bottom"),
+            frame = TRUE) +
+    tm_borders(alpha = 0.5)
+}
+```
+
+```{r}
+columns = colnames(wm_idw)[grepl("Vaccination_Rate", names(wm_idw))]
+
+for (i in 1:12){
+  if (i < 12){
+    map = map_plot(local_gi(wm_idw, columns[i]), months[i])
+    assign(paste("map_", i, sep = ""), map)
+  } else {
+    HCSA = wm_idw %>% 
+      mutate(local_Gi = local_gstar_perm(Vaccination_Rate_for_June,
+                                         nb, wt, 
+                                         nsim = 99),
+             .before = 1) %>%
+      unnest(local_Gi)
+  assign(paste("map_", i, sep = ""), map_plot(HCSA, months[12]))
+  }
+}
+```
+
+```{r}
+tmap_arrange(map_1, map_2, map_3, map_4,
+             ncol=2)
+tmap_arrange(map_5, map_6, map_7, map_8,
+             ncol=2)
+tmap_arrange(map_9, map_10, map_11, map_12,
+             ncol=2)
 ```
 
 ## Conclusion
+
+# Emerging Hot Spot Analysis (EHSA)
+
+Objectives of this section:
+
+-   Perform Mann-Kendall Test by using the spatio-temporal local Gi* values,
+
+-   Select three sub-districts and describe the temporal trends revealed (not more than 250 words),
+
+-   Prepared a EHSA map of the Gi* values of vaccination rate. The maps should only display the significant (i.e. p-value < 0.05),
+
+-   With reference to the EHSA map prepared, describe the spatial patterns revealed (not more than 250 words).
+
+## Mann-Kendall Test
+
+## Temporal Trends in ...
+
+## EHSA map of Gi* values
+
+## Spatial Patterns description
