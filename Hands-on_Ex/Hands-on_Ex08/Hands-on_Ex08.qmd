@@ -1,0 +1,214 @@
+---
+title: "Calibrating Hedonic Pricing Model for Private Highrise Property with GWR Method"
+subtitle: "Hands-on Exercise 8"
+
+author: "Pierre HAAS"
+
+date: "March 05, 2023"
+date-modified: "`r Sys.Date()`"
+
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+
+number-sections: true
+---
+
+# Getting started
+
+## Installing and Loading Packages
+
+```{r}
+pacman::p_load(olsrr, corrplot, ggpubr, sf, spdep, GWmodel, tmap, tidyverse, gtsummary)
+```
+
+## Importing the data
+
+### Importing geospatial data
+
+```{r}
+mpsz = st_read(dsn = "data/geospatial",
+        layer = "MP14_SUBZONE_WEB_PL") %>%
+  st_transform(3414) %>%
+  st_make_valid()
+```
+
+```{r}
+glimpse(mpsz)
+```
+
+### Importing aspatial data
+
+```{r}
+condo_resale = read_csv("data/aspatial/Condo_resale_2015.csv")
+```
+
+```{r}
+glimpse(condo_resale)
+```
+
+### Converting aspatial data frame into an sf object
+
+```{r}
+condo_resale.sf = st_as_sf(condo_resale,
+                           coords = c("LONGITUDE", "LATITUDE")
+                           , crs = 4326) %>%
+  st_transform(3414)
+```
+
+# EDA
+
+## EDA using statistical grphics
+
+```{r}
+ggplot(data=condo_resale.sf, aes(x=`SELLING_PRICE`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+```
+
+Next we perform a log transformation to go from a right skewed distribution to a somewhat normal distribution of selling prices.
+
+```{r}
+condo_resale.sf <- condo_resale.sf %>%
+  mutate(`LOG_SELLING_PRICE` = log(SELLING_PRICE))
+```
+
+```{r}
+ggplot(data=condo_resale.sf, aes(x=`LOG_SELLING_PRICE`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+```
+
+## Multiple Histogram Plots distribution of variables
+
+```{r}
+AREA_SQM <- ggplot(data=condo_resale.sf, aes(x= `AREA_SQM`)) + 
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+AGE <- ggplot(data=condo_resale.sf, aes(x= `AGE`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_CBD <- ggplot(data=condo_resale.sf, aes(x= `PROX_CBD`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_CHILDCARE <- ggplot(data=condo_resale.sf, aes(x= `PROX_CHILDCARE`)) + 
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_ELDERLYCARE <- ggplot(data=condo_resale.sf, aes(x= `PROX_ELDERLYCARE`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_URA_GROWTH_AREA <- ggplot(data=condo_resale.sf, 
+                               aes(x= `PROX_URA_GROWTH_AREA`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_HAWKER_MARKET <- ggplot(data=condo_resale.sf, aes(x= `PROX_HAWKER_MARKET`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_KINDERGARTEN <- ggplot(data=condo_resale.sf, aes(x= `PROX_KINDERGARTEN`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_MRT <- ggplot(data=condo_resale.sf, aes(x= `PROX_MRT`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_PARK <- ggplot(data=condo_resale.sf, aes(x= `PROX_PARK`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_PRIMARY_SCH <- ggplot(data=condo_resale.sf, aes(x= `PROX_PRIMARY_SCH`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+PROX_TOP_PRIMARY_SCH <- ggplot(data=condo_resale.sf, 
+                               aes(x= `PROX_TOP_PRIMARY_SCH`)) +
+  geom_histogram(bins=20, color="black", fill="light blue")
+
+ggpubr::ggarrange(AREA_SQM, AGE, PROX_CBD, PROX_CHILDCARE, PROX_ELDERLYCARE, 
+          PROX_URA_GROWTH_AREA, PROX_HAWKER_MARKET, PROX_KINDERGARTEN,
+          PROX_MRT, PROX_PARK, PROX_PRIMARY_SCH, PROX_TOP_PRIMARY_SCH,
+          ncol = 3, nrow = 4)
+```
+
+## Drawing statistical point map
+
+```{r}
+tmap_mode("view")
+
+tm_shape(mpsz)+
+  tm_polygons() +
+tm_shape(condo_resale.sf) +  
+  tm_dots(col = "SELLING_PRICE",
+          alpha = 0.6,
+          style="quantile") +
+  tm_view(set.zoom.limits = c(10,14))
+```
+
+```{r}
+tmap_mode("plot")
+```
+
+# Hedonic Pricing Modelling in R
+
+## SLR method
+
+```{r}
+condo.slr <- lm(formula=SELLING_PRICE ~ AREA_SQM, data = condo_resale.sf)
+```
+
+```{r}
+summary(condo.slr)
+```
+
+```{r}
+ggplot(data=condo_resale.sf,  
+       aes(x=`AREA_SQM`, y=`SELLING_PRICE`)) +
+  geom_point() +
+  geom_smooth(method = lm)
+```
+
+## MLR method
+
+### Visualising the relationships of the independent variables
+
+```{r}
+corrplot(cor(condo_resale[, 5:23]), diag = FALSE, order = "AOE",
+         tl.pos = "td", tl.cex = 0.5, method = "number", type = "upper")
+```
+
+### Building a hedonic pricing model using MLR
+
+```{r}
+condo.mlr <- lm(formula = SELLING_PRICE ~ AREA_SQM + AGE    + 
+                  PROX_CBD + PROX_CHILDCARE + PROX_ELDERLYCARE +
+                  PROX_URA_GROWTH_AREA + PROX_HAWKER_MARKET + PROX_KINDERGARTEN + 
+                  PROX_MRT  + PROX_PARK + PROX_PRIMARY_SCH + 
+                  PROX_TOP_PRIMARY_SCH + PROX_SHOPPING_MALL + PROX_SUPERMARKET + 
+                  PROX_BUS_STOP + NO_Of_UNITS + FAMILY_FRIENDLY + FREEHOLD, 
+                data=condo_resale.sf)
+summary(condo.mlr)
+```
+
+### Preparing Publication Quality Table: olsrr method
+
+```{r}
+condo.mlr1 <- lm(formula = SELLING_PRICE ~ AREA_SQM + AGE + 
+                   PROX_CBD + PROX_CHILDCARE + PROX_ELDERLYCARE +
+                   PROX_URA_GROWTH_AREA + PROX_MRT  + PROX_PARK + 
+                   PROX_PRIMARY_SCH + PROX_SHOPPING_MALL    + PROX_BUS_STOP + 
+                   NO_Of_UNITS + FAMILY_FRIENDLY + FREEHOLD,
+                 data=condo_resale.sf)
+ols_regress(condo.mlr1)
+```
+
+### Preparing Publication Quality Table: gtsummary method
+
+```{r}
+tbl_regression(condo.mlr1, intercept = TRUE)
+```
+
+```{r}
+tbl_regression(condo.mlr1, 
+               intercept = TRUE) %>% 
+  add_glance_source_note(
+    label = list(sigma ~ "\U03C3"),
+    include = c(r.squared, adj.r.squared, 
+                AIC, statistic,
+                p.value, sigma))
+```

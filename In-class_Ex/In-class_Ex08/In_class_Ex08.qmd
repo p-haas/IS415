@@ -1,0 +1,25 @@
+---
+title: " "
+subtitle: "In-Class Exercise 8"
+
+author: "Pierre HAAS"
+
+date: "March 06, 2023"
+date-modified: "`r Sys.Date()`"
+
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+
+number-sections: true
+---
+
+# Installing and Loading Packages
+
+```{r}
+pacman::p_load()
+```
+
+
