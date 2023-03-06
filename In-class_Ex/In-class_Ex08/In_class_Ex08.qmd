@@ -19,7 +19,7 @@ number-sections: true
 # Installing and Loading Packages
 
 ```{r}
-pacman::p_load()
+pacman::p_load(tmap)
 ```
 
 
