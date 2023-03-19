@@ -50,12 +50,16 @@ website:
             href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex1.html"
           - text: "Take-home Exercise 2"
             href: "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html"
-          
+          - text: "Take-home Exercise 3"
+            href: "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html"
           
     right:
       - href: index.qmd
         text: Home
       - about.qmd
+
+execute:
+  freeze: true  # never re-render during project render
 
 format:
   html:

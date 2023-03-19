@@ -1,0 +1,37 @@
+---
+title: " "
+subtitle: "In-Class Exercise 9"
+
+author: "Pierre HAAS"
+
+date: "March 13, 2023"
+date-modified: "`r Sys.Date()`"
+
+execute:
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+
+number-sections: true
+---
+
+# Getting Started
+
+```{r}
+pacman::p_load(sf, spdep, GWmodel, tmap, SpatialML, tidyverse, 
+               ggpubr, olsrr, devtools, tidymodels)
+```
+
+## Reading rds data file
+
+```{r}
+mdata = read_rds("data/aspatial/mdata.rds")
+```
+
+## Geospatial data
+
+```{r}
+
+```
+

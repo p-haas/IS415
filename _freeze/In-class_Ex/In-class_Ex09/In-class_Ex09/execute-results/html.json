@@ -1,0 +1,14 @@
+{
+  "hash": "c2aced38edcc87edba083cadc034ae3a",
+  "result": {
+    "markdown": "---\ntitle: \" \"\nsubtitle: \"In-Class Exercise 9\"\n\nauthor: \"Pierre HAAS\"\n\ndate: \"March 13, 2023\"\ndate-modified: \"2023-03-19\"\n\nexecute:\n  eval: true\n  echo: true\n  warning: false\neditor: visual\n\nnumber-sections: true\n---\n\n\n# Getting Started\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(sf, spdep, GWmodel, tmap, SpatialML, tidyverse, \n               ggpubr, olsrr, devtools, tidymodels)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\npackage 'tidymodels' successfully unpacked and MD5 sums checked\n\nThe downloaded binary packages are in\n\tC:\\Users\\pierre\\AppData\\Local\\Temp\\Rtmpy4vBvQ\\downloaded_packages\n```\n:::\n:::\n\n\n## Reading rds data file\n\n\n::: {.cell}\n\n```{.r .cell-code}\nmdata = read_rds(\"data/aspatial/mdata.rds\")\n```\n:::\n\n\n## Geospatial data\n\n\n::: {.cell}\n\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

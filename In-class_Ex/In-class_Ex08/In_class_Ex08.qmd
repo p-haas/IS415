@@ -19,7 +19,39 @@ number-sections: true
 # Installing and Loading Packages
 
 ```{r}
-pacman::p_load(tmap)
+pacman::p_load(olsrr, corrplot, ggpubr, sf, spdep, GWmodel, tmap, tidyverse, gtsummary)
 ```
 
+# Import the data
 
+## Importing geospatial data
+
+```{r}
+mpsz = st_read(dsn = "data/geospatial",
+        layer = "MP14_SUBZONE_WEB_PL") %>%
+  st_transform(3414) %>%
+  st_make_valid()
+```
+
+```{r}
+glimpse(mpsz)
+```
+
+## Importing aspatial data
+
+```{r}
+condo_resale = read_csv("data/aspatial/Condo_resale_2015.csv")
+```
+
+```{r}
+glimpse(condo_resale)
+```
+
+### Converting aspatial data frame into an sf object
+
+```{r}
+condo_resale.sf = st_as_sf(condo_resale,
+                           coords = c("LONGITUDE", "LATITUDE")
+                           , crs = 4326) %>%
+  st_transform(3414)
+```
