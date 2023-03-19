@@ -970,6 +970,6 @@
     "href": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#saving-the-data",
     "title": "Predicting HDB Public Housing Resale Prices using Geographically Weighted Methods",
     "section": "4.3 Saving the data",
-    "text": "4.3 Saving the data\n\nwrite_rds(rp_3rooms.sf, \"data/geospatial/final_dataset.rds\")\n\n\ntest = read_rds(\"data/geospatial/final_dataset.rds\")"
+    "text": "4.3 Saving the data\n\nwrite_rds(rp_3rooms.sf, \"data/geospatial/final_dataset.rds\")\n\n\nrp_3rooms.sf = read_rds(\"data/geospatial/final_dataset.rds\")\n\n\nsum(is.na(rp_3rooms.sf))\n\n[1] 0"
   }
 ]

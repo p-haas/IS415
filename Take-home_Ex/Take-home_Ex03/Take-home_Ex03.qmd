@@ -1082,8 +1082,15 @@ write_rds(rp_3rooms.sf, "data/geospatial/final_dataset.rds")
 ```
 
 ```{r}
-test = read_rds("data/geospatial/final_dataset.rds")
+rp_3rooms.sf = read_rds("data/geospatial/final_dataset.rds")
 ```
+
+```{r}
+sum(is.na(rp_3rooms.sf))
+```
+
+# aaa
+
 
 # Testing
 
@@ -1111,3 +1118,4 @@ rp_3rooms.sf %>%
 spatialrisk::concentration(rp_3rooms.sf, kindergartens.sf,
                            value = count, radius = 350)
 ```
+
