@@ -29,13 +29,15 @@ The following list shows the libraries that will be used and their purpose:
 To install and load the packages, we use the p_load() function of the pacman package. It automatically checks if packages are installed, installs them if they are not installed, and loads the packages into the R environment.
 
 ```{r}
+#| eval: false
 pacman::p_load(olsrr, corrplot, ggpubr, sf, spdep,
-               GWmodel, tmap, tidyverse, gtsummary)
+               GWmodel, tmap, tidyverse, gtsummary,
+               ranger, SpatialML, rsample, Metrics,
+               janitor)
 ```
 
 ```{r}
 #| eval: false
-
 pacman::p_load(knitr, httr, onemapsgapi, xml2, rvest,
                stringr, ggmap)
 ```
@@ -64,7 +66,6 @@ In this section, we will be importing the data frames into our R environment and
 
 ```{r}
 #| eval: false
-
 mpsz.sf = st_read(dsn = "data/geospatial/mpsz2019",
                   layer = "MPSZ-2019") %>%
   st_transform(crs=3414) %>%
@@ -75,7 +76,6 @@ mpsz.sf = st_read(dsn = "data/geospatial/mpsz2019",
 
 ```{r}
 #| eval: false
-
 mrt_exits.sf = st_read(dsn = "data/geospatial/TrainStationExit/TrainStationExit",
                        layer = "Train_Station_Exit_Layer") %>%
   st_transform(crs=3414)
@@ -85,7 +85,6 @@ mrt_exits.sf = st_read(dsn = "data/geospatial/TrainStationExit/TrainStationExit"
 
 ```{r}
 #| eval: false
-
 bus_stops.sf = st_read(dsn = "data/geospatial/BusStopLocation/BusStop_Feb2023",
                        layer = "BusStop") %>%
   st_transform(3414)
@@ -95,7 +94,6 @@ bus_stops.sf = st_read(dsn = "data/geospatial/BusStopLocation/BusStop_Feb2023",
 
 ```{r}
 #| eval: false
-
 supermarkets.sf = st_read("data/geospatial/supermarkets/supermarkets-kml.kml") %>%
   st_transform(3414)
 ```
@@ -118,13 +116,6 @@ Note that if you want to learn more about the One Map API, you should definitely
 #| eval: false
 token_api = get_token(email = "xxx@xxx.xxx", 
                       password = "...")
-```
-
-```{r}
-#| eval: false
-#| echo: false
-token_api = get_token(email = "pierre.haas2002@gmail.com", 
-                      password = "@P0yp0yonemap2oo2")
 ```
 
 ### Using the API to retrieve the variables available on OneMap
@@ -188,7 +179,6 @@ Using the code chunk below, you can retrieve the location name and its coordinat
 
 ```{r}
 #| eval: false
-
 df = data.frame()
 
 url = "https://developers.onemap.sg/privateapi/themesvc/retrieveTheme"
@@ -227,7 +217,6 @@ We now have part of our independent variables stored into a csv file that we wil
 
 ```{r}
 #| eval: false
-
 retrieved_variables = read_csv("data/geospatial/retrieved_variables.csv", )
 ```
 
@@ -235,7 +224,6 @@ If we look back to the variables we chose to retrieve using the One Map API, we 
 
 ```{r}
 #| eval: false
-
 unique(retrieved_variables$variable_name)
 ```
 
@@ -287,7 +275,6 @@ retrieved_variables$variable_name = str_replace(retrieved_variables$variable_nam
 
 ```{r}
 #| eval: false
-
 unique(retrieved_variables$variable_name)
 ```
 
@@ -299,7 +286,6 @@ Using the st_as_sf() function from the *sf* package, we can transform our set of
 
 ```{r}
 #| eval: false
-
 retrieved_variables.sf = st_as_sf(retrieved_variables,
                                   coords = c("lon", "lat"),
                                   crs = 4326, remove = FALSE) %>%
@@ -373,7 +359,6 @@ My previously mentioned intuition is confirmed. The month variable takes data st
 
 ```{r}
 #| eval: false
-
 rp_3rooms = resale_price %>%
   select(-2) %>%
   filter(grepl("202[123]", month)) %>%
@@ -388,7 +373,6 @@ The first step is to look at what are the unique values in the column. Using the
 
 ```{r}
 #| eval: false
-
 unique(rp_3rooms$storey_range)
 ```
 
@@ -396,7 +380,6 @@ Now, using a for loop and the ifelse() function, we will create a new column for
 
 ```{r}
 #| eval: false
-
 for (i in unique(rp_3rooms$storey_range)){
   rp_3rooms[i] = ifelse(rp_3rooms$storey_range == i, 1, 0)
 }
@@ -406,13 +389,11 @@ for (i in unique(rp_3rooms$storey_range)){
 
 ```{r}
 #| eval: false
-
 unique(rp_3rooms$flat_model)
 ```
 
 ```{r}
 #| eval: false
-
 for (i in unique(rp_3rooms$flat_model)){
   rp_3rooms[i] = ifelse(rp_3rooms$flat_model == i, 1, 0)
 }
@@ -422,7 +403,6 @@ for (i in unique(rp_3rooms$flat_model)){
 
 ```{r}
 #| eval: false
-
 lease_remaining = list()
 
 for (i in 1:nrow(rp_3rooms)){
@@ -448,7 +428,6 @@ for (i in 1:nrow(rp_3rooms)){
 
 ```{r}
 #| eval: false
-
 rp_3rooms$remaining_lease = as.numeric(lease_remaining)
 ```
 
@@ -458,13 +437,11 @@ The first step to geocoding the address - retrieving the latitude and longitude 
 
 ```{r}
 #| eval: false
-
 rp_3rooms["cleaned_address"] = paste(rp_3rooms$block, rp_3rooms$street_name, sep = " ")
 ```
 
 ```{r}
 #| eval: false
-
 url = "https://developers.onemap.sg/commonapi/search"
 
 full_address = list()
@@ -508,7 +485,6 @@ We import the geocoded data back into the R environment.
 
 ```{r}
 #| eval: false
-
 rp_3rooms = read_csv("data/aspatial/geocoded_resale_price.csv")
 ```
 
@@ -516,7 +492,6 @@ rp_3rooms = read_csv("data/aspatial/geocoded_resale_price.csv")
 
 ```{r}
 #| eval: false
-
 rp_3rooms.cleaned = rp_3rooms %>%
   select(-c("flat_type", "block", "street_name", "storey_range", "flat_model", "cleaned_address", "full_address"))
 ```
@@ -525,7 +500,6 @@ rp_3rooms.cleaned = rp_3rooms %>%
 
 ```{r}
 #| eval: false
-
 rp_3rooms.sf = st_as_sf(rp_3rooms.cleaned,
                         coords = c("lon", "lat"),
                         crs = 4326, remove = FALSE) %>%
@@ -539,17 +513,6 @@ tm_shape(mpsz.sf)+
   tm_polygons()+
 tm_shape(rp_3rooms.sf)+
   tm_dots()
-```
-
-### Splitting the Analysis and Test data
-
-```{r}
-#| eval: false
-rp_analysis.sf = rp_3rooms.sf %>%
-  filter(grepl("202[12]", month))
-
-rp_testing.sf = rp_3rooms.sf %>%
-  filter(grepl("2023", month))
 ```
 
 ## Primary School data
@@ -656,7 +619,6 @@ primary_sc1$location_name = str_replace(primary_sc1$location_name,
 
 ```{r}
 #| eval: false
-
 url = "https://developers.onemap.sg/commonapi/search"
 
 for (i in 1:nrow(primary_sc1)){
@@ -696,7 +658,7 @@ While looping through these schools, we use the geocode() function of *ggmap* to
 
 ```{r}
 #| eval: false
-register_google(key = "AIzaSyAXnBV3JyljN3Ek2cAZdRNtQw2SVZB8ZyE")
+register_google(key = "xxx")
 
 missing_sc = primary_sc1[grep("St. Andrew’s Junior School", primary_sc1$location_name):grep("St. Stephen’s School", primary_sc1$location_name), 1]
 
@@ -736,7 +698,6 @@ write.csv(primary_sc1, "data/aspatial/primary_schools.csv", row.names = FALSE)
 
 ```{r}
 #| eval: false
-
 primary_schools = read_csv("data/aspatial/primary_schools.csv")
 ```
 
@@ -744,7 +705,6 @@ primary_schools = read_csv("data/aspatial/primary_schools.csv")
 
 ```{r}
 #| eval: false
-
 primary_schools.sf = st_as_sf(primary_schools,
                          coords = c("lon", "lat"),
                          crs = 4326, remove = FALSE) %>%
@@ -881,13 +841,11 @@ write.csv(shp_malls, "data/aspatial/shopping_malls.csv", row.names = FALSE)
 
 ```{r}
 #| eval: false
-
 shp_malls = read_csv("data/aspatial/shopping_malls.csv")
 ```
 
 ```{r}
 #| eval: false
-
 shp_malls.sf = st_as_sf(shp_malls,
                         coords = c("lon", "lat"),
                         crs = 4326, remove = FALSE) %>%
@@ -906,14 +864,12 @@ Proxomity to CBD Proximity to eldercare Proximity to foodcourt/hawker centres Pr
 
 ```{r}
 #| eval: false
-
 eldercare.sf = retrieved_variables.sf %>%
   filter(variable_name == "eldercare")
 ```
 
 ```{r}
 #| eval: false
-
 nearest = st_nearest_feature(rp_3rooms.sf, eldercare.sf)
 
 rp_3rooms.sf$distance_to_eldercare = as.numeric(
@@ -926,14 +882,12 @@ rp_3rooms.sf$distance_to_eldercare = as.numeric(
 
 ```{r}
 #| eval: false
-
 hawker_centres.sf = retrieved_variables.sf %>%
   filter(variable_name == "hawker_centres")
 ```
 
 ```{r}
 #| eval: false
-
 nearest = st_nearest_feature(rp_3rooms.sf, hawker_centres.sf)
 
 rp_3rooms.sf$distance_to_food = as.numeric(
@@ -946,7 +900,6 @@ rp_3rooms.sf$distance_to_food = as.numeric(
 
 ```{r}
 #| eval: false
-
 nearest = st_nearest_feature(rp_3rooms.sf, mrt_exits.sf)
 
 rp_3rooms.sf$distance_to_mrt = as.numeric(
@@ -959,14 +912,12 @@ rp_3rooms.sf$distance_to_mrt = as.numeric(
 
 ```{r}
 #| eval: false
-
 parks.sf = retrieved_variables.sf %>%
   filter(variable_name == "parks")
 ```
 
 ```{r}
 #| eval: false
-
 nearest = st_nearest_feature(rp_3rooms.sf, parks.sf)
 
 rp_3rooms.sf$distance_to_park = as.numeric(
@@ -979,7 +930,6 @@ rp_3rooms.sf$distance_to_park = as.numeric(
 
 ```{r}
 #| eval: false
-
 nearest = st_nearest_feature(rp_3rooms.sf, shp_malls.sf)
 
 rp_3rooms.sf$distance_to_mall = as.numeric(
@@ -992,7 +942,6 @@ rp_3rooms.sf$distance_to_mall = as.numeric(
 
 ```{r}
 #| eval: false
-
 nearest = st_nearest_feature(rp_3rooms.sf, shp_malls.sf)
 
 rp_3rooms.sf$distance_to_mall = as.numeric(
@@ -1005,7 +954,6 @@ rp_3rooms.sf$distance_to_mall = as.numeric(
 
 ```{r}
 #| eval: false
-
 nearest = st_nearest_feature(rp_3rooms.sf, supermarkets.sf)
 
 rp_3rooms.sf$distance_to_supermarkets = as.numeric(
@@ -1018,7 +966,6 @@ rp_3rooms.sf$distance_to_supermarkets = as.numeric(
 
 ```{r}
 #| eval: false
-
 buffer_350  = st_buffer(rp_3rooms.sf, 350)
 buffer_1000 = st_buffer(rp_3rooms.sf, 1000)
 ```
@@ -1027,14 +974,12 @@ buffer_1000 = st_buffer(rp_3rooms.sf, 1000)
 
 ```{r}
 #| eval: false
-
 kindergartens.sf = retrieved_variables.sf %>%
   filter(variable_name == "kindergartens")
 ```
 
 ```{r}
 #| eval: false
-
 rp_3rooms.sf$nb_of_kindergartens = lengths(
   st_intersects(buffer_350, kindergartens.sf))
 ```
@@ -1043,14 +988,12 @@ rp_3rooms.sf$nb_of_kindergartens = lengths(
 
 ```{r}
 #| eval: false
-
 child_care.sf = retrieved_variables.sf %>%
   filter(variable_name == "child_care")
 ```
 
 ```{r}
 #| eval: false
-
 rp_3rooms.sf$nb_of_childcare = lengths(
   st_intersects(buffer_350, child_care.sf))
 ```
@@ -1059,7 +1002,6 @@ rp_3rooms.sf$nb_of_childcare = lengths(
 
 ```{r}
 #| eval: false
-
 rp_3rooms.sf$nb_of_bus_stops = lengths(
   st_intersects(buffer_350, bus_stops.sf))
 ```
@@ -1077,20 +1019,213 @@ rp_3rooms.sf$nb_of_primary_schools = lengths(
 
 ```{r}
 #| eval: false
-
 write_rds(rp_3rooms.sf, "data/geospatial/final_dataset.rds")
 ```
 
 ```{r}
+#| eval: false
 rp_3rooms.sf = read_rds("data/geospatial/final_dataset.rds")
 ```
 
 ```{r}
+#| eval: false
 sum(is.na(rp_3rooms.sf))
 ```
 
-# aaa
+# Hedonic Pricing model
 
+```{r}
+#| eval: false
+rp_3rooms.sf = rp_3rooms.sf %>%
+  rename("01_to_03" = "01 TO 03", "04_to_06" = "04 TO 06", "07_to_09" = "07 TO 09",
+         "10_to_12" = "10 TO 12", "13_to_15" = "13 TO 15", "16_to_18" = "16 TO 18",
+         "19_to_21" = "19 TO 21", "22_to_24" = "22 TO 24", "25_to_27" = "25 TO 27",
+         "28_to_30" = "28 TO 30", "31_to_33" = "31 TO 33", "34_to_36" = "34 TO 36",
+         "37_to_39" = "37 TO 39", "40_to_42" = "40 TO 42", "43_to_45" = "43 TO 45",
+         "46_to_48" = "46 TO 48", "New_Generation" = "New Generation", 
+         "Model_A" = "Model A", "Premium_Apartment" = "Premium Apartment")
+```
+
+## Splitting the data
+
+```{r}
+#| eval: false
+rp_analysis.sf = rp_3rooms.sf %>%
+  filter(grepl("202[12]", month))
+
+rp_testing.sf = rp_3rooms.sf %>%
+  filter(grepl("2023", month))
+```
+
+## Conventional OLS method
+
+```{r}
+#| eval: false
+colnames(rp_3rooms.sf)
+```
+
+```{r}
+#| eval: false
+rp_analysis.mlr <- lm(formula = resale_price ~ floor_area_sqm + remaining_lease +
+                      `01_to_03` + `04_to_06` + `07_to_09` + `10_to_12` + `13_to_15` + 
+                      `16_to_18` + `19_to_21` + `22_to_24` + `25_to_27` + `28_to_30` + 
+                      `31_to_33` + `34_to_36` + `37_to_39` + `40_to_42` + `43_to_45` + 
+                      `New_Generation` + Improved + `Model_A` + Simplified + Standard + 
+                      `Premium_Apartment` + DBSS + distance_to_eldercare + 
+                      distance_to_food + distance_to_mrt + distance_to_park + 
+                      distance_to_mall + distance_to_supermarkets + nb_of_kindergartens +
+                      nb_of_childcare + nb_of_bus_stops + nb_of_primary_schools, 
+                    data = rp_analysis.sf)
+
+summary(rp_analysis.mlr)
+```
+
+## GWR methods
+
+### Converting sf data frame to SpatialPointDataFrame
+
+```{r}
+#| eval: false
+rp_analysis.sp = as_Spatial(rp_analysis.sf)
+```
+
+### Computing adaptive bandwidth
+
+```{r}
+#| eval: false
+bw_analysis_adaptive <- bw.gwr(resale_price ~ floor_area_sqm + remaining_lease +
+                      X01_to_03 + X04_to_06 + X07_to_09 + X10_to_12 + X13_to_15 + 
+                      X16_to_18 + X19_to_21 + X22_to_24 + X25_to_27 + X28_to_30 + 
+                      X31_to_33 + X34_to_36 + X37_to_39 + X40_to_42 + X43_to_45 + 
+                      New_Generation + Improved + Model_A + Simplified + Standard + 
+                      Premium_Apartment + DBSS + distance_to_eldercare + 
+                      distance_to_food + distance_to_mrt + distance_to_park + 
+                      distance_to_mall + distance_to_supermarkets + nb_of_kindergartens +
+                      nb_of_childcare + nb_of_bus_stops + nb_of_primary_schools, 
+                      data = rp_analysis.sp, approach="CV", kernel="gaussian",
+                      adaptive=TRUE, longlat=FALSE)
+```
+
+```{r}
+#| eval: false
+write_rds(bw_analysis_adaptive, "data/model/bw_analysis_adaptive.rds")
+```
+
+### Constructing the adaptive bandwidth gwr model
+
+```{r}
+#| eval: false
+bw_adaptive <- read_rds("data/model/bw_analysis_adaptive.rds")
+```
+
+```{r}
+#| eval: false
+gwr_adaptive <- gwr.basic(formula = resale_price ~ floor_area_sqm + remaining_lease + X01_to_03 +
+                            X04_to_06 + X07_to_09 + X10_to_12 + X13_to_15 + X16_to_18 + X19_to_21 +
+                            X22_to_24 + X25_to_27 + X28_to_30 + X31_to_33 + X34_to_36 + X37_to_39 + 
+                            X40_to_42 + X43_to_45 + New_Generation + Improved + Model_A + Simplified + 
+                            Standard + Premium_Apartment + DBSS + distance_to_eldercare + distance_to_food + 
+                            distance_to_mrt + distance_to_park + distance_to_mall + distance_to_supermarkets + 
+                            nb_of_kindergartens + nb_of_childcare + nb_of_bus_stops + nb_of_primary_schools, 
+                          data = rp_analysis.sp, bw=bw_adaptive, kernel = 'gaussian', adaptive=TRUE, 
+                          longlat = FALSE)
+```
+
+```{r}
+#| eval: false
+write_rds(gwr_adaptive, "data/model/gwr_analysis_adaptive.rds")
+```
+
+```{r}
+#| eval: false
+gwr_adaptive = read_rds("data/model/gwr_analysis_adaptive.rds")
+```
+
+```{r}
+#| eval: false
+gwr_adaptive
+```
+
+## Dropping geometry
+
+```{r}
+#| eval: false
+coords_train <- st_coordinates(rp_analysis.sf)
+```
+
+```{r}
+#| eval: false
+write_rds(coords_train, "data/model/coords_train.rds" )
+```
+
+```{r}
+#| eval: false
+coords_train = read_rds("data/model/coords_train.rds")
+```
+
+```{r}
+#| eval: false
+rp_analysis.no_geom = rp_analysis.sf %>% 
+  st_drop_geometry() %>%
+  select(-c(1, 3, 22:23))
+```
+
+## Calibrating Random Forest Model
+
+```{r}
+#| eval: false
+rp_analysis.no_geom = rp_analysis.no_geom %>%
+  clean_names()
+```
+
+```{r}
+#| eval: false
+set.seed(2410)
+rf <- ranger(resale_price ~ floor_area_sqm + remaining_lease +
+               x01_to_03 + x04_to_06 + x07_to_09 + x10_to_12 + x13_to_15 + 
+               x16_to_18 + x19_to_21 + x22_to_24 + x25_to_27 + x28_to_30 + 
+               x31_to_33 + x34_to_36 + x37_to_39 + x40_to_42 + x43_to_45 + 
+               new_generation + improved + model_a + simplified + standard + 
+               premium_apartment + dbss + distance_to_eldercare + 
+               distance_to_food + distance_to_mrt + distance_to_park + 
+               distance_to_mall + distance_to_supermarkets + nb_of_kindergartens +
+               nb_of_childcare + nb_of_bus_stops + nb_of_primary_schools, 
+             data = rp_analysis.no_geom)
+```
+
+```{r}
+#| eval: false
+print(rf)
+```
+
+## Calibrating Geographical Random Forest Model
+
+### Calibrating using training data
+
+```{r}
+#| eval: false
+gwRF_adaptive <- grf(formula = resale_price ~ floor_area_sqm + remaining_lease +
+                       x01_to_03 + x04_to_06 + x07_to_09 + x10_to_12 + x13_to_15 + 
+                       x16_to_18 + x19_to_21 + x22_to_24 + x25_to_27 + x28_to_30 + 
+                       x31_to_33 + x34_to_36 + x37_to_39 + x40_to_42 + x43_to_45 + 
+                       new_generation + improved + model_a + simplified + standard + 
+                       premium_apartment + dbss + distance_to_eldercare + 
+                       distance_to_food + distance_to_mrt + distance_to_park +
+                       distance_to_mall + distance_to_supermarkets + nb_of_kindergartens +
+                       nb_of_childcare + nb_of_bus_stops + nb_of_primary_schools,
+                     dframe=rp_analysis.no_geom, bw=bw_adaptive, kernel="adaptive",
+                     coords=coords_train)
+```
+
+```{r}
+#| eval: false
+write_rds(gwRF_adaptive, "data/model/gwRF_adaptive250.rds")
+```
+
+```{r}
+#| eval: false
+gwRF_adaptive <- read_rds("data/model/gwRF_adaptive.rds")
+```
 
 # Testing
 
@@ -1114,8 +1249,6 @@ rp_3rooms.sf %>%
 
 ```{r}
 #| eval: false
-
 spatialrisk::concentration(rp_3rooms.sf, kindergartens.sf,
                            value = count, radius = 350)
 ```
-
