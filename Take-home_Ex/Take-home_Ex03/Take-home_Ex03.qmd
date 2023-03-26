@@ -308,6 +308,8 @@ I have also picked-up some other interesting variables that may be included late
 extra_variables = c("lta_cycling_paths", "disability", "hsgb_fcc", "sportsg_sport_facilities", "ssc_sports_facilities", "wastedisposalsite", "drainageconstruction", "cpe_pei_premises", "sewerageconstruction", "danger_areas", "aquaticsg", "moh_isp_clinics", "heritagetrees", "nparks_activity_area",  "exercisefacilities", "mha_uav_2015", "playsg", "underconstruction_facilities", "preschools_location", "hdbcyclingunderconstruction",  "boundary_5km",  "hdbluppropunderconstruction", "parkingstandardszone", "libraries", "cyclingpath", "dengue_cluster", "greenbuilding", "nparks_uc_parks", )
 ```
 
+You won't see these additional variables in my model due to the computing power of my computer. However, I strongly recommend to try an include these potential independent variables to improve the model.
+
 ### Retrieving the available variables with the OneMap API
 
 Using the code chunk below, you can retrieve the location name and its coordinates based on the previously created list of variables. We store this information into a data frame to make our use of this data easier
@@ -351,21 +353,18 @@ write_csv(df, "data/geospatial/retrieved_variables.csv")
 We now have part of our independent variables stored into a csv file that we will import back into our R environment.
 
 ```{r}
-#| eval: false
 retrieved_variables = read_csv("data/geospatial/retrieved_variables.csv", )
 ```
 
 If we look back to the variables we chose to retrieve using the One Map API, we had sub-categories to our independent variables.
 
 ```{r}
-#| eval: false
 unique(retrieved_variables$variable_name)
 ```
 
 For instance, we have four sub-categories for hawker centres and food courts. We shall simplify our work by renaming these sub-categories under one name only. Using the next code chunk, we may do so.
 
 ```{r}
-#| eval: false
 retrieved_variables$variable_name = str_replace(retrieved_variables$variable_name, 
                                                 "Eldercare Services", 
                                                 "eldercare")
@@ -409,7 +408,6 @@ retrieved_variables$variable_name = str_replace(retrieved_variables$variable_nam
 ```
 
 ```{r}
-#| eval: false
 unique(retrieved_variables$variable_name)
 ```
 
@@ -420,7 +418,6 @@ We shall now proceed to creating sf objects from the extracted coordinates.
 Using the st_as_sf() function from the *sf* package, we can transform our set of coordinates into sf point objects.
 
 ```{r}
-#| eval: false
 retrieved_variables.sf = st_as_sf(retrieved_variables,
                                   coords = c("lon", "lat"),
                                   crs = 4326, remove = FALSE) %>%
@@ -430,9 +427,8 @@ retrieved_variables.sf = st_as_sf(retrieved_variables,
 We shall check if our data points have been correctly transformed by plotting the points on the Singapore map using the *tmap* package.
 
 ```{r}
-#| eval: false
 tmap_mode("plot")
-tm_shape(mpsz)+
+tm_shape(mpsz.sf)+
   tm_polygons()+
 tm_shape(retrieved_variables.sf)+
   tm_dots()
