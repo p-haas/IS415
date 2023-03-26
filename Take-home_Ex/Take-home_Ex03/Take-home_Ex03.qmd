@@ -24,57 +24,17 @@ In this Take-home Exercise 3, we will try using geographically weighted methods 
 
 For the purpose our this project, we have selected a list of libraries that will allow to perform all the necessary data cleaning, handling and analysis.
 
-The following list shows the libraries that will be used and their purpose for this assignment:
+The following list shows the libraries that will be used in this assignment:
 
--   pacman
-
--   tidyverse
-
--   janitor
-
--   sf
-
--   spdep
-
--   tmap
-
--   corrplot
-
--   olsrr
-
--   gtsummary
-
--   knitr
-
--   httr
-
--   onemapsapi
-
--   xml2
-
--   rvest
-
--   stringr
-
--   ggmap
-
--   ggpubr
-
--   GWmodel
-
--   SpatialML
-
--   Metrics
-
--   rsample
+*pacman, tidyverse, janitor, sf, spdep, tmap, corrplot, olsrr, knitr, httr, onemapsapi, xml2, rvest, stringr, ggmap, ggpubr, GWmodel, SpatialML, Metrics*
 
 To install and load the packages, we use the p_load() function of the pacman package. It automatically checks if packages are installed, installs them if they are not installed, and loads the packages into the R environment.
 
 ```{r}
 pacman::p_load(olsrr, corrplot, ggpubr, sf, spdep,
                GWmodel, tmap, tidyverse, gtsummary,
-               ranger, SpatialML, rsample, Metrics,
-               janitor, stargazer, lmtest, robustbase)
+               ranger, SpatialML, janitor, stargazer, 
+               lmtest, Metrics)
 ```
 
 ```{r}
@@ -96,6 +56,17 @@ options(digits = 15)
 ## The Data
 
 For the purpose of this assignment, extensive amount of data was extracted from the web. You will find below a table that directs you to the webpage on which you can retrieve the data sets.
+
+|           Name           |     Format     |                                                      Source                                                      |
+|:------------------------:|:--------------:|:----------------------------------------------------------------------------------------------------------------:|
+|    Resale Flat Prices    |      csv       |                          [data.gov.sg](https://data.gov.sg/dataset/resale-flat-prices)                           |
+| Master Plan 2019 Subzone |      shp       |                                                       prof                                                       |
+|    MRT Exit Locations    |      shp       | [datamall.lta.gov.sg](https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/TrainStationExit.zip) |
+|    Bus Stop Locations    |      shp       | [datamall.lta.gov.sg](https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/BusStopLocation.zip)  |
+|       Supermarkets       |      kml       |                             [data.gov.sg](https://data.gov.sg/dataset/supermarkets)                              |
+|     Primary Schools      | HTML scrapping |                                     [Here](https://sgschooling.com/school/)                                      |
+|      Shopping Malls      | HTML scrapping |                  [Wikipedia](https://en.wikipedia.org/wiki/List_of_shopping_malls_in_Singapore)                  |
+|     Rest of the data     |      API       |                                   [OneMapAPI](https://www.onemap.gov.sg/docs/)                                   |
 
 # Retrieving and Importing the Geospatial Data
 
@@ -655,7 +626,6 @@ tm_shape(mpsz.sf)+
 tm_shape(rp_3rooms.sf)+
   tm_dots()
 ```
-
 :::
 
 ## Primary School data
@@ -1286,15 +1256,23 @@ Before running the analysis, there are a few preliminary steps. We should check 
 
 ## Multicollinearity
 
+Using the corrplot package and its corrplot function, we get a clean correlation matrix that indicates positive correlation with the color blue and negative with red.
+
 ```{r}
-corrplot::corrplot(cor(rp_3rooms.sf %>% 
-                         st_drop_geometry() %>%
-                         select(-c(1, 22, 23))), 
-                   diag = FALSE, order = "AOE", tl.pos = "td", 
-                   tl.cex = 0.5, method = "number", type = "upper")
+cor_test = cor(rp_3rooms.sf %>% 
+  st_drop_geometry() %>% 
+  select(-c(1, 22, 23)))
+
+corrplot::corrplot(cor_test, diag = FALSE, order = "AOE", tl.pos = "td", 
+                   tl.cex = 0.5, method = "number", type = "upper",
+                   number.cex = 0.3)
 ```
 
+We find that there is a perfect correlation between the lease_commence_date and remaining_lease variables, so we will include only one of the two in our OLS regression.
+
 ## MLR model
+
+To test for linearity and heteroscedasticity, we first need to run the regression. Note that using the next code chunk, you can retrieve the list of variables in our data frame.
 
 ```{r}
 #| eval: false
@@ -1317,29 +1295,45 @@ rp_analysis.mlr <- lm(formula = resale_price ~ floor_area_sqm + remaining_lease 
 stargazer(rp_analysis.mlr, type="text")
 ```
 
+It seems like our regression is statistically significant; the F-statistic is very high which indicates that the model is globally significant at a 1% significance level. Looking at the significance of our variables, we realize that most of them are significant apart from the following dummy variables: 43_to_45, 40_to_42, 37_to_39, 34_to_36, and 31_to_33. We may want to drop these variables in the future. Now, let's look at the R-squared of this model. We find that the chosen variables explain about 64% of the total variation in the resale price. It is somewhat a good fit but i think we can improve that with a geographically weighted model.
+
 ## Linearity
+
+To check for linearity, we can plot the residuals agaisnt the fitted values of the regression. If we observe a random cloud of points, it means that there are no non-linearity issues.
 
 ```{r}
 plot(residuals(rp_analysis.mlr), fitted.values(rp_analysis.mlr),
      xlab="Residuals", ylab="Fitted Values")
 ```
 
+Looking at the above scatter plot, it seems that the cloud is not so random, meaning that it is likely that we observe non-linear relationships between some independent variables and the dependent variable.
+
 ## Heteroscedasticity
+
+To check if there is heteroscedasticity (we want homoscedasticity), we will use the Goldfeld-Quandt test.
 
 ```{r}
 gqtest(rp_analysis.mlr)
 ```
 
+The p-value proves that there is homoscedasticity of the residuals. So, we can consider our previous findings to be accurate under the Gauss-Markov theorem.
+
 # GWR methods
 
+We will now moce on to our first geographically weighted regression. We will be using the gwr.basic function of the *GWmodel* package. We shall use an adaptive bandwidth for our model.
+
 ## Converting sf data frame to SpatialPointDataFrame
+
+The first step to what I described above is to convert our sf data frame into a SpatialPoint data frame.
 
 ```{r}
 #| eval: false
 rp_analysis.sp = as_Spatial(rp_analysis.sf)
 ```
 
-### Computing adaptive bandwidth
+## Computing adaptive bandwidth
+
+Once this is done, we use the bw.gwr function to compute the bandwidth that we should use in the regression.
 
 ```{r}
 #| eval: false
@@ -1361,12 +1355,16 @@ bw_analysis_adaptive <- bw.gwr(resale_price ~ floor_area_sqm + remaining_lease +
 write_rds(bw_analysis_adaptive, "data/model/bw_analysis_adaptive.rds")
 ```
 
-### Constructing the adaptive bandwidth gwr model
-
 ```{r}
-#| eval: false
 bw_adaptive <- read_rds("data/model/bw_analysis_adaptive.rds")
+bw_adaptive
 ```
+
+It looks like we should use a bandwidth of 1357 neighbor points.
+
+## Constructing the adaptive bandwidth gwr model
+
+Now, we can use the gwr.basic function to obtain our regression.
 
 ```{r}
 #| eval: false
@@ -1387,49 +1385,70 @@ write_rds(gwr_adaptive, "data/model/gwr_analysis_adaptive.rds")
 ```
 
 ```{r}
-#| eval: false
 gwr_adaptive = read_rds("data/model/gwr_analysis_adaptive.rds")
-```
-
-```{r}
-#| eval: false
 gwr_adaptive
 ```
 
-## Dropping geometry
+Looking at the results of the Geographically Weighted Regression, we obtain much better results as the R-squared is now almost 20% higher, meaning that adding the geographic weights has had a positive impact on the quality of the model.
+
+# Preparing coordinates data
+
+Before moving on our last two regression models based around Random Forest, we shall prepare so additional data necessary to properly use the coming functions.
+
+## Extracting coordinates data
+
+Using the st_coordinates function of the sf package, we extract the coordinates from the POINT geometries and store them in a rds file for later use.
 
 ```{r}
 #| eval: false
 coords_train <- st_coordinates(rp_analysis.sf)
+coords_test <- st_coordinates(rp_testing.sf)
 ```
 
 ```{r}
 #| eval: false
 write_rds(coords_train, "data/model/coords_train.rds" )
+write_rds(coords_test, "data/model/coords_test.rds" )
 ```
 
 ```{r}
-#| eval: false
 coords_train = read_rds("data/model/coords_train.rds")
+coords_test = read_rds("data/model/coords_test.rds")
 ```
 
+## Dropping geometry
+
+We shall also create new data frames that do not store the sf geometry. Using the st_drop_geometry function, we remove the geometry column and we pipe the select function to remove unnecessary columns.
+
 ```{r}
-#| eval: false
 rp_analysis.no_geom = rp_analysis.sf %>% 
+  st_drop_geometry() %>%
+  select(-c(1, 3, 22:23))
+
+rp_testing.no_geom = rp_testing.sf %>% 
   st_drop_geometry() %>%
   select(-c(1, 3, 22:23))
 ```
 
-## Calibrating Random Forest Model
+# Random Forest Model
+
+We will now address how to calibrate the Random Forest model and build predictions with it.
+
+## Calibrating the Random Forest model
+
+Before calibrating the model, we have to once again clean the column names. To do so, we use the clean_names function of the janitor package.
 
 ```{r}
-#| eval: false
 rp_analysis.no_geom = rp_analysis.no_geom %>%
+  clean_names()
+
+rp_testing.no_geom = rp_testing.no_geom %>%
   clean_names()
 ```
 
+We can now use the ranger function of the ranger package to generate the Random Forest model.
+
 ```{r}
-#| eval: false
 set.seed(2410)
 rf <- ranger(resale_price ~ floor_area_sqm + remaining_lease +
                x01_to_03 + x04_to_06 + x07_to_09 + x10_to_12 + x13_to_15 + 
@@ -1444,13 +1463,76 @@ rf <- ranger(resale_price ~ floor_area_sqm + remaining_lease +
 ```
 
 ```{r}
-#| eval: false
-print(rf)
+rf
 ```
 
-## Calibrating Geographical Random Forest Model
+It looks like this is our best model so far and has great explanatory power. We obtain a 89% R-squared value, which by far is an improvement from our previous models.
 
-### Calibrating using training data
+## Predicting by using test data
+
+### Preparing the test data
+
+The code chunk below will be used to combine the test data with its corresponding coordinates data.
+
+```{r}
+test_data = cbind(rp_testing.no_geom, coords_test)
+```
+
+### Predicting with test data
+
+Next, we will use the predict function of the ranger package to predict the resale value of HDB flats using the testing data and the rf model previously calibrated.
+
+```{r}
+test_pred = predict(rf, test_data, 
+                    x.var.name="X", y.var.name="Y", 
+                    local.w=1, global.w=0)
+```
+
+### Converting the predicting output into a data frame
+
+The output of the predict.grf() is a vector of predicted values. It is wiser to convert it into a data frame for further visualization and analysis.
+
+```{r}
+test_pred.df = as.data.frame(test_pred)
+```
+
+In the code chunk below, cbind() is used to append the predicted values onto test_data
+
+```{r}
+test_data_p <- cbind(test_data, test_pred.df)
+```
+
+### Calculating Root Mean Square Error
+
+The root mean square error (RMSE) allows us to measure how far predicted values are from observed values in a regression analysis. In the code chunk below, rmse() of Metrics package is used to compute the RMSE.
+
+```{r}
+rmse(test_data_p$resale_price, 
+     test_data_p$prediction)
+```
+
+We should use this value and compare it with the one of the geographical random forest model.
+
+### Visualising the predicted values
+
+Alternatively, scatter plot can be used to visualize the actual resale price and the predicted resale price by using the code chunk below.
+
+```{r}
+ggplot(data = test_data_p,
+       aes(x = prediction,
+           y = resale_price)) +
+  geom_point()
+```
+
+It looks like we have a great model since the plot shows an almost perfect linear relationship.
+
+# Geographical Random Forest Model
+
+Now, we can move on to our last regression model, the Geographical Random Forest model. I provide you with the code necessary for this whole section of calibrating the model and making predictions. Unfortunately, my computer does not allow me to run the prediction as when I load the model into my environment, my computer crashes.
+
+In this section, we use the grf function of the SpatialML package with an adaptive kernel and the previously computed adaptive bandwidth.
+
+## Calibrating the model using training data
 
 ```{r}
 #| eval: false
@@ -1469,7 +1551,7 @@ gwRF_adaptive <- grf(formula = resale_price ~ floor_area_sqm + remaining_lease +
 
 ```{r}
 #| eval: false
-write_rds(gwRF_adaptive, "data/model/gwRF_adaptive250.rds")
+write_rds(gwRF_adaptive, "data/model/gwRF_adaptive.rds")
 ```
 
 ```{r}
@@ -1477,28 +1559,66 @@ write_rds(gwRF_adaptive, "data/model/gwRF_adaptive250.rds")
 gwRF_adaptive <- read_rds("data/model/gwRF_adaptive.rds")
 ```
 
-# Testing
+## Predicting by using test data
+
+### Preparing the test data
+
+The code chunk below will be used to combine the test data with its corresponding coordinates data.
 
 ```{r}
 #| eval: false
-tmap_mode("plot")
-tm_shape(mpsz.sf)+
-  tm_polygons()+
-tm_shape(rp_3rooms.sf)+
-  tm_dots(col = "blue")+
-tm_shape(st_buffer(rp_3rooms.sf, 350))+
-  tm_fill(col = "red",
-          alpha = 0.1)
+test_data = cbind(gwRF_adaptive, coords_test)
 ```
+
+### Predicting with test data
+
+Next, we will use the predict function of the ranger package to predict the resale value of HDB flats using the testing data and the rf model previously calibrated.
 
 ```{r}
 #| eval: false
-rp_3rooms.sf %>%
-  filter(st_distance(rp_3rooms.sf, kindergartens.sf) <= 350)
+test_pred = predict(rf, test_data, 
+                    x.var.name="X", y.var.name="Y", 
+                    local.w=1, global.w=0)
 ```
+
+### Converting the predicting output into a data frame
+
+The output of the predict.grf() is a vector of predicted values. It is wiser to convert it into a data frame for further visualization and analysis.
 
 ```{r}
 #| eval: false
-spatialrisk::concentration(rp_3rooms.sf, kindergartens.sf,
-                           value = count, radius = 350)
+test_pred.df = as.data.frame(test_pred)
 ```
+
+In the code chunk below, cbind() is used to append the predicted values onto test_data
+
+```{r}
+#| eval: false
+test_data_p <- cbind(test_data, test_pred.df)
+```
+
+### Calculating Root Mean Square Error
+
+The root mean square error (RMSE) allows us to measure how far predicted values are from observed values in a regression analysis. In the code chunk below, rmse() of Metrics package is used to compute the RMSE.
+
+```{r}
+#| eval: false
+rmse(test_data_p$resale_price, 
+     test_data_p$prediction)
+```
+
+### Visualising the predicted values
+
+Alternatively, scatter plot can be used to visualize the actual resale price and the predicted resale price by using the code chunk below.
+
+```{r}
+#| eval: false
+ggplot(data = test_data_p,
+       aes(x = GRF_pred,
+           y = resale_price)) +
+  geom_point()
+```
+
+# Conclusion
+
+If we have to compare the models, it seems like the random forest model is the better model with the highest explanatory power. I can only imagine that the geographically weighted random forest performs even better with great predictive ability. Models like a conventional OLS are not relevant anymore in a world where geography has such an importance in the prediction of HDB flats prices.

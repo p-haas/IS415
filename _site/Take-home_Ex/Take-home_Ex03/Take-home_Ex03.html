@@ -349,19 +349,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#gwr-methods" id="toc-gwr-methods" class="nav-link" data-scroll-target="#gwr-methods"><span class="toc-section-number">7</span>  GWR methods</a>
   <ul class="collapse">
-  <li><a href="#converting-sf-data-frame-to-spatialpointdataframe" id="toc-converting-sf-data-frame-to-spatialpointdataframe" class="nav-link" data-scroll-target="#converting-sf-data-frame-to-spatialpointdataframe"><span class="toc-section-number">7.1</span>  Converting sf data frame to SpatialPointDataFrame</a>
+  <li><a href="#converting-sf-data-frame-to-spatialpointdataframe" id="toc-converting-sf-data-frame-to-spatialpointdataframe" class="nav-link" data-scroll-target="#converting-sf-data-frame-to-spatialpointdataframe"><span class="toc-section-number">7.1</span>  Converting sf data frame to SpatialPointDataFrame</a></li>
+  <li><a href="#computing-adaptive-bandwidth" id="toc-computing-adaptive-bandwidth" class="nav-link" data-scroll-target="#computing-adaptive-bandwidth"><span class="toc-section-number">7.2</span>  Computing adaptive bandwidth</a></li>
+  <li><a href="#constructing-the-adaptive-bandwidth-gwr-model" id="toc-constructing-the-adaptive-bandwidth-gwr-model" class="nav-link" data-scroll-target="#constructing-the-adaptive-bandwidth-gwr-model"><span class="toc-section-number">7.3</span>  Constructing the adaptive bandwidth gwr model</a></li>
+  </ul></li>
+  <li><a href="#preparing-coordinates-data" id="toc-preparing-coordinates-data" class="nav-link" data-scroll-target="#preparing-coordinates-data"><span class="toc-section-number">8</span>  Preparing coordinates data</a>
   <ul class="collapse">
-  <li><a href="#computing-adaptive-bandwidth" id="toc-computing-adaptive-bandwidth" class="nav-link" data-scroll-target="#computing-adaptive-bandwidth"><span class="toc-section-number">7.1.1</span>  Computing adaptive bandwidth</a></li>
-  <li><a href="#constructing-the-adaptive-bandwidth-gwr-model" id="toc-constructing-the-adaptive-bandwidth-gwr-model" class="nav-link" data-scroll-target="#constructing-the-adaptive-bandwidth-gwr-model"><span class="toc-section-number">7.1.2</span>  Constructing the adaptive bandwidth gwr model</a></li>
+  <li><a href="#extracting-coordinates-data" id="toc-extracting-coordinates-data" class="nav-link" data-scroll-target="#extracting-coordinates-data"><span class="toc-section-number">8.1</span>  Extracting coordinates data</a></li>
+  <li><a href="#dropping-geometry" id="toc-dropping-geometry" class="nav-link" data-scroll-target="#dropping-geometry"><span class="toc-section-number">8.2</span>  Dropping geometry</a></li>
   </ul></li>
-  <li><a href="#dropping-geometry" id="toc-dropping-geometry" class="nav-link" data-scroll-target="#dropping-geometry"><span class="toc-section-number">7.2</span>  Dropping geometry</a></li>
-  <li><a href="#calibrating-random-forest-model" id="toc-calibrating-random-forest-model" class="nav-link" data-scroll-target="#calibrating-random-forest-model"><span class="toc-section-number">7.3</span>  Calibrating Random Forest Model</a></li>
-  <li><a href="#calibrating-geographical-random-forest-model" id="toc-calibrating-geographical-random-forest-model" class="nav-link" data-scroll-target="#calibrating-geographical-random-forest-model"><span class="toc-section-number">7.4</span>  Calibrating Geographical Random Forest Model</a>
+  <li><a href="#random-forest-model" id="toc-random-forest-model" class="nav-link" data-scroll-target="#random-forest-model"><span class="toc-section-number">9</span>  Random Forest Model</a>
   <ul class="collapse">
-  <li><a href="#calibrating-using-training-data" id="toc-calibrating-using-training-data" class="nav-link" data-scroll-target="#calibrating-using-training-data"><span class="toc-section-number">7.4.1</span>  Calibrating using training data</a></li>
+  <li><a href="#calibrating-the-random-forest-model" id="toc-calibrating-the-random-forest-model" class="nav-link" data-scroll-target="#calibrating-the-random-forest-model"><span class="toc-section-number">9.1</span>  Calibrating the Random Forest model</a></li>
+  <li><a href="#predicting-by-using-test-data" id="toc-predicting-by-using-test-data" class="nav-link" data-scroll-target="#predicting-by-using-test-data"><span class="toc-section-number">9.2</span>  Predicting by using test data</a>
+  <ul class="collapse">
+  <li><a href="#preparing-the-test-data" id="toc-preparing-the-test-data" class="nav-link" data-scroll-target="#preparing-the-test-data"><span class="toc-section-number">9.2.1</span>  Preparing the test data</a></li>
+  <li><a href="#predicting-with-test-data" id="toc-predicting-with-test-data" class="nav-link" data-scroll-target="#predicting-with-test-data"><span class="toc-section-number">9.2.2</span>  Predicting with test data</a></li>
+  <li><a href="#converting-the-predicting-output-into-a-data-frame" id="toc-converting-the-predicting-output-into-a-data-frame" class="nav-link" data-scroll-target="#converting-the-predicting-output-into-a-data-frame"><span class="toc-section-number">9.2.3</span>  Converting the predicting output into a data frame</a></li>
+  <li><a href="#calculating-root-mean-square-error" id="toc-calculating-root-mean-square-error" class="nav-link" data-scroll-target="#calculating-root-mean-square-error"><span class="toc-section-number">9.2.4</span>  Calculating Root Mean Square Error</a></li>
+  <li><a href="#visualising-the-predicted-values" id="toc-visualising-the-predicted-values" class="nav-link" data-scroll-target="#visualising-the-predicted-values"><span class="toc-section-number">9.2.5</span>  Visualising the predicted values</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#testing" id="toc-testing" class="nav-link" data-scroll-target="#testing"><span class="toc-section-number">8</span>  Testing</a></li>
+  <li><a href="#geographical-random-forest-model" id="toc-geographical-random-forest-model" class="nav-link" data-scroll-target="#geographical-random-forest-model"><span class="toc-section-number">10</span>  Geographical Random Forest Model</a>
+  <ul class="collapse">
+  <li><a href="#calibrating-the-model-using-training-data" id="toc-calibrating-the-model-using-training-data" class="nav-link" data-scroll-target="#calibrating-the-model-using-training-data"><span class="toc-section-number">10.1</span>  Calibrating the model using training data</a></li>
+  <li><a href="#predicting-by-using-test-data-1" id="toc-predicting-by-using-test-data-1" class="nav-link" data-scroll-target="#predicting-by-using-test-data-1"><span class="toc-section-number">10.2</span>  Predicting by using test data</a>
+  <ul class="collapse">
+  <li><a href="#preparing-the-test-data-1" id="toc-preparing-the-test-data-1" class="nav-link" data-scroll-target="#preparing-the-test-data-1"><span class="toc-section-number">10.2.1</span>  Preparing the test data</a></li>
+  <li><a href="#predicting-with-test-data-1" id="toc-predicting-with-test-data-1" class="nav-link" data-scroll-target="#predicting-with-test-data-1"><span class="toc-section-number">10.2.2</span>  Predicting with test data</a></li>
+  <li><a href="#converting-the-predicting-output-into-a-data-frame-1" id="toc-converting-the-predicting-output-into-a-data-frame-1" class="nav-link" data-scroll-target="#converting-the-predicting-output-into-a-data-frame-1"><span class="toc-section-number">10.2.3</span>  Converting the predicting output into a data frame</a></li>
+  <li><a href="#calculating-root-mean-square-error-1" id="toc-calculating-root-mean-square-error-1" class="nav-link" data-scroll-target="#calculating-root-mean-square-error-1"><span class="toc-section-number">10.2.4</span>  Calculating Root Mean Square Error</a></li>
+  <li><a href="#visualising-the-predicted-values-1" id="toc-visualising-the-predicted-values-1" class="nav-link" data-scroll-target="#visualising-the-predicted-values-1"><span class="toc-section-number">10.2.5</span>  Visualising the predicted values</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="toc-section-number">11</span>  Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -410,36 +431,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="installing-and-loading-packages" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="installing-and-loading-packages"><span class="header-section-number">1.1</span> Installing and Loading Packages</h2>
 <p>For the purpose our this project, we have selected a list of libraries that will allow to perform all the necessary data cleaning, handling and analysis.</p>
-<p>The following list shows the libraries that will be used and their purpose for this assignment:</p>
-<ul>
-<li><p>pacman</p></li>
-<li><p>tidyverse</p></li>
-<li><p>janitor</p></li>
-<li><p>sf</p></li>
-<li><p>spdep</p></li>
-<li><p>tmap</p></li>
-<li><p>corrplot</p></li>
-<li><p>olsrr</p></li>
-<li><p>gtsummary</p></li>
-<li><p>knitr</p></li>
-<li><p>httr</p></li>
-<li><p>onemapsapi</p></li>
-<li><p>xml2</p></li>
-<li><p>rvest</p></li>
-<li><p>stringr</p></li>
-<li><p>ggmap</p></li>
-<li><p>ggpubr</p></li>
-<li><p>GWmodel</p></li>
-<li><p>SpatialML</p></li>
-<li><p>Metrics</p></li>
-<li><p>rsample</p></li>
-</ul>
+<p>The following list shows the libraries that will be used in this assignment:</p>
+<p><em>pacman, tidyverse, janitor, sf, spdep, tmap, corrplot, olsrr, knitr, httr, onemapsapi, xml2, rvest, stringr, ggmap, ggpubr, GWmodel, SpatialML, Metrics</em></p>
 <p>To install and load the packages, we use the p_load() function of the pacman package. It automatically checks if packages are installed, installs them if they are not installed, and loads the packages into the R environment.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(olsrr, corrplot, ggpubr, sf, spdep,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               GWmodel, tmap, tidyverse, gtsummary,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               ranger, SpatialML, rsample, Metrics,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               janitor, stargazer, lmtest, robustbase)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               ranger, SpatialML, janitor, stargazer, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               lmtest, Metrics)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(knitr, httr, onemapsgapi, xml2, rvest,</span>
@@ -455,6 +454,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="the-data" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="the-data"><span class="header-section-number">1.2</span> The Data</h2>
 <p>For the purpose of this assignment, extensive amount of data was extracted from the web. You will find below a table that directs you to the webpage on which you can retrieve the data sets.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Name</th>
+<th style="text-align: center;">Format</th>
+<th style="text-align: center;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Resale Flat Prices</td>
+<td style="text-align: center;">csv</td>
+<td style="text-align: center;"><a href="https://data.gov.sg/dataset/resale-flat-prices">data.gov.sg</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Master Plan 2019 Subzone</td>
+<td style="text-align: center;">shp</td>
+<td style="text-align: center;">prof</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">MRT Exit Locations</td>
+<td style="text-align: center;">shp</td>
+<td style="text-align: center;"><a href="https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/TrainStationExit.zip">datamall.lta.gov.sg</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Bus Stop Locations</td>
+<td style="text-align: center;">shp</td>
+<td style="text-align: center;"><a href="https://datamall.lta.gov.sg/content/dam/datamall/datasets/Geospatial/BusStopLocation.zip">datamall.lta.gov.sg</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Supermarkets</td>
+<td style="text-align: center;">kml</td>
+<td style="text-align: center;"><a href="https://data.gov.sg/dataset/supermarkets">data.gov.sg</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Primary Schools</td>
+<td style="text-align: center;">HTML scrapping</td>
+<td style="text-align: center;"><a href="https://sgschooling.com/school/">Here</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Shopping Malls</td>
+<td style="text-align: center;">HTML scrapping</td>
+<td style="text-align: center;"><a href="https://en.wikipedia.org/wiki/List_of_shopping_malls_in_Singapore">Wikipedia</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Rest of the data</td>
+<td style="text-align: center;">API</td>
+<td style="text-align: center;"><a href="https://www.onemap.gov.sg/docs/">OneMapAPI</a></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 <section id="retrieving-and-importing-the-geospatial-data" class="level1" data-number="2">
@@ -1670,19 +1720,24 @@ $ resale_price        &lt;dbl&gt; 232000, 250000, 262000, 265000, 265000, 275000
 <p>Before running the analysis, there are a few preliminary steps. We should check for: non-linear relationships between the independent variables and the dependent variables; multicollinearity; heteroscedasticity.</p>
 <section id="multicollinearity" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="multicollinearity"><span class="header-section-number">6.1</span> Multicollinearity</h2>
+<p>Using the corrplot package and its corrplot function, we get a clean correlation matrix that indicates positive correlation with the color blue and negative with red.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>corrplot<span class="sc">::</span><span class="fu">corrplot</span>(<span class="fu">cor</span>(rp_3rooms.sf <span class="sc">%&gt;%</span> </span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">22</span>, <span class="dv">23</span>))), </span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">diag =</span> <span class="cn">FALSE</span>, <span class="at">order =</span> <span class="st">"AOE"</span>, <span class="at">tl.pos =</span> <span class="st">"td"</span>, </span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tl.cex =</span> <span class="fl">0.5</span>, <span class="at">method =</span> <span class="st">"number"</span>, <span class="at">type =</span> <span class="st">"upper"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>cor_test <span class="ot">=</span> <span class="fu">cor</span>(rp_3rooms.sf <span class="sc">%&gt;%</span> </span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">22</span>, <span class="dv">23</span>)))</span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>corrplot<span class="sc">::</span><span class="fu">corrplot</span>(cor_test, <span class="at">diag =</span> <span class="cn">FALSE</span>, <span class="at">order =</span> <span class="st">"AOE"</span>, <span class="at">tl.pos =</span> <span class="st">"td"</span>, </span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tl.cex =</span> <span class="fl">0.5</span>, <span class="at">method =</span> <span class="st">"number"</span>, <span class="at">type =</span> <span class="st">"upper"</span>,</span>
+<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">number.cex =</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-105-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>We find that there is a perfect correlation between the lease_commence_date and remaining_lease variables, so we will include only one of the two in our OLS regression.</p>
 </section>
 <section id="mlr-model" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="mlr-model"><span class="header-section-number">6.2</span> MLR model</h2>
+<p>To test for linearity and heteroscedasticity, we first need to run the regression. Note that using the next code chunk, you can retrieve the list of variables in our data frame.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(rp_3rooms.sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1821,9 +1876,11 @@ F Statistic              652.049*** (df = 34; 12573)
 Note:                    *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 </div>
 </div>
+<p>It seems like our regression is statistically significant; the F-statistic is very high which indicates that the model is globally significant at a 1% significance level. Looking at the significance of our variables, we realize that most of them are significant apart from the following dummy variables: 43_to_45, 40_to_42, 37_to_39, 34_to_36, and 31_to_33. We may want to drop these variables in the future. Now, let’s look at the R-squared of this model. We find that the chosen variables explain about 64% of the total variation in the resale price. It is somewhat a good fit but i think we can improve that with a geographically weighted model.</p>
 </section>
 <section id="linearity" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="linearity"><span class="header-section-number">6.3</span> Linearity</h2>
+<p>To check for linearity, we can plot the residuals agaisnt the fitted values of the regression. If we observe a random cloud of points, it means that there are no non-linearity issues.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">residuals</span>(rp_analysis.mlr), <span class="fu">fitted.values</span>(rp_analysis.mlr),</span>
 <span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Residuals"</span>, <span class="at">ylab=</span><span class="st">"Fitted Values"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1831,9 +1888,11 @@ Note:                    *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 <p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-108-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Looking at the above scatter plot, it seems that the cloud is not so random, meaning that it is likely that we observe non-linear relationships between some independent variables and the dependent variable.</p>
 </section>
 <section id="heteroscedasticity" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="heteroscedasticity"><span class="header-section-number">6.4</span> Heteroscedasticity</h2>
+<p>To check if there is heteroscedasticity (we want homoscedasticity), we will use the Goldfeld-Quandt test.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gqtest</span>(rp_analysis.mlr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1845,17 +1904,22 @@ GQ = 0.9281659246132, df1 = 6269, df2 = 6269, p-value = 0.99841450489
 alternative hypothesis: variance increases from segment 1 to 2</code></pre>
 </div>
 </div>
+<p>The p-value proves that there is homoscedasticity of the residuals. So, we can consider our previous findings to be accurate under the Gauss-Markov theorem.</p>
 </section>
 </section>
 <section id="gwr-methods" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> GWR methods</h1>
+<p>We will now moce on to our first geographically weighted regression. We will be using the gwr.basic function of the <em>GWmodel</em> package. We shall use an adaptive bandwidth for our model.</p>
 <section id="converting-sf-data-frame-to-spatialpointdataframe" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="converting-sf-data-frame-to-spatialpointdataframe"><span class="header-section-number">7.1</span> Converting sf data frame to SpatialPointDataFrame</h2>
+<p>The first step to what I described above is to convert our sf data frame into a SpatialPoint data frame.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>rp_analysis.sp <span class="ot">=</span> <span class="fu">as_Spatial</span>(rp_analysis.sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="computing-adaptive-bandwidth" class="level3" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="computing-adaptive-bandwidth"><span class="header-section-number">7.1.1</span> Computing adaptive bandwidth</h3>
+</section>
+<section id="computing-adaptive-bandwidth" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="computing-adaptive-bandwidth"><span class="header-section-number">7.2</span> Computing adaptive bandwidth</h2>
+<p>Once this is done, we use the bw.gwr function to compute the bandwidth that we should use in the regression.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>bw_analysis_adaptive <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span> remaining_lease <span class="sc">+</span></span>
 <span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a>                      X01_to_03 <span class="sc">+</span> X04_to_06 <span class="sc">+</span> X07_to_09 <span class="sc">+</span> X10_to_12 <span class="sc">+</span> X13_to_15 <span class="sc">+</span> </span>
@@ -1872,120 +1936,506 @@ alternative hypothesis: variance increases from segment 1 to 2</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(bw_analysis_adaptive, <span class="st">"data/model/bw_analysis_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>bw_adaptive <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/model/bw_analysis_adaptive.rds"</span>)</span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>bw_adaptive</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1357</code></pre>
+</div>
+</div>
+<p>It looks like we should use a bandwidth of 1357 neighbor points.</p>
 </section>
-<section id="constructing-the-adaptive-bandwidth-gwr-model" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="constructing-the-adaptive-bandwidth-gwr-model"><span class="header-section-number">7.1.2</span> Constructing the adaptive bandwidth gwr model</h3>
+<section id="constructing-the-adaptive-bandwidth-gwr-model" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="constructing-the-adaptive-bandwidth-gwr-model"><span class="header-section-number">7.3</span> Constructing the adaptive bandwidth gwr model</h2>
+<p>Now, we can use the gwr.basic function to obtain our regression.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>bw_adaptive <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/model/bw_analysis_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a>gwr_adaptive <span class="ot">&lt;-</span> <span class="fu">gwr.basic</span>(<span class="at">formula =</span> resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span> remaining_lease <span class="sc">+</span> X01_to_03 <span class="sc">+</span></span>
+<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a>                            X04_to_06 <span class="sc">+</span> X07_to_09 <span class="sc">+</span> X10_to_12 <span class="sc">+</span> X13_to_15 <span class="sc">+</span> X16_to_18 <span class="sc">+</span> X19_to_21 <span class="sc">+</span></span>
+<span id="cb133-3"><a href="#cb133-3" aria-hidden="true" tabindex="-1"></a>                            X22_to_24 <span class="sc">+</span> X25_to_27 <span class="sc">+</span> X28_to_30 <span class="sc">+</span> X31_to_33 <span class="sc">+</span> X34_to_36 <span class="sc">+</span> X37_to_39 <span class="sc">+</span> </span>
+<span id="cb133-4"><a href="#cb133-4" aria-hidden="true" tabindex="-1"></a>                            X40_to_42 <span class="sc">+</span> X43_to_45 <span class="sc">+</span> New_Generation <span class="sc">+</span> Improved <span class="sc">+</span> Model_A <span class="sc">+</span> Simplified <span class="sc">+</span> </span>
+<span id="cb133-5"><a href="#cb133-5" aria-hidden="true" tabindex="-1"></a>                            Standard <span class="sc">+</span> Premium_Apartment <span class="sc">+</span> DBSS <span class="sc">+</span> distance_to_eldercare <span class="sc">+</span> distance_to_food <span class="sc">+</span> </span>
+<span id="cb133-6"><a href="#cb133-6" aria-hidden="true" tabindex="-1"></a>                            distance_to_mrt <span class="sc">+</span> distance_to_park <span class="sc">+</span> distance_to_mall <span class="sc">+</span> distance_to_supermarkets <span class="sc">+</span> </span>
+<span id="cb133-7"><a href="#cb133-7" aria-hidden="true" tabindex="-1"></a>                            nb_of_kindergartens <span class="sc">+</span> nb_of_childcare <span class="sc">+</span> nb_of_bus_stops <span class="sc">+</span> nb_of_primary_schools, </span>
+<span id="cb133-8"><a href="#cb133-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> rp_analysis.sp, <span class="at">bw=</span>bw_adaptive, <span class="at">kernel =</span> <span class="st">'gaussian'</span>, <span class="at">adaptive=</span><span class="cn">TRUE</span>, </span>
+<span id="cb133-9"><a href="#cb133-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">longlat =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>gwr_adaptive <span class="ot">&lt;-</span> <span class="fu">gwr.basic</span>(<span class="at">formula =</span> resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span> remaining_lease <span class="sc">+</span> X01_to_03 <span class="sc">+</span></span>
-<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a>                            X04_to_06 <span class="sc">+</span> X07_to_09 <span class="sc">+</span> X10_to_12 <span class="sc">+</span> X13_to_15 <span class="sc">+</span> X16_to_18 <span class="sc">+</span> X19_to_21 <span class="sc">+</span></span>
-<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a>                            X22_to_24 <span class="sc">+</span> X25_to_27 <span class="sc">+</span> X28_to_30 <span class="sc">+</span> X31_to_33 <span class="sc">+</span> X34_to_36 <span class="sc">+</span> X37_to_39 <span class="sc">+</span> </span>
-<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a>                            X40_to_42 <span class="sc">+</span> X43_to_45 <span class="sc">+</span> New_Generation <span class="sc">+</span> Improved <span class="sc">+</span> Model_A <span class="sc">+</span> Simplified <span class="sc">+</span> </span>
-<span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a>                            Standard <span class="sc">+</span> Premium_Apartment <span class="sc">+</span> DBSS <span class="sc">+</span> distance_to_eldercare <span class="sc">+</span> distance_to_food <span class="sc">+</span> </span>
-<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a>                            distance_to_mrt <span class="sc">+</span> distance_to_park <span class="sc">+</span> distance_to_mall <span class="sc">+</span> distance_to_supermarkets <span class="sc">+</span> </span>
-<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a>                            nb_of_kindergartens <span class="sc">+</span> nb_of_childcare <span class="sc">+</span> nb_of_bus_stops <span class="sc">+</span> nb_of_primary_schools, </span>
-<span id="cb132-8"><a href="#cb132-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> rp_analysis.sp, <span class="at">bw=</span>bw_adaptive, <span class="at">kernel =</span> <span class="st">'gaussian'</span>, <span class="at">adaptive=</span><span class="cn">TRUE</span>, </span>
-<span id="cb132-9"><a href="#cb132-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">longlat =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwr_adaptive, <span class="st">"data/model/gwr_analysis_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwr_adaptive, <span class="st">"data/model/gwr_analysis_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>gwr_adaptive <span class="ot">=</span> <span class="fu">read_rds</span>(<span class="st">"data/model/gwr_analysis_adaptive.rds"</span>)</span>
+<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a>gwr_adaptive</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2023-03-20 00:51:55 
+   Call:
+   gwr.basic(formula = resale_price ~ floor_area_sqm + remaining_lease + 
+    X01_to_03 + X04_to_06 + X07_to_09 + X10_to_12 + X13_to_15 + 
+    X16_to_18 + X19_to_21 + X22_to_24 + X25_to_27 + X28_to_30 + 
+    X31_to_33 + X34_to_36 + X37_to_39 + X40_to_42 + X43_to_45 + 
+    New_Generation + Improved + Model_A + Simplified + Standard + 
+    Premium_Apartment + DBSS + distance_to_eldercare + distance_to_food + 
+    distance_to_mrt + distance_to_park + distance_to_mall + distance_to_supermarkets + 
+    nb_of_kindergartens + nb_of_childcare + nb_of_bus_stops + 
+    nb_of_primary_schools, data = rp_analysis.sp, bw = bw_adaptive, 
+    kernel = "gaussian", adaptive = TRUE, longlat = FALSE)
+
+   Dependent (y) variable:  resale_price
+   Independent variables:  floor_area_sqm remaining_lease X01_to_03 X04_to_06 X07_to_09 X10_to_12 X13_to_15 X16_to_18 X19_to_21 X22_to_24 X25_to_27 X28_to_30 X31_to_33 X34_to_36 X37_to_39 X40_to_42 X43_to_45 New_Generation Improved Model_A Simplified Standard Premium_Apartment DBSS distance_to_eldercare distance_to_food distance_to_mrt distance_to_park distance_to_mall distance_to_supermarkets nb_of_kindergartens nb_of_childcare nb_of_bus_stops nb_of_primary_schools
+   Number of data points: 12608
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+            Min              1Q          Median              3Q             Max 
+-240462.8895745  -33035.5338021   -4099.0414119   26337.1945223  339652.2172861 
+
+   Coefficients:
+                                      Estimate         Std. Error   t value
+   (Intercept)               6.75321297326e+05  5.49238919832e+04  12.29558
+   floor_area_sqm            3.94653697865e+03  9.35301810120e+01  42.19533
+   remaining_lease           2.75419062799e+03  6.12068280832e+01  44.99809
+   X01_to_03                -2.57839692943e+05  5.26202487910e+04  -4.90001
+   X04_to_06                -2.48405940332e+05  5.26164408917e+04  -4.72107
+   X07_to_09                -2.41109221218e+05  5.26168599751e+04  -4.58236
+   X10_to_12                -2.32833112045e+05  5.26182655337e+04  -4.42495
+   X13_to_15                -2.24504937356e+05  5.26261515769e+04  -4.26603
+   X16_to_18                -2.05120926567e+05  5.26598505686e+04  -3.89521
+   X19_to_21                -1.74800777430e+05  5.27571400718e+04  -3.31331
+   X22_to_24                -1.58664646692e+05  5.28520975873e+04  -3.00205
+   X25_to_27                -1.27272290209e+05  5.29227901000e+04  -2.40487
+   X28_to_30                -9.61674142266e+04  5.30849249047e+04  -1.81158
+   X31_to_33                -7.93897892485e+04  5.32080061172e+04  -1.49206
+   X34_to_36                -5.85447153375e+04  5.35102358989e+04  -1.09408
+   X37_to_39                -4.76782410918e+04  5.32966506954e+04  -0.89458
+   X40_to_42                -2.83035759235e+04  5.67451351102e+04  -0.49878
+   X43_to_45                 2.79624196753e+04  5.87109389443e+04   0.47627
+   New_Generation           -4.29929633982e+05  1.08001636301e+04 -39.80770
+   Improved                 -4.23909938462e+05  1.10103100883e+04 -38.50118
+   Model_A                  -4.22627637926e+05  1.07897707978e+04 -39.16929
+   Simplified               -4.02908905991e+05  1.12271446103e+04 -35.88703
+   Standard                 -4.13750267457e+05  1.13766593423e+04 -36.36834
+   Premium_Apartment        -3.99095701534e+05  1.11792168610e+04 -35.69979
+   DBSS                     -3.48968293074e+05  1.16385974404e+04 -29.98371
+   distance_to_eldercare    -1.60720547849e+01  9.44565101400e-01 -17.01530
+   distance_to_food         -1.91812838402e+01  1.59990807892e+00 -11.98899
+   distance_to_mrt          -2.72683047489e+01  1.37643630698e+00 -19.81080
+   distance_to_park         -2.09027776390e+01  1.53021979062e+00 -13.65998
+   distance_to_mall         -1.13632168038e+01  1.35152546069e+00  -8.40770
+   distance_to_supermarkets -5.74949826288e+00  2.59131049154e+00  -2.21876
+   nb_of_kindergartens       4.51282191853e+03  6.42853416663e+02   7.01999
+   nb_of_childcare          -2.78931461657e+03  2.95193263547e+02  -9.44911
+   nb_of_bus_stops          -9.10529320454e+02  1.88398960078e+02  -4.83298
+   nb_of_primary_schools    -7.93830473583e+03  3.69917094138e+02 -21.45969
+                              Pr(&gt;|t|)    
+   (Intercept)              &lt; 2.22e-16 ***
+   floor_area_sqm           &lt; 2.22e-16 ***
+   remaining_lease          &lt; 2.22e-16 ***
+   X01_to_03                9.7027e-07 ***
+   X04_to_06                2.3714e-06 ***
+   X07_to_09                4.6419e-06 ***
+   X10_to_12                9.7277e-06 ***
+   X13_to_15                2.0043e-05 ***
+   X16_to_18                9.8624e-05 ***
+   X19_to_21                0.00092459 ***
+   X22_to_24                0.00268695 ** 
+   X25_to_27                0.01619270 *  
+   X28_to_30                0.07007547 .  
+   X31_to_33                0.13570727    
+   X34_to_36                0.27393892    
+   X37_to_39                0.37102753    
+   X40_to_42                0.61794016    
+   X43_to_45                0.63388836    
+   New_Generation           &lt; 2.22e-16 ***
+   Improved                 &lt; 2.22e-16 ***
+   Model_A                  &lt; 2.22e-16 ***
+   Simplified               &lt; 2.22e-16 ***
+   Standard                 &lt; 2.22e-16 ***
+   Premium_Apartment        &lt; 2.22e-16 ***
+   DBSS                     &lt; 2.22e-16 ***
+   distance_to_eldercare    &lt; 2.22e-16 ***
+   distance_to_food         &lt; 2.22e-16 ***
+   distance_to_mrt          &lt; 2.22e-16 ***
+   distance_to_park         &lt; 2.22e-16 ***
+   distance_to_mall         &lt; 2.22e-16 ***
+   distance_to_supermarkets 0.02652079 *  
+   nb_of_kindergartens      2.3329e-12 ***
+   nb_of_childcare          &lt; 2.22e-16 ***
+   nb_of_bus_stops          1.3609e-06 ***
+   nb_of_primary_schools    &lt; 2.22e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 52512.6319494 on 12573 degrees of freedom
+   Multiple R-squared: 0.638110548684
+   Adjusted R-squared: 0.637131924541 
+   F-statistic: 652.048647601 on 34 and 12573 DF,  p-value: &lt; 2.220446049e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 34671009513671.7
+   Sigma(hat): 52443.8530960874
+   AIC:  309884.79383796
+   AICc:  309885.005754276
+   BIC:  297884.624088431
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: gaussian 
+   Adaptive bandwidth: 1357 (number of nearest neighbours)
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                                           Min.             1st Qu.
+   Intercept                 2.088671317153e+05  5.998777821386e+05
+   floor_area_sqm            2.387596184396e+03  3.011792694837e+03
+   remaining_lease           1.650595095776e+03  2.274857903910e+03
+   X01_to_03                -4.125708586698e+05 -2.784588036565e+05
+   X04_to_06                -4.068159545249e+05 -2.683798900342e+05
+   X07_to_09                -4.006193509978e+05 -2.602046448123e+05
+   X10_to_12                -3.935242242099e+05 -2.540259354664e+05
+   X13_to_15                -3.867704592358e+05 -2.467461124008e+05
+   X16_to_18                -3.819997184095e+05 -2.338750640869e+05
+   X19_to_21                -2.964059154308e+05 -2.220531501956e+05
+   X22_to_24                -3.649893746206e+05 -2.104819018812e+05
+   X25_to_27                -2.853860414403e+05 -1.626543832891e+05
+   X28_to_30                -2.303182980734e+05 -1.173174355323e+05
+   X31_to_33                -2.073032630430e+05 -8.982959381400e+04
+   X34_to_36                -1.836583433440e+05 -3.531676789320e+04
+   X37_to_39                -1.556916222683e+05 -3.624579821300e+04
+   X40_to_42                -1.712780793208e+05 -3.358187516798e+04
+   X43_to_45                -7.138009020763e+04  2.747964385570e+04
+   New_Generation           -5.127199944244e+05 -4.806213822729e+05
+   Improved                 -5.283547436802e+05 -4.782857533712e+05
+   Model_A                  -5.215106668974e+05 -4.692225288231e+05
+   Simplified               -5.117765983964e+05 -4.566366060243e+05
+   Standard                 -5.122701874786e+05 -4.870650610056e+05
+   Premium_Apartment        -5.171516761728e+05 -4.552972105130e+05
+   DBSS                     -4.520967890435e+05 -3.945473101338e+05
+   distance_to_eldercare    -3.552103704653e+01 -1.767308749777e+01
+   distance_to_food         -4.750721738788e+01 -2.426292683676e+01
+   distance_to_mrt          -8.441714936292e+01 -4.594874472560e+01
+   distance_to_park         -4.714158550886e+01 -2.523736877992e+01
+   distance_to_mall         -4.317256486992e+01 -2.266490011416e+01
+   distance_to_supermarkets -3.129997789761e+01 -1.240250557667e+01
+   nb_of_kindergartens      -5.436984198029e+03 -1.396646680193e+03
+   nb_of_childcare          -3.657431883636e+03 -2.087298029371e+03
+   nb_of_bus_stops          -3.722286998323e+03 -7.040611360374e+02
+   nb_of_primary_schools    -1.222620944114e+04 -8.801984039150e+03
+                                         Median             3rd Qu.
+   Intercept                 7.328803950468e+05  7.686448987817e+05
+   floor_area_sqm            3.110976106939e+03  3.530003756797e+03
+   remaining_lease           2.729897834233e+03  3.840278121788e+03
+   X01_to_03                -2.606686783704e+05 -1.717014596296e+05
+   X04_to_06                -2.490137188919e+05 -1.605854500630e+05
+   X07_to_09                -2.403153543636e+05 -1.515558707160e+05
+   X10_to_12                -2.346633137276e+05 -1.424259624663e+05
+   X13_to_15                -2.248701154294e+05 -1.323001367930e+05
+   X16_to_18                -2.098182696816e+05 -1.230095711217e+05
+   X19_to_21                -1.846562121224e+05 -9.798770711477e+04
+   X22_to_24                -1.595883978778e+05 -8.664688553422e+04
+   X25_to_27                -1.146484072791e+05 -7.768643166053e+04
+   X28_to_30                -7.819012993839e+04 -6.105200370822e+04
+   X31_to_33                -2.331412554000e+04 -5.125173759318e+03
+   X34_to_36                -1.249048544763e+04  9.421847206229e+03
+   X37_to_39                -8.295811147792e+03  7.084184171972e+03
+   X40_to_42                -1.668156868825e+04 -1.161035289228e+04
+   X43_to_45                 2.795837293907e+04  2.907112282679e+04
+   New_Generation           -4.638454179781e+05 -4.524133005150e+05
+   Improved                 -4.636809562957e+05 -4.524858689284e+05
+   Model_A                  -4.556728681692e+05 -4.387935770472e+05
+   Simplified               -4.474541743272e+05 -4.360870343131e+05
+   Standard                 -4.601830937278e+05 -4.280247236367e+05
+   Premium_Apartment        -4.384536201574e+05 -3.942345110791e+05
+   DBSS                     -3.681738423773e+05 -3.559240599045e+05
+   distance_to_eldercare    -4.158176579550e+00  9.653538526030e-01
+   distance_to_food         -1.479518395544e+01 -7.287486815558e+00
+   distance_to_mrt          -3.310149006526e+01 -1.464564580024e+01
+   distance_to_park         -9.230192420402e+00 -4.135212112595e+00
+   distance_to_mall         -9.639776765486e+00 -5.368072698911e+00
+   distance_to_supermarkets  4.626676063351e+00  1.832193280708e+01
+   nb_of_kindergartens       1.675878145141e+03  5.830973161502e+03
+   nb_of_childcare          -1.632575299240e+03 -7.590842712440e+02
+   nb_of_bus_stops           2.901040245698e+02  9.347433944123e+02
+   nb_of_primary_schools    -5.874182955384e+03 -4.442668469482e+03
+                                     Max.
+   Intercept                 891225.24752
+   floor_area_sqm              5894.11776
+   remaining_lease             6124.28975
+   X01_to_03                -106152.72280
+   X04_to_06                 -99783.70603
+   X07_to_09                 -91255.14695
+   X10_to_12                 -79683.31829
+   X13_to_15                 -74041.36904
+   X16_to_18                 -66265.65674
+   X19_to_21                 -49123.89843
+   X22_to_24                 -45344.89297
+   X25_to_27                 -31504.28029
+   X28_to_30                 -31595.88351
+   X31_to_33                  47039.27278
+   X34_to_36                  54699.44195
+   X37_to_39                  47452.47448
+   X40_to_42                  14518.54968
+   X43_to_45                 113153.14893
+   New_Generation           -386243.18922
+   Improved                 -367407.49477
+   Model_A                  -374239.51716
+   Simplified               -367354.70212
+   Standard                 -333103.72203
+   Premium_Apartment        -314222.02062
+   DBSS                     -328715.24306
+   distance_to_eldercare         18.96413
+   distance_to_food               1.04035
+   distance_to_mrt               31.76859
+   distance_to_park               8.14749
+   distance_to_mall               0.60805
+   distance_to_supermarkets      35.32732
+   nb_of_kindergartens        12345.25653
+   nb_of_childcare             2143.54822
+   nb_of_bus_stops             2503.67622
+   nb_of_primary_schools       2025.88852
+   ************************Diagnostic information*************************
+   Number of data points: 12608 
+   Effective number of parameters (2trace(S) - trace(S'S)): 198.329551225858 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 12409.6704487741 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 301063.546093158 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 300905.912913168 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 289579.898270255 
+   Residual sum of squares: 16901673675002.7 
+   R-square value:  0.823583521265468 
+   Adjusted R-square value:  0.820763831500903 
+
+   ***********************************************************************
+   Program stops at: 2023-03-20 00:58:49 </code></pre>
+</div>
+</div>
+<p>Looking at the results of the Geographically Weighted Regression, we obtain much better results as the R-squared is now almost 20% higher, meaning that adding the geographic weights has had a positive impact on the quality of the model.</p>
+</section>
+</section>
+<section id="preparing-coordinates-data" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Preparing coordinates data</h1>
+<p>Before moving on our last two regression models based around Random Forest, we shall prepare so additional data necessary to properly use the coming functions.</p>
+<section id="extracting-coordinates-data" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="extracting-coordinates-data"><span class="header-section-number">8.1</span> Extracting coordinates data</h2>
+<p>Using the st_coordinates function of the sf package, we extract the coordinates from the POINT geometries and store them in a rds file for later use.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a>coords_train <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(rp_analysis.sf)</span>
+<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a>coords_test <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(rp_testing.sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>gwr_adaptive <span class="ot">=</span> <span class="fu">read_rds</span>(<span class="st">"data/model/gwr_analysis_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(coords_train, <span class="st">"data/model/coords_train.rds"</span> )</span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(coords_test, <span class="st">"data/model/coords_test.rds"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>gwr_adaptive</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>coords_train <span class="ot">=</span> <span class="fu">read_rds</span>(<span class="st">"data/model/coords_train.rds"</span>)</span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a>coords_test <span class="ot">=</span> <span class="fu">read_rds</span>(<span class="st">"data/model/coords_test.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="dropping-geometry" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="dropping-geometry"><span class="header-section-number">8.2</span> Dropping geometry</h2>
+<p>We shall also create new data frames that do not store the sf geometry. Using the st_drop_geometry function, we remove the geometry column and we pipe the select function to remove unnecessary columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a>rp_analysis.no_geom <span class="ot">=</span> rp_analysis.sf <span class="sc">%&gt;%</span> </span>
+<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb140-3"><a href="#cb140-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">22</span><span class="sc">:</span><span class="dv">23</span>))</span>
+<span id="cb140-4"><a href="#cb140-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb140-5"><a href="#cb140-5" aria-hidden="true" tabindex="-1"></a>rp_testing.no_geom <span class="ot">=</span> rp_testing.sf <span class="sc">%&gt;%</span> </span>
+<span id="cb140-6"><a href="#cb140-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb140-7"><a href="#cb140-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">22</span><span class="sc">:</span><span class="dv">23</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="dropping-geometry" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="dropping-geometry"><span class="header-section-number">7.2</span> Dropping geometry</h2>
+<section id="random-forest-model" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Random Forest Model</h1>
+<p>We will now address how to calibrate the Random Forest model and build predictions with it.</p>
+<section id="calibrating-the-random-forest-model" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="calibrating-the-random-forest-model"><span class="header-section-number">9.1</span> Calibrating the Random Forest model</h2>
+<p>Before calibrating the model, we have to once again clean the column names. To do so, we use the clean_names function of the janitor package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>coords_train <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(rp_analysis.sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a>rp_analysis.no_geom <span class="ot">=</span> rp_analysis.no_geom <span class="sc">%&gt;%</span></span>
+<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb141-3"><a href="#cb141-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb141-4"><a href="#cb141-4" aria-hidden="true" tabindex="-1"></a>rp_testing.no_geom <span class="ot">=</span> rp_testing.no_geom <span class="sc">%&gt;%</span></span>
+<span id="cb141-5"><a href="#cb141-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now use the ranger function of the ranger package to generate the Random Forest model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2410</span>)</span>
+<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">ranger</span>(resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span> remaining_lease <span class="sc">+</span></span>
+<span id="cb142-3"><a href="#cb142-3" aria-hidden="true" tabindex="-1"></a>               x01_to_03 <span class="sc">+</span> x04_to_06 <span class="sc">+</span> x07_to_09 <span class="sc">+</span> x10_to_12 <span class="sc">+</span> x13_to_15 <span class="sc">+</span> </span>
+<span id="cb142-4"><a href="#cb142-4" aria-hidden="true" tabindex="-1"></a>               x16_to_18 <span class="sc">+</span> x19_to_21 <span class="sc">+</span> x22_to_24 <span class="sc">+</span> x25_to_27 <span class="sc">+</span> x28_to_30 <span class="sc">+</span> </span>
+<span id="cb142-5"><a href="#cb142-5" aria-hidden="true" tabindex="-1"></a>               x31_to_33 <span class="sc">+</span> x34_to_36 <span class="sc">+</span> x37_to_39 <span class="sc">+</span> x40_to_42 <span class="sc">+</span> x43_to_45 <span class="sc">+</span> </span>
+<span id="cb142-6"><a href="#cb142-6" aria-hidden="true" tabindex="-1"></a>               new_generation <span class="sc">+</span> improved <span class="sc">+</span> model_a <span class="sc">+</span> simplified <span class="sc">+</span> standard <span class="sc">+</span> </span>
+<span id="cb142-7"><a href="#cb142-7" aria-hidden="true" tabindex="-1"></a>               premium_apartment <span class="sc">+</span> dbss <span class="sc">+</span> distance_to_eldercare <span class="sc">+</span> </span>
+<span id="cb142-8"><a href="#cb142-8" aria-hidden="true" tabindex="-1"></a>               distance_to_food <span class="sc">+</span> distance_to_mrt <span class="sc">+</span> distance_to_park <span class="sc">+</span> </span>
+<span id="cb142-9"><a href="#cb142-9" aria-hidden="true" tabindex="-1"></a>               distance_to_mall <span class="sc">+</span> distance_to_supermarkets <span class="sc">+</span> nb_of_kindergartens <span class="sc">+</span></span>
+<span id="cb142-10"><a href="#cb142-10" aria-hidden="true" tabindex="-1"></a>               nb_of_childcare <span class="sc">+</span> nb_of_bus_stops <span class="sc">+</span> nb_of_primary_schools, </span>
+<span id="cb142-11"><a href="#cb142-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> rp_analysis.no_geom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(coords_train, <span class="st">"data/model/coords_train.rds"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a>rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Ranger result
+
+Call:
+ ranger(resale_price ~ floor_area_sqm + remaining_lease + x01_to_03 +      x04_to_06 + x07_to_09 + x10_to_12 + x13_to_15 + x16_to_18 +      x19_to_21 + x22_to_24 + x25_to_27 + x28_to_30 + x31_to_33 +      x34_to_36 + x37_to_39 + x40_to_42 + x43_to_45 + new_generation +      improved + model_a + simplified + standard + premium_apartment +      dbss + distance_to_eldercare + distance_to_food + distance_to_mrt +      distance_to_park + distance_to_mall + distance_to_supermarkets +      nb_of_kindergartens + nb_of_childcare + nb_of_bus_stops +      nb_of_primary_schools, data = rp_analysis.no_geom) 
+
+Type:                             Regression 
+Number of trees:                  500 
+Sample size:                      12608 
+Number of independent variables:  34 
+Mtry:                             5 
+Target node size:                 5 
+Variable importance mode:         none 
+Splitrule:                        variance 
+OOB prediction error (MSE):       818794743.929314 
+R squared (OOB):                  0.892255220701931 </code></pre>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a>coords_train <span class="ot">=</span> <span class="fu">read_rds</span>(<span class="st">"data/model/coords_train.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>It looks like this is our best model so far and has great explanatory power. We obtain a 89% R-squared value, which by far is an improvement from our previous models.</p>
+</section>
+<section id="predicting-by-using-test-data" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="predicting-by-using-test-data"><span class="header-section-number">9.2</span> Predicting by using test data</h2>
+<section id="preparing-the-test-data" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="preparing-the-test-data"><span class="header-section-number">9.2.1</span> Preparing the test data</h3>
+<p>The code chunk below will be used to combine the test data with its corresponding coordinates data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>rp_analysis.no_geom <span class="ot">=</span> rp_analysis.sf <span class="sc">%&gt;%</span> </span>
-<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">22</span><span class="sc">:</span><span class="dv">23</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">=</span> <span class="fu">cbind</span>(rp_testing.no_geom, coords_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="calibrating-random-forest-model" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="calibrating-random-forest-model"><span class="header-section-number">7.3</span> Calibrating Random Forest Model</h2>
+<section id="predicting-with-test-data" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="predicting-with-test-data"><span class="header-section-number">9.2.2</span> Predicting with test data</h3>
+<p>Next, we will use the predict function of the ranger package to predict the resale value of HDB flats using the testing data and the rf model previously calibrated.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a>rp_analysis.no_geom <span class="ot">=</span> rp_analysis.no_geom <span class="sc">%&gt;%</span></span>
-<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2410</span>)</span>
-<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">ranger</span>(resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span> remaining_lease <span class="sc">+</span></span>
-<span id="cb141-3"><a href="#cb141-3" aria-hidden="true" tabindex="-1"></a>               x01_to_03 <span class="sc">+</span> x04_to_06 <span class="sc">+</span> x07_to_09 <span class="sc">+</span> x10_to_12 <span class="sc">+</span> x13_to_15 <span class="sc">+</span> </span>
-<span id="cb141-4"><a href="#cb141-4" aria-hidden="true" tabindex="-1"></a>               x16_to_18 <span class="sc">+</span> x19_to_21 <span class="sc">+</span> x22_to_24 <span class="sc">+</span> x25_to_27 <span class="sc">+</span> x28_to_30 <span class="sc">+</span> </span>
-<span id="cb141-5"><a href="#cb141-5" aria-hidden="true" tabindex="-1"></a>               x31_to_33 <span class="sc">+</span> x34_to_36 <span class="sc">+</span> x37_to_39 <span class="sc">+</span> x40_to_42 <span class="sc">+</span> x43_to_45 <span class="sc">+</span> </span>
-<span id="cb141-6"><a href="#cb141-6" aria-hidden="true" tabindex="-1"></a>               new_generation <span class="sc">+</span> improved <span class="sc">+</span> model_a <span class="sc">+</span> simplified <span class="sc">+</span> standard <span class="sc">+</span> </span>
-<span id="cb141-7"><a href="#cb141-7" aria-hidden="true" tabindex="-1"></a>               premium_apartment <span class="sc">+</span> dbss <span class="sc">+</span> distance_to_eldercare <span class="sc">+</span> </span>
-<span id="cb141-8"><a href="#cb141-8" aria-hidden="true" tabindex="-1"></a>               distance_to_food <span class="sc">+</span> distance_to_mrt <span class="sc">+</span> distance_to_park <span class="sc">+</span> </span>
-<span id="cb141-9"><a href="#cb141-9" aria-hidden="true" tabindex="-1"></a>               distance_to_mall <span class="sc">+</span> distance_to_supermarkets <span class="sc">+</span> nb_of_kindergartens <span class="sc">+</span></span>
-<span id="cb141-10"><a href="#cb141-10" aria-hidden="true" tabindex="-1"></a>               nb_of_childcare <span class="sc">+</span> nb_of_bus_stops <span class="sc">+</span> nb_of_primary_schools, </span>
-<span id="cb141-11"><a href="#cb141-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> rp_analysis.no_geom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>test_pred <span class="ot">=</span> <span class="fu">predict</span>(rf, test_data, </span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x.var.name=</span><span class="st">"X"</span>, <span class="at">y.var.name=</span><span class="st">"Y"</span>, </span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">local.w=</span><span class="dv">1</span>, <span class="at">global.w=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="calibrating-geographical-random-forest-model" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="calibrating-geographical-random-forest-model"><span class="header-section-number">7.4</span> Calibrating Geographical Random Forest Model</h2>
-<section id="calibrating-using-training-data" class="level3" data-number="7.4.1">
-<h3 data-number="7.4.1" class="anchored" data-anchor-id="calibrating-using-training-data"><span class="header-section-number">7.4.1</span> Calibrating using training data</h3>
+<section id="converting-the-predicting-output-into-a-data-frame" class="level3" data-number="9.2.3">
+<h3 data-number="9.2.3" class="anchored" data-anchor-id="converting-the-predicting-output-into-a-data-frame"><span class="header-section-number">9.2.3</span> Converting the predicting output into a data frame</h3>
+<p>The output of the predict.grf() is a vector of predicted values. It is wiser to convert it into a data frame for further visualization and analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a>gwRF_adaptive <span class="ot">&lt;-</span> <span class="fu">grf</span>(<span class="at">formula =</span> resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span> remaining_lease <span class="sc">+</span></span>
-<span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a>                       x01_to_03 <span class="sc">+</span> x04_to_06 <span class="sc">+</span> x07_to_09 <span class="sc">+</span> x10_to_12 <span class="sc">+</span> x13_to_15 <span class="sc">+</span> </span>
-<span id="cb143-3"><a href="#cb143-3" aria-hidden="true" tabindex="-1"></a>                       x16_to_18 <span class="sc">+</span> x19_to_21 <span class="sc">+</span> x22_to_24 <span class="sc">+</span> x25_to_27 <span class="sc">+</span> x28_to_30 <span class="sc">+</span> </span>
-<span id="cb143-4"><a href="#cb143-4" aria-hidden="true" tabindex="-1"></a>                       x31_to_33 <span class="sc">+</span> x34_to_36 <span class="sc">+</span> x37_to_39 <span class="sc">+</span> x40_to_42 <span class="sc">+</span> x43_to_45 <span class="sc">+</span> </span>
-<span id="cb143-5"><a href="#cb143-5" aria-hidden="true" tabindex="-1"></a>                       new_generation <span class="sc">+</span> improved <span class="sc">+</span> model_a <span class="sc">+</span> simplified <span class="sc">+</span> standard <span class="sc">+</span> </span>
-<span id="cb143-6"><a href="#cb143-6" aria-hidden="true" tabindex="-1"></a>                       premium_apartment <span class="sc">+</span> dbss <span class="sc">+</span> distance_to_eldercare <span class="sc">+</span> </span>
-<span id="cb143-7"><a href="#cb143-7" aria-hidden="true" tabindex="-1"></a>                       distance_to_food <span class="sc">+</span> distance_to_mrt <span class="sc">+</span> distance_to_park <span class="sc">+</span></span>
-<span id="cb143-8"><a href="#cb143-8" aria-hidden="true" tabindex="-1"></a>                       distance_to_mall <span class="sc">+</span> distance_to_supermarkets <span class="sc">+</span> nb_of_kindergartens <span class="sc">+</span></span>
-<span id="cb143-9"><a href="#cb143-9" aria-hidden="true" tabindex="-1"></a>                       nb_of_childcare <span class="sc">+</span> nb_of_bus_stops <span class="sc">+</span> nb_of_primary_schools,</span>
-<span id="cb143-10"><a href="#cb143-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">dframe=</span>rp_analysis.no_geom, <span class="at">bw=</span>bw_adaptive, <span class="at">kernel=</span><span class="st">"adaptive"</span>,</span>
-<span id="cb143-11"><a href="#cb143-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">coords=</span>coords_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a>test_pred.df <span class="ot">=</span> <span class="fu">as.data.frame</span>(test_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the code chunk below, cbind() is used to append the predicted values onto test_data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>test_data_p <span class="ot">&lt;-</span> <span class="fu">cbind</span>(test_data, test_pred.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calculating-root-mean-square-error" class="level3" data-number="9.2.4">
+<h3 data-number="9.2.4" class="anchored" data-anchor-id="calculating-root-mean-square-error"><span class="header-section-number">9.2.4</span> Calculating Root Mean Square Error</h3>
+<p>The root mean square error (RMSE) allows us to measure how far predicted values are from observed values in a regression analysis. In the code chunk below, rmse() of Metrics package is used to compute the RMSE.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rmse</span>(test_data_p<span class="sc">$</span>resale_price, </span>
+<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a>     test_data_p<span class="sc">$</span>prediction)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 38454.1455788506</code></pre>
+</div>
+</div>
+<p>We should use this value and compare it with the one of the geographical random forest model.</p>
+</section>
+<section id="visualising-the-predicted-values" class="level3" data-number="9.2.5">
+<h3 data-number="9.2.5" class="anchored" data-anchor-id="visualising-the-predicted-values"><span class="header-section-number">9.2.5</span> Visualising the predicted values</h3>
+<p>Alternatively, scatter plot can be used to visualize the actual resale price and the predicted resale price by using the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> test_data_p,</span>
+<span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> prediction,</span>
+<span id="cb151-3"><a href="#cb151-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> resale_price)) <span class="sc">+</span></span>
+<span id="cb151-4"><a href="#cb151-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-129-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>It looks like we have a great model since the plot shows an almost perfect linear relationship.</p>
+</section>
+</section>
+</section>
+<section id="geographical-random-forest-model" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Geographical Random Forest Model</h1>
+<p>Now, we can move on to our last regression model, the Geographical Random Forest model. I provide you with the code necessary for this whole section of calibrating the model and making predictions. Unfortunately, my computer does not allow me to run the prediction as when I load the model into my environment, my computer crashes.</p>
+<p>In this section, we use the grf function of the SpatialML package with an adaptive kernel and the previously computed adaptive bandwidth.</p>
+<section id="calibrating-the-model-using-training-data" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="calibrating-the-model-using-training-data"><span class="header-section-number">10.1</span> Calibrating the model using training data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>gwRF_adaptive <span class="ot">&lt;-</span> <span class="fu">grf</span>(<span class="at">formula =</span> resale_price <span class="sc">~</span> floor_area_sqm <span class="sc">+</span> remaining_lease <span class="sc">+</span></span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a>                       x01_to_03 <span class="sc">+</span> x04_to_06 <span class="sc">+</span> x07_to_09 <span class="sc">+</span> x10_to_12 <span class="sc">+</span> x13_to_15 <span class="sc">+</span> </span>
+<span id="cb152-3"><a href="#cb152-3" aria-hidden="true" tabindex="-1"></a>                       x16_to_18 <span class="sc">+</span> x19_to_21 <span class="sc">+</span> x22_to_24 <span class="sc">+</span> x25_to_27 <span class="sc">+</span> x28_to_30 <span class="sc">+</span> </span>
+<span id="cb152-4"><a href="#cb152-4" aria-hidden="true" tabindex="-1"></a>                       x31_to_33 <span class="sc">+</span> x34_to_36 <span class="sc">+</span> x37_to_39 <span class="sc">+</span> x40_to_42 <span class="sc">+</span> x43_to_45 <span class="sc">+</span> </span>
+<span id="cb152-5"><a href="#cb152-5" aria-hidden="true" tabindex="-1"></a>                       new_generation <span class="sc">+</span> improved <span class="sc">+</span> model_a <span class="sc">+</span> simplified <span class="sc">+</span> standard <span class="sc">+</span> </span>
+<span id="cb152-6"><a href="#cb152-6" aria-hidden="true" tabindex="-1"></a>                       premium_apartment <span class="sc">+</span> dbss <span class="sc">+</span> distance_to_eldercare <span class="sc">+</span> </span>
+<span id="cb152-7"><a href="#cb152-7" aria-hidden="true" tabindex="-1"></a>                       distance_to_food <span class="sc">+</span> distance_to_mrt <span class="sc">+</span> distance_to_park <span class="sc">+</span></span>
+<span id="cb152-8"><a href="#cb152-8" aria-hidden="true" tabindex="-1"></a>                       distance_to_mall <span class="sc">+</span> distance_to_supermarkets <span class="sc">+</span> nb_of_kindergartens <span class="sc">+</span></span>
+<span id="cb152-9"><a href="#cb152-9" aria-hidden="true" tabindex="-1"></a>                       nb_of_childcare <span class="sc">+</span> nb_of_bus_stops <span class="sc">+</span> nb_of_primary_schools,</span>
+<span id="cb152-10"><a href="#cb152-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">dframe=</span>rp_analysis.no_geom, <span class="at">bw=</span>bw_adaptive, <span class="at">kernel=</span><span class="st">"adaptive"</span>,</span>
+<span id="cb152-11"><a href="#cb152-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">coords=</span>coords_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwRF_adaptive, <span class="st">"data/model/gwRF_adaptive250.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb153"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(gwRF_adaptive, <span class="st">"data/model/gwRF_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a>gwRF_adaptive <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/model/gwRF_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>gwRF_adaptive <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/model/gwRF_adaptive.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="predicting-by-using-test-data-1" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="predicting-by-using-test-data-1"><span class="header-section-number">10.2</span> Predicting by using test data</h2>
+<section id="preparing-the-test-data-1" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="preparing-the-test-data-1"><span class="header-section-number">10.2.1</span> Preparing the test data</h3>
+<p>The code chunk below will be used to combine the test data with its corresponding coordinates data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">=</span> <span class="fu">cbind</span>(gwRF_adaptive, coords_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="predicting-with-test-data-1" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="predicting-with-test-data-1"><span class="header-section-number">10.2.2</span> Predicting with test data</h3>
+<p>Next, we will use the predict function of the ranger package to predict the resale value of HDB flats using the testing data and the rf model previously calibrated.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>test_pred <span class="ot">=</span> <span class="fu">predict</span>(rf, test_data, </span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x.var.name=</span><span class="st">"X"</span>, <span class="at">y.var.name=</span><span class="st">"Y"</span>, </span>
+<span id="cb156-3"><a href="#cb156-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">local.w=</span><span class="dv">1</span>, <span class="at">global.w=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="converting-the-predicting-output-into-a-data-frame-1" class="level3" data-number="10.2.3">
+<h3 data-number="10.2.3" class="anchored" data-anchor-id="converting-the-predicting-output-into-a-data-frame-1"><span class="header-section-number">10.2.3</span> Converting the predicting output into a data frame</h3>
+<p>The output of the predict.grf() is a vector of predicted values. It is wiser to convert it into a data frame for further visualization and analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb157"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a>test_pred.df <span class="ot">=</span> <span class="fu">as.data.frame</span>(test_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the code chunk below, cbind() is used to append the predicted values onto test_data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a>test_data_p <span class="ot">&lt;-</span> <span class="fu">cbind</span>(test_data, test_pred.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calculating-root-mean-square-error-1" class="level3" data-number="10.2.4">
+<h3 data-number="10.2.4" class="anchored" data-anchor-id="calculating-root-mean-square-error-1"><span class="header-section-number">10.2.4</span> Calculating Root Mean Square Error</h3>
+<p>The root mean square error (RMSE) allows us to measure how far predicted values are from observed values in a regression analysis. In the code chunk below, rmse() of Metrics package is used to compute the RMSE.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rmse</span>(test_data_p<span class="sc">$</span>resale_price, </span>
+<span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a>     test_data_p<span class="sc">$</span>prediction)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="visualising-the-predicted-values-1" class="level3" data-number="10.2.5">
+<h3 data-number="10.2.5" class="anchored" data-anchor-id="visualising-the-predicted-values-1"><span class="header-section-number">10.2.5</span> Visualising the predicted values</h3>
+<p>Alternatively, scatter plot can be used to visualize the actual resale price and the predicted resale price by using the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> test_data_p,</span>
+<span id="cb160-2"><a href="#cb160-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> GRF_pred,</span>
+<span id="cb160-3"><a href="#cb160-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> resale_price)) <span class="sc">+</span></span>
+<span id="cb160-4"><a href="#cb160-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 </section>
-<section id="testing" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Testing</h1>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
-<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz.sf)<span class="sc">+</span></span>
-<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>()<span class="sc">+</span></span>
-<span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(rp_3rooms.sf)<span class="sc">+</span></span>
-<span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>(<span class="at">col =</span> <span class="st">"blue"</span>)<span class="sc">+</span></span>
-<span id="cb146-6"><a href="#cb146-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">st_buffer</span>(rp_3rooms.sf, <span class="dv">350</span>))<span class="sc">+</span></span>
-<span id="cb146-7"><a href="#cb146-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"red"</span>,</span>
-<span id="cb146-8"><a href="#cb146-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">alpha =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a>rp_3rooms.sf <span class="sc">%&gt;%</span></span>
-<span id="cb147-2"><a href="#cb147-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">st_distance</span>(rp_3rooms.sf, kindergartens.sf) <span class="sc">&lt;=</span> <span class="dv">350</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>spatialrisk<span class="sc">::</span><span class="fu">concentration</span>(rp_3rooms.sf, kindergartens.sf,</span>
-<span id="cb148-2"><a href="#cb148-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">value =</span> count, <span class="at">radius =</span> <span class="dv">350</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<section id="conclusion" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Conclusion</h1>
+<p>If we have to compare the models, it seems like the random forest model is the better model with the highest explanatory power. I can only imagine that the geographically weighted random forest performs even better with great predictive ability. Models like a conventional OLS are not relevant anymore in a world where geography has such an importance in the prediction of HDB flats prices.</p>
 
 
 </section>
