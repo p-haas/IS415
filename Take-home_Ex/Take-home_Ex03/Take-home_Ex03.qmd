@@ -26,47 +26,47 @@ For the purpose our this project, we have selected a list of libraries that will
 
 The following list shows the libraries that will be used and their purpose for this assignment:
 
-- pacman
+-   pacman
 
-- tidyverse
+-   tidyverse
 
-- janitor
+-   janitor
 
-- sf
+-   sf
 
-- spdep
+-   spdep
 
-- tmap
+-   tmap
 
-- corrplot
+-   corrplot
 
-- olsrr
+-   olsrr
 
-- gtsummary
+-   gtsummary
 
-- knitr
+-   knitr
 
-- httr
+-   httr
 
-- onemapsapi
+-   onemapsapi
 
-- xml2
+-   xml2
 
-- rvest
+-   rvest
 
-- stringr
+-   stringr
 
-- ggmap
+-   ggmap
 
-- ggpubr
+-   ggpubr
 
-- GWmodel
+-   GWmodel
 
-- SpatialML
+-   SpatialML
 
-- Metrics
+-   Metrics
 
-- rsample
+-   rsample
 
 To install and load the packages, we use the p_load() function of the pacman package. It automatically checks if packages are installed, installs them if they are not installed, and loads the packages into the R environment.
 
@@ -74,7 +74,7 @@ To install and load the packages, we use the p_load() function of the pacman pac
 pacman::p_load(olsrr, corrplot, ggpubr, sf, spdep,
                GWmodel, tmap, tidyverse, gtsummary,
                ranger, SpatialML, rsample, Metrics,
-               janitor)
+               janitor, stargazer, lmtest, robustbase)
 ```
 
 ```{r}
@@ -99,13 +99,13 @@ For the purpose of this assignment, extensive amount of data was extracted from 
 
 # Retrieving and Importing the Geospatial Data
 
-In this first section that addresses the data import, we will be going through the necessary work to load the geospatial data correctly into our R environment. 
+In this first section that addresses the data import, we will be going through the necessary work to load the geospatial data correctly into our R environment.
 
 Note that in this section, we will be load data previously retrieved from the web, but also using some APIs to collect necessary variables that will play an important role in our regression models.
 
 ## Master Plan 2019 with sub-zones
 
-:::panel-tabset
+::: panel-tabset
 ### Importing the data
 
 The first geospatial data set that we are importing is the 2019 Master Plan with sub-zones. Since it is a shp file, we use the st_read() function of the sf package to properly import the data frame.
@@ -152,14 +152,13 @@ Using the qtm() function of the tmap package, we can make a quick visualization 
 ```{r}
 qtm(mpsz.sf)
 ```
-
 :::
 
 ## MRT Train stations
 
 Importing MRT Exits into an sf data frame.
 
-:::panel-tabset
+::: panel-tabset
 ### Importing the data
 
 As explained just before, I will be sticking with the necessary code only from now on. Using the following code chunk, we import the MRT Train Stations into an sf data frame.
@@ -172,7 +171,7 @@ mrt_exits.sf = st_read(dsn = "data/geospatial/TrainStationExit/TrainStationExit"
 
 ### Visualizing the data
 
-Using the tmap package, we can conveniently plot the MRT Exits on the Singaporean map. 
+Using the tmap package, we can conveniently plot the MRT Exits on the Singaporean map.
 
 ```{r}
 tmap_mode("plot")
@@ -181,14 +180,13 @@ tm_shape(mpsz.sf)+
 tm_shape(mrt_exits.sf)+
   tm_dots(alpha = 0.5)
 ```
-
 :::
 
 ## Bus Stop Locations
 
 Importing Bus Stops into an sf data frame.
 
-:::panel-tabset
+::: panel-tabset
 ### Importing the data
 
 ```{r}
@@ -206,14 +204,13 @@ tm_shape(mpsz.sf)+
 tm_shape(bus_stops.sf)+
   tm_dots(alpha = 0.5)
 ```
-
 :::
 
 ## Supermarket data
 
 Importing Supermarket Locations into an sf data frame.
 
-:::panel-tabset
+::: panel-tabset
 ### Importing the data
 
 ```{r}
@@ -230,7 +227,6 @@ tm_shape(mpsz.sf)+
 tm_shape(supermarkets.sf)+
   tm_dots(alpha = 0.5)
 ```
-
 :::
 
 ## Retrieving the independent variables using the OneMap API
@@ -420,7 +416,7 @@ Using the st_as_sf() function from the *sf* package, we can transform our set of
 ```{r}
 retrieved_variables.sf = st_as_sf(retrieved_variables,
                                   coords = c("lon", "lat"),
-                                  crs = 4326, remove = FALSE) %>%
+                                  crs = 4326) %>%
   st_transform(3414)
 ```
 
@@ -443,7 +439,6 @@ After retrieving the resale HDB prices from the data.gov.sg website, I moved the
 The downloaded data is stored in a folder called resale-flat-prices, itself containing multiple files. To choose the right file, we can use the base r function list.files() to return a list of the file's names.
 
 ```{r}
-#| eval: false
 path = "data/aspatial/resale-flat-prices"
 files = list.files(path)
 files
@@ -452,14 +447,12 @@ files
 Looking at the above list, it seems clear that we should use file n°5 as it contains the data from 2017 and later. It gives us the intuition that we may need to treat the data and take a subset of data rows within the analysis period (2021 to 2023). We will import the data using the read_csv() function from the readr package.
 
 ```{r}
-#| eval: false
 resale_price = read_csv(file = paste(path, files[5], sep = "/"))
 ```
 
 We should take a quick look at the fields contained in the resale_price data frame. We do so using the glimpse() function.
 
 ```{r}
-#| eval: false
 glimpse(resale_price)
 ```
 
@@ -480,7 +473,6 @@ The available fields are as follows:
 Now, we will use the head() function to look at the available data in each field.
 
 ```{r}
-#| eval: false
 head(resale_price)
 ```
 
@@ -488,8 +480,9 @@ head(resale_price)
 
 My previously mentioned intuition is confirmed. The month variable takes data starting in January 2017 and, through quick data manipulation, we will have to restrain the data frames to the 2021-2022 analysis period and 2023 data testing period. In addition, it looks like the town field in unnecessary and may be dropped. We only need the block and steet_name fields to geocode the addresses and create sf geometry.
 
+Here we pipe the select() function to remove the town variable, filter and grepl functions to create a subset of the data by only selecting transactions that took place in 2021 to 2023, and finally pipe once again the filter function to select only three room HDB flats.
+
 ```{r}
-#| eval: false
 rp_3rooms = resale_price %>%
   select(-2) %>%
   filter(grepl("202[123]", month)) %>%
@@ -503,7 +496,6 @@ Since we would like to include the storey_range variable in our analysis and the
 The first step is to look at what are the unique values in the column. Using the unique() function, we retrieve in the form of a list the unique categorical values.
 
 ```{r}
-#| eval: false
 unique(rp_3rooms$storey_range)
 ```
 
@@ -518,8 +510,9 @@ for (i in unique(rp_3rooms$storey_range)){
 
 ### Transforming the flat_model column to dummy variables
 
+We repeat the same process with the flat_model variable.
+
 ```{r}
-#| eval: false
 unique(rp_3rooms$flat_model)
 ```
 
@@ -531,6 +524,10 @@ for (i in unique(rp_3rooms$flat_model)){
 ```
 
 ### Transforming the remaining_lease to a numerical variable
+
+If you remember previously when we took a look at the different data fields available in our data frame, you could notice that the remaining_lease variable stored character data, however, we would like it to be a numerical data field.
+
+To transform our column into a numerical field, we use a for loop with if/else statements. This will allow us to extract the number of years and months remaining on the lease and create a variable that stores the years remaining before expiration of the lease.
 
 ```{r}
 #| eval: false
@@ -571,6 +568,8 @@ The first step to geocoding the address - retrieving the latitude and longitude 
 rp_3rooms["cleaned_address"] = paste(rp_3rooms$block, rp_3rooms$street_name, sep = " ")
 ```
 
+Now that we have a column that stores the cleaned addresses, we can move on to the geocoding. By using the httr package and One Map API, we will create GET requests that retrieve the full address of the HDB flat, its longitude and latitude. We will store all this data into three lists to later create three additional columns in our data frame.
+
 ```{r}
 #| eval: false
 url = "https://developers.onemap.sg/commonapi/search"
@@ -598,6 +597,8 @@ rp_3rooms$lat = latitude
 rp_3rooms$lon = longitude
 ```
 
+Before exporting the data frame to a csv file (to avoid repeating this lengthy step), we shall use the apply function to transform our three newly created columns to the right type (character / numerical type).
+
 ```{r}
 #| eval: false
 options(digits=15)
@@ -615,30 +616,39 @@ write.csv(rp_3rooms, "data/aspatial/geocoded_resale_price.csv", row.names = FALS
 We import the geocoded data back into the R environment.
 
 ```{r}
-#| eval: false
 rp_3rooms = read_csv("data/aspatial/geocoded_resale_price.csv")
 ```
 
-### Dropping the unrelevant variables
+### Dropping the irrelevant variables
 
 ```{r}
-#| eval: false
+head(rp_3rooms)
+```
+
+We will drop the following irrelevant fields.
+
+```{r}
 rp_3rooms.cleaned = rp_3rooms %>%
   select(-c("flat_type", "block", "street_name", "storey_range", "flat_model", "cleaned_address", "full_address"))
 ```
 
 ### Creating the sf geometry
 
+Using the tibble data frame and lon/lat fields, we create a sf data frame and visualize the data with the tmap package.
+
+::: panel-tabset
+#### Creating the sf data frame
+
 ```{r}
-#| eval: false
 rp_3rooms.sf = st_as_sf(rp_3rooms.cleaned,
                         coords = c("lon", "lat"),
-                        crs = 4326, remove = FALSE) %>%
+                        crs = 4326) %>%
   st_transform(3414)
 ```
 
+#### Visualizing the data
+
 ```{r}
-#| eval: false
 tmap_mode("plot")
 tm_shape(mpsz.sf)+
   tm_polygons()+
@@ -646,9 +656,15 @@ tm_shape(rp_3rooms.sf)+
   tm_dots()
 ```
 
+:::
+
 ## Primary School data
 
+After thoroughly looking on the web, I was not able to find a list of primary schools of Singapore to download. So, to improve the reproducibility of my work, I scrapped the [sgschooling](https://sgschooling.com/school/) website to retrieve what seemed to me like an up-to-date list of primary schools.
+
 ### Scrapping Primary Schools online with *rvest* package
+
+The first step is to retrieve the names of the primary schools. Looking at the code chunk below, I used the *httr*, *xml2*, and *rvest* packages to create a GET request, read the HTML code of the website, and extract the names of the schools to store them into a list.
 
 ```{r}
 #| eval: false
@@ -676,6 +692,10 @@ for (i in 1:length(result)){
 ```
 
 ### Using the OneMap API to retrieve the schools' coordinates
+
+I then used this list and the One Map API to geocode these schools and retrieve their address as well as their longitude and latitude, and then stored all of it into a data frame.
+
+Note that in my code I include an if/else statement in the case where we do not get a perfect match and are not able to retrieve information with the API.
 
 ```{r}
 #| eval: false
@@ -828,21 +848,47 @@ write.csv(primary_sc1, "data/aspatial/primary_schools.csv", row.names = FALSE)
 ```
 
 ```{r}
-#| eval: false
 primary_schools = read_csv("data/aspatial/primary_schools.csv")
 ```
 
 ### Creating the sf data frame
 
 ```{r}
-#| eval: false
 primary_schools.sf = st_as_sf(primary_schools,
                          coords = c("lon", "lat"),
-                         crs = 4326, remove = FALSE) %>%
+                         crs = 4326) %>%
   st_transform(3414)
 ```
 
+### Visualizing the data
+
+```{r}
+tmap_mode("plot")
+tm_shape(mpsz.sf)+
+  tm_polygons()+
+tm_shape(primary_schools.sf)+
+  tm_dots()
+```
+
+### Creating a field with the Top 20 Primary Schools
+
+We will now create an additional variable that indicates whether one primary school is considered good or not. I made the selection factor be whether the primary school is in the Top 20 primary schools or not. I extracted from the internet the Top 20 list that you may find below. With this list, we can create a dummy variable that stores a 1 (0) if the school is part (or not) of the Top 20.
+
+```{r}
+#| eval: false
+top20_sc = c("Methodist Girls’ School (Primary)", "Catholic High School", "Tao Nan School", "Pei Hwa Presbyterian Primary School", "Holy Innocents’ Primary School", "Nan Hua Primary School", "CHIJ St. Nicholas Girls’ School", "Admiralty Primary School", "St. Hilda’s Primary School", "Ai Tong School", "Anglo-Chinese School (Junior)", "Chongfu School", "St. Joseph’s Institution Junior", "Anglo-Chinese School (Primary)", "Singapore Chinese Girls’ Primary School", "Nanyang Primary School", "South View Primary School", "Pei Chun Public School", "Kong Hwa School", "Rosyth School")
+
+primary_schools.sf["top20"] = ifelse(primary_schools.sf$location_name %in% top20_sc == TRUE,
+                                     1, 0)
+```
+
+Note that I originally forgot to create this variable and am doing it after having ran all the regressions. Unfortunately, since my computer crashes most of the time when trying to perform the geographic regression, I won't be able to include it now, but I still made sure to include how to create this variable.
+
 ## Shopping Mall data
+
+We encounter the same problem with the shopping malls as when looking for a data set of primary schools, so I decided to scrape Wikipedia for this one.
+
+We perform very similar steps as the previous section on primary schools, so I won't run you through every step.
 
 ### Scraping Wikipedia to extract the list of malls in Singapore
 
@@ -971,25 +1017,58 @@ write.csv(shp_malls, "data/aspatial/shopping_malls.csv", row.names = FALSE)
 ```
 
 ```{r}
-#| eval: false
 shp_malls = read_csv("data/aspatial/shopping_malls.csv")
 ```
 
+### Creating an sf data frame
+
 ```{r}
-#| eval: false
 shp_malls.sf = st_as_sf(shp_malls,
                         coords = c("lon", "lat"),
-                        crs = 4326, remove = FALSE) %>%
+                        crs = 4326) %>%
   st_transform(3414)
+```
+
+### Visualizing the data
+
+```{r}
+tmap_mode("plot")
+tm_shape(mpsz.sf)+
+  tm_polygons()+
+tm_shape(shp_malls.sf)+
+  tm_dots()
 ```
 
 # Preparing the final data frame
 
 In this section, we will prepare the following variables:
 
-Proxomity to CBD Proximity to eldercare Proximity to foodcourt/hawker centres Proximity to MRT Proximity to park Proximity to good primary school Proximity to shopping mall Proximity to supermarket Numbers of kindergartens within 350m Numbers of childcare centres within 350m Numbers of bus stop within 350m Numbers of primary school within 1km
+Proximity to CBD ; Proximity to eldercare ; Proximity to foodcourt/hawker centres ; Proximity to MRT ; Proximity to park ; Proximity to good primary school ; Proximity to shopping mall ; Proximity to supermarket
+
+Numbers of kindergartens within 350m ; Numbers of childcare centres within 350m ; Numbers of bus stop within 350m ; Numbers of primary school within 1km
 
 ## Proximity variables
+
+### Proximity to CBD
+
+We will consider the Downtown Core planning area to be the Central Business District. Given the previous statement, we will compute the distance of each HDB flats to the CBD area.
+
+The first step is to compute the nearest feature between the HDB flats and CDB area. With this, we then can create a column that stores the distance between the two features (e.g., distance between each flat and nearest part of the CBD).
+
+```{r}
+#| eval: false
+cbd_zone.sf = mpsz.sf %>%
+  filter(PLN_AREA_N == "DOWNTOWN CORE")
+
+nearest = st_nearest_feature(rp_3rooms.sf, cbd_zone.sf)
+
+rp_3rooms.sf$distance_to_cdb = as.numeric(
+  st_distance(rp_3rooms.sf, 
+              cbd_zone.sf[nearest,],
+              by_element=TRUE) )
+```
+
+Note that I had forgot to compute this variable when running my regressions, so you won't see it later but I made sure to include the code to compute it.
 
 ### Proximity to eldercare
 
@@ -1061,11 +1140,11 @@ rp_3rooms.sf$distance_to_park = as.numeric(
 
 ```{r}
 #| eval: false
-nearest = st_nearest_feature(rp_3rooms.sf, shp_malls.sf)
+nearest = st_nearest_feature(rp_3rooms.sf, primary_schools.sf)
 
-rp_3rooms.sf$distance_to_mall = as.numeric(
+rp_3rooms.sf$top20_schools = as.numeric(
   st_distance(rp_3rooms.sf, 
-              shp_malls.sf[nearest,],
+              primary_schools.sf[nearest,],
               by_element=TRUE) )
 ```
 
@@ -1093,13 +1172,17 @@ rp_3rooms.sf$distance_to_supermarkets = as.numeric(
               by_element=TRUE) )
 ```
 
-## Number of .. within distance variables
+## Number of ... within given distance
+
+The first step is to create buffers for each HDB flat. We create two buffers, one of 350m and one of 1000m (1km).
 
 ```{r}
 #| eval: false
 buffer_350  = st_buffer(rp_3rooms.sf, 350)
 buffer_1000 = st_buffer(rp_3rooms.sf, 1000)
 ```
+
+Using these buffers will allow us to compute the number of a given variable inside the buffer.
 
 ### Numbers of kindergartens within 350m
 
@@ -1141,12 +1224,13 @@ rp_3rooms.sf$nb_of_bus_stops = lengths(
 
 ```{r}
 #| eval: false
-
 rp_3rooms.sf$nb_of_primary_schools = lengths(
   st_intersects(buffer_1000, primary_schools.sf))
 ```
 
 ## Saving the data
+
+We will save the data into a rds file to avoid running all the previous code every time we would like to work on the assignment since some of these steps are very lengthy.
 
 ```{r}
 #| eval: false
@@ -1154,19 +1238,22 @@ write_rds(rp_3rooms.sf, "data/geospatial/final_dataset.rds")
 ```
 
 ```{r}
-#| eval: false
 rp_3rooms.sf = read_rds("data/geospatial/final_dataset.rds")
 ```
 
+## Check for missing data
+
 ```{r}
-#| eval: false
 sum(is.na(rp_3rooms.sf))
 ```
 
+There is no missing that so we can move on to creating the hedonistic pricing models.
+
 # Hedonic Pricing model
 
+The first step to our hedonistic pricing model is to clean the name of our fields. We do so using the rename function.
+
 ```{r}
-#| eval: false
 rp_3rooms.sf = rp_3rooms.sf %>%
   rename("01_to_03" = "01 TO 03", "04_to_06" = "04 TO 06", "07_to_09" = "07 TO 09",
          "10_to_12" = "10 TO 12", "13_to_15" = "13 TO 15", "16_to_18" = "16 TO 18",
@@ -1179,8 +1266,11 @@ rp_3rooms.sf = rp_3rooms.sf %>%
 
 ## Splitting the data
 
+Now that are fields are cleaned, we should split the data into two data frames. One data frame used for training and one for testing. We do so using the filter and grepl functions.
+
+Note that you can use regular expressions to be more efficient when trying to string match.
+
 ```{r}
-#| eval: false
 rp_analysis.sf = rp_3rooms.sf %>%
   filter(grepl("202[12]", month))
 
@@ -1188,7 +1278,23 @@ rp_testing.sf = rp_3rooms.sf %>%
   filter(grepl("2023", month))
 ```
 
-## Conventional OLS method
+# Conventional OLS method
+
+The first analysis we will perform is the "standard" or "conventional" OLS. This is a multiple linear regression that takes into account only our independent variables. It does not use geographical location as a determinant of the resale price of an HDB flat.
+
+Before running the analysis, there are a few preliminary steps. We should check for: non-linear relationships between the independent variables and the dependent variables; multicollinearity; heteroscedasticity.
+
+## Multicollinearity
+
+```{r}
+corrplot::corrplot(cor(rp_3rooms.sf %>% 
+                         st_drop_geometry() %>%
+                         select(-c(1, 22, 23))), 
+                   diag = FALSE, order = "AOE", tl.pos = "td", 
+                   tl.cex = 0.5, method = "number", type = "upper")
+```
+
+## MLR model
 
 ```{r}
 #| eval: false
@@ -1196,7 +1302,7 @@ colnames(rp_3rooms.sf)
 ```
 
 ```{r}
-#| eval: false
+#| warning: false
 rp_analysis.mlr <- lm(formula = resale_price ~ floor_area_sqm + remaining_lease +
                       `01_to_03` + `04_to_06` + `07_to_09` + `10_to_12` + `13_to_15` + 
                       `16_to_18` + `19_to_21` + `22_to_24` + `25_to_27` + `28_to_30` + 
@@ -1208,12 +1314,25 @@ rp_analysis.mlr <- lm(formula = resale_price ~ floor_area_sqm + remaining_lease 
                       nb_of_childcare + nb_of_bus_stops + nb_of_primary_schools, 
                     data = rp_analysis.sf)
 
-summary(rp_analysis.mlr)
+stargazer(rp_analysis.mlr, type="text")
 ```
 
-## GWR methods
+## Linearity
 
-### Converting sf data frame to SpatialPointDataFrame
+```{r}
+plot(residuals(rp_analysis.mlr), fitted.values(rp_analysis.mlr),
+     xlab="Residuals", ylab="Fitted Values")
+```
+
+## Heteroscedasticity
+
+```{r}
+gqtest(rp_analysis.mlr)
+```
+
+# GWR methods
+
+## Converting sf data frame to SpatialPointDataFrame
 
 ```{r}
 #| eval: false
